@@ -2110,6 +2110,9 @@ class Prefab(BaseItem):
 
     def build_nav_routes(self):
         self._nav_routes = []
+        if self.prefab_description is None:
+            # No prefab description available, cannot build nav routes
+            return
         for route in self.prefab_description.nav_routes:
             self._nav_routes.append(PrefabNavRoute(
                 route.generate_relative_curves(data.map.get_node_by_uid(self.node_uids[0]),

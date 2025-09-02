@@ -1,5 +1,4 @@
-"""
-The plugin event system.
+"""The plugin event system.
 
 Example:
 ````python
@@ -22,5 +21,9 @@ class MyPlugin(ETS2LAPlugin):
 Please note that all events are global. So listening or triggering events will affect the entire plugin system.
 
 WARNING: This system will be rewritten completely in the future, it doesn't even work with the new plugin system yet!
+
 """
+
 from .event_system import events, EventSystem
+
+__all__ = ["events", "EventSystem"]

@@ -14,13 +14,13 @@ last_updates = []
 class Page(ETS2LAPage):
     dynamic = True
     url = "/updater"
-    settings_target = "updater"
     refresh_rate = 30
 
     def update(self, *args, **kwargs):
         mainThreadQueue.append([Update, [], {}])
 
     def open_event(self):
+        super().open_event()
         self.reset_timer()
 
     def time_since(self, target_time):

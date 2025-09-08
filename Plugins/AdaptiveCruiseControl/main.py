@@ -6,7 +6,7 @@ from ETS2LA.Utils.translator import _
 # Local imports
 from Plugins.AdaptiveCruiseControl.controls import enable_disable, increment, decrement
 from Plugins.AdaptiveCruiseControl.speed import get_maximum_speed_for_points
-from Plugins.AdaptiveCruiseControl.settings import SettingsMenu
+from Plugins.AdaptiveCruiseControl.settings import SettingsMenu, settings
 
 # ETS2LA imports
 from Plugins.AR.classes import Coordinate, Polygon, Fade, Color
@@ -185,31 +185,41 @@ class Plugin(ETS2LAPlugin):
         return speed_limit_accel
 
     def calculate_leading_vehicle_constraint(self, in_front: ACCVehicle):
-        # time_gap * own_speed + minimum_gap
-        minimum_gap = 15.0  # meters at 0 speed
+        minimum_gap = 10.0 + in_front.size.length / 2  # meters at 0 speed
 
         desired_gap = max(self.time_gap_seconds * self.speed, minimum_gap)
-        self.globals.tags.acc_gap = desired_gap
+        self.tags.acc_gap = desired_gap
 
         relative_speed = self.speed - in_front.speed
-        gap_error = in_front.distance - desired_gap
+        gap_error = (in_front.distance - desired_gap) / max((desired_gap / 30), 1)
 
-        # Weighted sum of gap error and relative speed
-        if self.speed > 10 / 3.6:
-            following_accel = 0.5 * gap_error - 2.0 * relative_speed
-        else:
-            following_accel = 1.0 * gap_error - 0.7 * relative_speed
+        # Relative speed is more important at higher speeds due
+        # to vehicles merging in front.
+        # if self.speed > 10 / 3.6:
+        #     following_accel = 0.4 * gap_error - 2.0 * relative_speed
+        # else:
+        #     following_accel = 1.0 * gap_error - 0.7 * relative_speed
 
-        following_accel += 0.3 * in_front.acceleration
+        # following_accel += 0.3 * in_front.acceleration
 
-        following_accel = min(
-            self.max_accel, max(self.emergency_decel, following_accel)
-        )
+        following_accel = gap_error / 20 if gap_error < 0 else gap_error
+        if relative_speed < 0:  # vehicle in front is faster
+            following_accel -= relative_speed * 0.5
+            following_accel -= in_front.acceleration * 2 * (self.speed / 80 / 3.6)
+        else:  # vehicle in front is slower
+            if following_accel > 0:
+                following_accel *= max(
+                    1 - (relative_speed / 50 / 3.6), 0.1
+                )  # if the vehicle in front is stopped, then we want to be more careful
+            following_accel -= relative_speed * 4
+            following_accel -= in_front.acceleration * 1.5 * (self.speed / 80 / 3.6)
+
+        following_accel = min(self.max_accel, following_accel)
 
         if following_accel < -5.0:
-            self.globals.tags.AEB = True
+            self.tags.AEB = True
         else:
-            self.globals.tags.AEB = False
+            self.tags.AEB = False
 
         return following_accel
 
@@ -242,48 +252,59 @@ class Plugin(ETS2LAPlugin):
             return self.emergency_decel
 
     def update_parameters(self):
-        aggressiveness = self.settings.aggressiveness  # 'Aggressive', 'Normal', 'Eco'
-        distance_setting = self.settings.following_distance  # 'Far', 'Normal', 'Near'
-        overwrite_speed = self.settings.overwrite_speed
-        speed_offset_type = self.settings.speed_offset_type
-        speed_offset = self.settings.speed_offset
-        ignore_traffic_lights = self.settings.ignore_traffic_lights
-        ignore_speed_limit = self.settings.ignore_speed_limit
+        aggressiveness = settings.aggressiveness  # 'Aggressive', 'Normal', 'Eco'
+        distance_setting = settings.following_distance
+        if isinstance(distance_setting, str):
+            distance_setting = 2
+
+        overwrite_speed = settings.overwrite_speed
+        max_speed = settings.max_speed
+
+        speed_offset_type = settings.speed_offset_type
+        speed_offset = settings.speed_offset
+
+        ignore_traffic_lights = settings.ignore_traffic_lights
+        ignore_speed_limit = settings.ignore_speed_limit
 
         if ignore_speed_limit is None:
             ignore_speed_limit = False
-            self.settings.ignore_speed_limit = ignore_speed_limit
+            settings.ignore_speed_limit = ignore_speed_limit
 
         if ignore_traffic_lights is None:
             ignore_traffic_lights = False
-            self.settings.ignore_traffic_lights = ignore_traffic_lights
+            settings.ignore_traffic_lights = ignore_traffic_lights
 
         if aggressiveness is None:
             aggressiveness = "Normal"
-            self.settings.aggressiveness = aggressiveness
+            settings.aggressiveness = aggressiveness
 
         if distance_setting is None:
-            distance_setting = "Normal"
-            self.settings.following_distance = distance_setting
+            distance_setting = 2
+            settings.following_distance = distance_setting
 
         if overwrite_speed is None:
             overwrite_speed = 30
-            self.settings.overwrite_speed = overwrite_speed
+            settings.overwrite_speed = overwrite_speed
+
+        if max_speed is None:
+            max_speed = 0
+            settings.max_speed = max_speed
 
         if speed_offset_type is None:
             speed_offset_type = "Absolute"
-            self.settings.speed_offset_type = speed_offset_type
+            settings.speed_offset_type = speed_offset_type
 
         if speed_offset is None:
             speed_offset = 0
-            self.settings.speed_offset = speed_offset
+            settings.speed_offset = speed_offset
 
         self.overwrite_speed = overwrite_speed
         self.speed_offset = speed_offset
 
+        self.base_time_gap_seconds = distance_setting
         if aggressiveness == "Aggressive":
-            self.max_accel = self.base_max_accel * 1.33
-            self.comfort_decel = self.base_comfort_decel * 1.33
+            self.max_accel = self.base_max_accel * 2
+            self.comfort_decel = self.base_comfort_decel * 2
             self.time_gap_seconds = self.base_time_gap_seconds * 0.75
         elif aggressiveness == "Eco":
             self.max_accel = self.base_max_accel * 0.66
@@ -294,28 +315,23 @@ class Plugin(ETS2LAPlugin):
             self.comfort_decel = self.base_comfort_decel
             self.time_gap_seconds = self.base_time_gap_seconds
 
-        if distance_setting == "Far":
-            self.time_gap_seconds *= 1.3
-        elif distance_setting == "Near":
-            self.time_gap_seconds *= 0.8
-
         self.speed_offset_type = speed_offset_type
         if self.speed_offset_type is None:
             self.speed_offset_type = "Absolute"
 
-        if self.settings.unlock_pid:
-            self.kp_accel = self.settings.pid_kp
-            self.ki_accel = self.settings.pid_ki
-            self.kd_accel = self.settings.pid_kd
+        if settings.unlock_pid:
+            self.kp_accel = settings.pid_kp
+            self.ki_accel = settings.pid_ki
+            self.kd_accel = settings.pid_kd
             if self.kp_accel is None:
                 self.kp_accel = 0.30
-                self.settings.pid_kp = self.kp_accel
+                settings.pid_kp = self.kp_accel
             if self.ki_accel is None:
                 self.ki_accel = 0.08
-                self.settings.pid_ki = self.ki_accel
+                settings.pid_ki = self.ki_accel
             if self.kd_accel is None:
                 self.kd_accel = 0.05
-                self.settings.pid_kd = self.kd_accel
+                settings.pid_kd = self.kd_accel
 
     def calculate_target_acceleration(
         self,
@@ -335,7 +351,7 @@ class Plugin(ETS2LAPlugin):
             target_accelerations.append(following_accel)
 
         # Red Light - Only check if traffic lights are not ignored
-        if traffic_light and not self.settings.ignore_traffic_lights:
+        if traffic_light and not settings.ignore_traffic_lights:
             if (
                 traffic_light.state == 2 or traffic_light.state == 1
             ):  # red or changing to red
@@ -362,7 +378,7 @@ class Plugin(ETS2LAPlugin):
         self.api = self.modules.TruckSimAPI
         self.controller = self.modules.SDKController.SCSController()
         self.controller = cast(Controller, self.controller)
-        self.globals.tags.status = {"AdaptiveCruiseControl": self.enabled}
+        self.tags.status = {"AdaptiveCruiseControl": self.enabled}
 
         # if variables.DEVELOPMENT_MODE:
         #     self.graph.setup_plot()
@@ -373,7 +389,7 @@ class Plugin(ETS2LAPlugin):
             return  # Callback for the lift up event
 
         self.enabled = not self.enabled
-        self.globals.tags.status = {"AdaptiveCruiseControl": self.enabled}
+        self.tags.status = {"AdaptiveCruiseControl": self.enabled}
 
     @events.on("increment_speed")
     def on_increment_speed(self, state: bool):
@@ -415,10 +431,10 @@ class Plugin(ETS2LAPlugin):
     def get_vehicle_in_front(self, api_data: dict) -> ACCVehicle:
         # TODO: This function is ugly and unoptimized,
         #       rewrite it.
-        vehicles = self.modules.Traffic.run()
+        vehicles: list[Vehicle] = self.modules.Traffic.run()
 
-        plugin_vehicles = self.globals.tags.vehicles
-        plugin_vehicles = self.globals.tags.merge(plugin_vehicles)
+        plugin_vehicles = self.tags.vehicles
+        plugin_vehicles = self.tags.merge(plugin_vehicles)
 
         if plugin_vehicles is not None:
             vehicles += [
@@ -464,7 +480,27 @@ class Plugin(ETS2LAPlugin):
         if not isinstance(vehicles, list):
             return None
 
+        # Expand vehicles with trailers into multiple vehicles
+        expanded_vehicles = []
         for vehicle in vehicles:
+            expanded_vehicles.append(vehicle)
+            for trailer in vehicle.trailers:
+                expanded_vehicles.append(
+                    Vehicle(
+                        position=trailer.position,
+                        rotation=trailer.rotation,
+                        size=trailer.size,
+                        speed=vehicle.speed,
+                        acceleration=vehicle.acceleration,
+                        trailer_count=0,
+                        trailers=[],
+                        id=vehicle.id,
+                        is_tmp=vehicle.is_tmp,
+                        is_trailer=True,
+                    )
+                )
+
+        for vehicle in expanded_vehicles:
             if len(vehicle.trailers) > 0:
                 x = vehicle.trailers[-1].position.x
                 y = vehicle.trailers[-1].position.z
@@ -511,19 +547,17 @@ class Plugin(ETS2LAPlugin):
         closest_vehicle = None
         for distance, vehicle in vehicles_in_front:
             if distance < closest_distance:
-                closest_distance = distance
+                closest_distance = distance + vehicle.size.length / 2
                 closest_vehicle = vehicle
 
         if closest_vehicle is None:
             return None
 
-        if closest_vehicle.speed > self.speed + 10:
-            time_to_vehicle = 999
-        else:
-            time_to_vehicle = (
-                closest_distance + (closest_vehicle.speed - self.speed)
-            ) / self.speed
-            self.globals.tags.vehicle_highlights = [closest_vehicle.id]
+        time_to_vehicle = (
+            closest_distance + (closest_vehicle.speed - self.speed)
+        ) / self.speed
+        self.tags.vehicle_highlights = [closest_vehicle.id]
+        self.tags.vehicle_in_front_distance = closest_distance
 
         return ACCVehicle(closest_vehicle, closest_distance, time_to_vehicle)
 
@@ -647,13 +681,13 @@ class Plugin(ETS2LAPlugin):
         except Exception:
             return None, None
 
-        prefab = self.globals.tags.next_intersection
-        prefab: Prefab = self.globals.tags.merge(prefab)
+        prefab = self.tags.next_intersection
+        prefab: Prefab = self.tags.merge(prefab)
         if not prefab:
             return None, None
 
-        index = self.globals.tags.next_intersection_lane
-        index: int = self.globals.tags.merge(index)
+        index = self.tags.next_intersection_lane
+        index: int = self.tags.merge(index)
         if index is None:
             return None, None
 
@@ -842,7 +876,7 @@ class Plugin(ETS2LAPlugin):
         else:
             smoothed_max_speed = 999
 
-        if self.settings.ignore_speed_limit:
+        if settings.ignore_speed_limit:
             target_speed = 999 / 3.6  # Set highest speed to 999 km/h
         else:
             target_speed = api_data["truckFloat"]["speedLimit"]
@@ -858,6 +892,10 @@ class Plugin(ETS2LAPlugin):
         if target_speed > smoothed_max_speed and smoothed_max_speed > 0:
             target_speed = smoothed_max_speed
 
+        if settings.max_speed:
+            if target_speed > settings.max_speed / 3.6:
+                target_speed = settings.max_speed / 3.6
+
         return target_speed
 
     def reset(self) -> None:
@@ -872,7 +910,7 @@ class Plugin(ETS2LAPlugin):
         speed = 0.0
         if self.api_data:
             gear = self.api_data["truckInt"]["gear"]
-            clutch = self.api_data["truckFloat"]["gameClutch"]
+            clutch = self.api_data["truckFloat"]["userClutch"]
             speed = self.api_data["truckFloat"]["speed"] * 3.6
             is_reversing = gear < 0
 
@@ -1001,16 +1039,17 @@ class Plugin(ETS2LAPlugin):
     def run(self):
         self.update_parameters()
         self.update_manual_offset()
-        self.globals.tags.status = {"AdaptiveCruiseControl": self.enabled}
+        self.tags.status = {"AdaptiveCruiseControl": self.enabled}
 
-        points = self.globals.tags.steering_points
-        points = self.globals.tags.merge(points)
+        points = self.tags.steering_points
+        points = self.tags.merge(points)
         self.map_points = points
 
         if not self.enabled:
             self.accel_errors = []
-            self.globals.tags.vehicle_highlights = []
-            self.globals.tags.AR = []
+            self.tags.vehicle_highlights = []
+            self.tags.vehicle_in_front_distance = None
+            self.tags.AR = []
             self.reset()
             return
 
@@ -1043,9 +1082,10 @@ class Plugin(ETS2LAPlugin):
             in_front = None
 
         if not in_front:
-            self.globals.tags.vehicle_highlights = []
+            self.tags.vehicle_in_front_distance = None
+            self.tags.vehicle_highlights = []
 
-        tl_mode = self.settings.get("traffic_light_mode", "Normal")
+        tl_mode = settings.traffic_light_mode
 
         if tl_mode == "Legacy":
             try:
@@ -1092,11 +1132,11 @@ class Plugin(ETS2LAPlugin):
                         right_point[2],
                     ]
 
-                    self.globals.tags.light = {
+                    self.tags.light = {
                         "distance": round(distance, 1),
                         "state": traffic_light.state_text(),
                     }
-                    self.globals.tags.AR = [
+                    self.tags.AR = [
                         Polygon(
                             [
                                 Coordinate(left_point[0], left_point[1], left_point[2]),
@@ -1117,7 +1157,7 @@ class Plugin(ETS2LAPlugin):
                 traffic_light = None
                 traceback.print_exc()
                 self.globals.light = {"distance": 0, "state": ""}
-                self.globals.tags.AR = []
+                self.tags.AR = []
 
         try:
             gate = self.get_gate_in_front(self.api_data)
@@ -1131,8 +1171,8 @@ class Plugin(ETS2LAPlugin):
         target_throttle = self.apply_pid(target_acceleration)
         self.set_accel_brake(target_throttle)
 
-        self.globals.tags.acc = self.speedlimit
-        self.globals.tags.acc_target = target_acceleration
+        self.tags.acc = self.speedlimit
+        self.tags.acc_target = target_acceleration
 
         # self.state.text = "Integral length: " + str(len(self.accel_errors)) + "\nValue: " + str(round(sum(self.accel_errors), 2))
 

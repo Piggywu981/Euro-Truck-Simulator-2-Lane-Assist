@@ -18,10 +18,11 @@ class Renderer(HUDRenderer):
 
     def draw(self):
         if not self.plugin.data:
+            self.data = []
             return
 
-        targets = self.plugin.globals.tags.vehicle_highlights
-        targets = self.plugin.globals.tags.merge(targets)
+        targets = self.plugin.tags.vehicle_highlights
+        targets = self.plugin.tags.merge(targets)
 
         if targets is None:
             targets = []
@@ -72,6 +73,7 @@ class Renderer(HUDRenderer):
         ]
 
         if distance > 120:
+            self.data = []
             return
 
         relative_front_left = self.plugin.get_relative_to_head(Coordinate(*front_left))
@@ -91,8 +93,8 @@ class Renderer(HUDRenderer):
 
         color = [255, 255, 255]
         alpha = 0.5
-        AEB = self.plugin.globals.tags.AEB
-        if AEB and self.plugin.globals.tags.merge(AEB):
+        AEB = self.plugin.tags.AEB
+        if AEB and self.plugin.tags.merge(AEB):
             color = [255, 120, 120]
             alpha = 1
 

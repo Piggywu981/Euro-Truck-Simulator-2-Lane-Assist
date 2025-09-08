@@ -7,6 +7,8 @@ from ETS2LA.UI import (
     ButtonWithTitleDescription,
     AdSense,
     Space,
+    Markdown,
+    Button,
 )
 from ETS2LA.Networking.cloud import (
     GetUserCount,
@@ -22,12 +24,14 @@ from ETS2LA.Utils.Game import path as game
 from ETS2LA.Networking.Servers.webserver import mainThreadQueue
 from Modules.SDKController.main import SCSController
 from ETS2LA.Utils.translator import _, ngettext, languages, parse_language
+from ETS2LA.Settings import GlobalSettings
 from ETS2LA.Utils.version import Update
-from ETS2LA.Utils import settings
 from langcodes import Language
 import hashlib
 import time
 import os
+
+settings = GlobalSettings()
 
 contributors = [
     {
@@ -223,6 +227,7 @@ class Page(ETS2LAPage):
         mainThreadQueue.append([Update, [], {}])
 
     def open_event(self):
+        super().open_event()
         self.game_needs_update = {}
         for path in games:
             try:
@@ -248,11 +253,19 @@ class Page(ETS2LAPage):
                 ngettext("{0} minute", "{0} minutes", minutes).format(minutes),
             )
 
+    show_kofi = True
+
+    def handle_hide_kofi(self):
+        self.show_kofi = False
+
     def render(self):
-        ads = settings.Get("global", "ad_preference", default=1)
+        ads = settings.ad_preference
         if ads >= 1:
             with Container(
-                style=styles.FlexHorizontal() + styles.Padding("40px 0px 0px 80px")
+                style=styles.FlexVertical()
+                + styles.Gap("4px")
+                + styles.Padding("40px 0px 0px 80px")
+                + styles.Classname("relative")
             ):
                 AdSense(
                     client="ca-pub-6002744323117854",
@@ -261,10 +274,77 @@ class Page(ETS2LAPage):
                         display="inline-block", width="900px", height="90px"
                     ),
                 )
+                Text(
+                    "Ads can be disabled in the settings, they support development.",
+                    styles.Classname("text-muted-foreground")
+                    + styles.Style(font_size="9px"),
+                )
+        elif self.show_kofi:
+            with Container(
+                styles.FlexVertical()
+                + styles.Padding("40px 0px 0px 80px")
+                + styles.MaxWidth("900px")
+            ):
+                with Container(
+                    styles.Classname("w-full p-4 border rounded-md bg-kofi")
+                    # + styles.Style(background_color="#c45635")
+                ):
+                    Text(
+                        _("Hey There!"),
+                        styles.Classname("font-bold")
+                        + styles.Style(
+                            color="#e9e9e9",
+                            text_shadow="1px 1px 2px #00000080",
+                        ),
+                    )
+                    Space(styles.Height("4px"))
+                    Markdown(
+                        _(
+                            "I see you've disabled ads. That's totally fine, but you can still support ETS2LA development by donating via Ko-Fi. *Every donation is equal to weeks(!) of ad revenue*, we are eternally grateful for every bit of support we get!"
+                        ),
+                        styles.Style(
+                            color="#e9e9e9",
+                            text_shadow="1px 1px 2px #00000080",
+                        ),
+                    )
+                    Space(styles.Height("8px"))
+                    with Container(
+                        styles.FlexHorizontal()
+                        + styles.Gap("10px")
+                        + styles.Classname("items-center")
+                    ):
+                        Link(
+                            _("Donate via Ko-Fi"),
+                            "https://ko-fi.com/tumppi066",
+                            styles.Classname("text-xs hover:underline")
+                            + styles.Style(
+                                color="#e9e9e9",
+                                text_shadow="1px 1px 2px #00000080",
+                            ),
+                        )
+                        Text(
+                            "or",
+                            styles.Classname("text-xs")
+                            + styles.Style(
+                                color="#e9e9e9",
+                                text_shadow="1px 1px 2px #00000080",
+                            ),
+                        )
+                        with Button(action=self.handle_hide_kofi, type="link"):
+                            Text(
+                                _("Hide"),
+                                style=styles.Classname("text-xs hover:underline")
+                                + styles.Style(
+                                    color="#e9e9e9",
+                                    text_shadow="1px 1px 2px #00000080",
+                                ),
+                            )
 
         with Container(
             style=styles.FlexVertical()
-            + styles.Padding(("20px" if ads else "80px") + " 0px 0px 80px")
+            + styles.Padding(
+                ("60px" if not self.show_kofi and ads < 1 else "15px") + " 0px 0px 80px"
+            )
             + styles.MaxWidth("900px")
         ):
             if any(self.game_needs_update.values()):

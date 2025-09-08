@@ -113,7 +113,6 @@ def needs_update(game: str) -> bool:
 class Page(ETS2LAPage):
     dynamic = True
     url = "/settings/sdk"
-    settings_target = "sdk_installation"
     onboarding_mode = False
     game_needs_update = {}
 
@@ -249,6 +248,7 @@ class Page(ETS2LAPage):
             SendPopup(_("Path {path} does not exist.").format(path=path), "error")
 
     def open_event(self):
+        super().open_event()
         self.game_needs_update = {}
         for path in games:
             try:

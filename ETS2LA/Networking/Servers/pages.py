@@ -138,6 +138,7 @@ async def handler(ws: websockets.WebSocketServerProtocol, path):
 
                 elif data.get("type") == "function":
                     handle_functions(data["data"])
+
     except Exception:
         logging.exception("An error occurred while processing a message.")
     finally:
@@ -146,7 +147,7 @@ async def handler(ws: websockets.WebSocketServerProtocol, path):
 
 # Background task to check for updates periodically
 async def update_loop():
-    last_update = time.perf_counter()
+    last_update = 0
     while True:
         last_update = time.perf_counter()
 

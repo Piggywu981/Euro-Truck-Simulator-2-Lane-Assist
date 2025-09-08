@@ -18,11 +18,9 @@ class ETS2LAPage:
     """This is a base class for all ETS2LA pages.
 
     :param dynamic: If the page is dynamic, it will be rebuilt every time the frontend updates it.
-    :param settings_target: The path to the settings file that the page will use.
     :param url: The relative URL of the page. (eg. /settings/global)
     :param refresh_rate: The refresh rate of the page in seconds. (0 = no limit)
     :param plugin: A reference to the plugin that spawned this page.
-    :param settings: A reference to the settings object of the plugin that spawned this page.
     """
 
     url: str = ""
@@ -35,11 +33,6 @@ class ETS2LAPage:
     A reference to the plugin that spawned this page.
     If the plugin is disabled, then this object will be None.
     """
-    settings: object = None
-    """
-    A reference to the settings object of the plugin that spawned this page.
-    If the plugin is disabled, then this object will be None.
-    """
 
     location: ETS2LAPageLocation = ETS2LAPageLocation.HIDDEN
     """
@@ -50,6 +43,11 @@ class ETS2LAPage:
     """
     The title of the page. This is used for the button that opens the page.
     If the page is hidden, then this is ignored.
+    """
+
+    open_calls: int = 0
+    """
+    Incremented by open_event(), decremented by close_event().
     """
 
     def __init__(self):
@@ -71,13 +69,17 @@ class ETS2LAPage:
             "You must implement the 'render' method in your page class."
         )
 
+    def is_open(self) -> bool:
+        """Returns True if the page is currently open."""
+        return self.open_calls > 0
+
     def open_event(self):
         """This method is called when the page is opened. Override this method to handle the open event."""
-        pass
+        self.open_calls += 1
 
     def close_event(self):
         """This method is called when the page is closed. Override this method to handle the close event."""
-        pass
+        self.open_calls -= 1
 
     def reset_timer(self):
         # Trigger a timer reset to make sure the

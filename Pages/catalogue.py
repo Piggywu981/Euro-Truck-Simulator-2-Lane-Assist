@@ -14,9 +14,9 @@ from ETS2LA.UI import (
     Markdown,
     SendPopup,
 )
+from ETS2LA.Settings import GlobalSettings
 from ETS2LA.Handlers import plugins
 from ETS2LA.Utils.translator import _
-from ETS2LA.Utils import settings
 import webbrowser
 import threading
 import requests
@@ -26,6 +26,8 @@ import time
 import yaml
 import git
 import os
+
+settings = GlobalSettings()
 
 
 class CataloguePlugin:
@@ -142,6 +144,7 @@ class Page(ETS2LAPage):
         threading.Thread(target=self.update_data, daemon=True).start()
 
     def open_event(self):
+        super().open_event()
         if self.plugins:
             return
 
@@ -183,6 +186,7 @@ class Page(ETS2LAPage):
         try:
             self.installing_state = _("Cloning repository")
             self.reset_timer()
+            git.Repo.clone_from(target.repository, f"CataloguePlugins/{target.name}")
             if os.path.exists(f"CataloguePlugins/{target.name}/requirements.txt"):
                 self.installing_state = _("Installing requirements")
                 self.reset_timer()
@@ -612,7 +616,7 @@ class Page(ETS2LAPage):
                     Text(_("Refresh"), styles.Classname("text-xs"))
 
     def render(self):
-        ads = settings.Get("global", "ad_preference", default=1)
+        ads = settings.ad_preference
 
         if self.loading_screen():
             return

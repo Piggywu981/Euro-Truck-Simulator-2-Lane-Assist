@@ -10,7 +10,7 @@ root of the project to update the translation files. Please lock and update the
 translations from weblate before generating, as you might hit merge conflicts otherwise.
 """
 
-from ETS2LA.Utils.settings import Get, Listen, Set
+from ETS2LA.Settings import GlobalSettings
 from langcodes import Language
 import datetime
 import gettext
@@ -32,6 +32,7 @@ def get_available_languages(localedir: str) -> list:
 
 
 languages = get_available_languages("Translations/locales")
+settings = GlobalSettings()
 
 
 class Translate:
@@ -142,9 +143,9 @@ def correct_naming(language: str) -> str:
     return language
 
 
-default = Get("global", "language", "English")
+default = settings.language
 if not default:
-    Set("global", "language", "English")
+    settings.language = "English"
     default = "English"
 
 default = parse_language(Language.find(default))
@@ -159,7 +160,7 @@ def set_language(language: str | Language):
     :param language: The language code to set.
     """
     if not language:
-        Set("global", "language", "English")
+        settings.language = "English"
         language = "English"
 
     language = (
@@ -172,8 +173,8 @@ def set_language(language: str | Language):
     _.set_language(language)
 
 
-def detect_change(dictionary: dict):
-    language = dictionary.get("language", "English")
+def detect_change():
+    language = settings.language
     if not language:
         language = "English"
 
@@ -184,13 +185,13 @@ def detect_change(dictionary: dict):
         set_language(language)
 
 
-Listen("global", detect_change)
+settings.listen(detect_change)
 
 # region Generation
 overrides = {
     "zh": "zh_Hans",
     "zh_2": "zh_Hant",
-    "pt": "pt_PT",
+    "pt": "pt",
     "pt_2": "pt_BR",
     "nb": "nb_NO",
 }
@@ -258,28 +259,32 @@ msgstr ""
 
     # Generate or update .po files for each language
     for lang in [language.language for language in languages]:
-        if lang in overrides:
-            count[lang] = count.get(lang, 0) + 1
-            if count.get(lang, 0) >= 2:
-                lang = f"{lang}_{count[lang]}"
-            lang = overrides[lang]
+        try:
+            if lang in overrides:
+                count[lang] = count.get(lang, 0) + 1
+                if count.get(lang, 0) >= 2:
+                    lang = f"{lang}_{count[lang]}"
+                lang = overrides[lang]
 
-        lang_dir = f"{target_dir}/{lang}/LC_MESSAGES"
-        if not os.path.exists(lang_dir):
-            os.makedirs(lang_dir)
+            lang_dir = f"{target_dir}/{lang}/LC_MESSAGES"
+            if not os.path.exists(lang_dir):
+                os.makedirs(lang_dir)
 
-        po_file = f"{lang_dir}/backend.po"
+            po_file = f"{lang_dir}/backend.po"
 
-        # Check if the PO file already exists
-        if os.path.exists(po_file):
-            # If it exists, merge with the new template to preserve translations
-            print(f"Updating existing translations for language: {lang}")
-            os.system(
-                f'msgmerge --update --no-wrap --backup=none --no-fuzzy-matching "{po_file}" "{target_dir}/base.pot"'
-            )
+            # Check if the PO file already exists
+            if os.path.exists(po_file):
+                # If it exists, merge with the new template to preserve translations
+                print(f"Updating existing translations for language: {lang}")
+                os.system(
+                    f'msgmerge --update --no-wrap --backup=none --no-fuzzy-matching "{po_file}" "{target_dir}/base.pot"'
+                )
+                continue
+            else:
+                print(f"ERROR: PO file for language {lang} does not exist.")
+                print("Please add the real language code to the overrides.")
+        except Exception as e:
+            print(f"An error occurred while processing language {lang}: {e}")
             continue
-        else:
-            print(f"ERROR: PO file for language {lang} does not exist.")
-            print("Please add the real language code to the overrides.")
 
     print("Translation files have been successfully updated")

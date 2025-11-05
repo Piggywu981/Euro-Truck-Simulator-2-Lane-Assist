@@ -1,3 +1,5 @@
+from typing import Any
+
 class TTSVoice:
     name: str
     """
@@ -51,6 +53,10 @@ class TTSProvider:
 
     _selected_voice: TTSVoice | None
     _selected_language: str | None
+    pipeline: Any = None
+    """
+    Pipeline object for TTS providers that require it.
+    """
 
     def initialize(self, plugin):
         """Initialize the TTSProvider.

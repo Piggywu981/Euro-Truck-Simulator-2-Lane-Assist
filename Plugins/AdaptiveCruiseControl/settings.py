@@ -21,6 +21,7 @@ from typing import Literal
 class Settings(ETS2LASettings):
     MU: float = 0.5
     ignore_traffic_lights: bool = False
+    ignore_gates: bool = False
     aggressiveness: Literal["Eco", "Normal", "Aggressive"] = "Normal"
     following_distance: float = 2
     overwrite_speed: float = 30
@@ -33,6 +34,7 @@ class Settings(ETS2LASettings):
     pid_kd: float = 0.05
     traffic_light_mode: Literal["Legacy", "Normal"] = "Normal"
     max_speed: float = 0
+    debug: bool = False
 
 
 settings = Settings("AdaptiveCruiseControl")
@@ -59,6 +61,14 @@ class SettingsMenu(ETS2LAPage):
             value = not settings.ignore_traffic_lights
 
         settings.ignore_traffic_lights = value
+
+    def handle_ignore_gates(self, *args):
+        if args:
+            value = args[0]
+        else:
+            value = not settings.ignore_gates
+
+        settings.ignore_gates = value
 
     def handle_speed_offset_type(self, value):
         settings.speed_offset_type = value
@@ -117,6 +127,14 @@ class SettingsMenu(ETS2LAPage):
 
     def handle_traffic_light_mode(self, value):
         settings.traffic_light_mode = value
+
+    def handle_debug(self, *args):
+        if args:
+            value = args[0]
+        else:
+            value = not settings.debug
+
+        settings.debug = value
 
     def render(self):
         TitleAndDescription(
@@ -179,7 +197,16 @@ class SettingsMenu(ETS2LAPage):
                         styles.Classname("text-xs text-muted-foreground"),
                     )
 
-                Text(_("Traffic Light Settings"), styles.Classname("font-semibold"))
+                Text(_("Obstruction Settings"), styles.Classname("font-semibold"))
+
+                CheckboxWithTitleDescription(
+                    title=_("Ignore Gates"),
+                    description=_(
+                        "Whether the ACC should ignore gates. Please note that this will, as it says ignore the gates."
+                    ),
+                    changed=self.handle_ignore_gates,
+                    default=settings.ignore_gates,
+                )
 
                 ignore = settings.ignore_traffic_lights
                 CheckboxWithTitleDescription(
@@ -296,6 +323,15 @@ class SettingsMenu(ETS2LAPage):
             with Tab(
                 _("PID"), container_style=styles.FlexVertical() + styles.Gap("24px")
             ):
+                CheckboxWithTitleDescription(
+                    title=_("Show Debug Data"),
+                    description=_(
+                        "Show ACC debug information on the AR overlay, can help when tuning the PID controller."
+                    ),
+                    changed=self.handle_debug,
+                    default=settings.debug,
+                )
+
                 unlocked = settings.unlock_pid
                 CheckboxWithTitleDescription(
                     title=_("Unlock PID"),

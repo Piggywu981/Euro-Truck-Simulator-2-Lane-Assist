@@ -109,6 +109,7 @@ def get_path_to_destination():
         return []
 
     if len(game_route) != data.last_length:
+        data.plugin.state.text = "Calculating route..."
         route = []
         for item in game_route:
             route.append(nc.RouteNode(item))
@@ -116,17 +117,20 @@ def get_path_to_destination():
                 route.pop()
 
         if len(route) == 0:
+            data.plugin.state.reset()
             logging.warning("Failed to find route")
             return []
 
         start_direction, index = get_direction_for_route_start(route)
         if start_direction == "":
+            data.plugin.state.reset()
             logging.warning("Failed to find direction for route start.")
             return []
 
         route = route[index:]
         directions = get_directions_until_route_end(route, start_direction)
         if len(directions) != len(route):
+            data.plugin.state.reset()
             logging.warning(
                 "Failed to find direction for route, do you have ferries on your route?"
             )
@@ -174,6 +178,7 @@ def get_path_to_destination():
             "points": node_points,
         }
         data.last_length = len(game_route)
+        data.plugin.state.reset()
         data.plugin.notify(
             f"Navigation path updated, new lanes calculated for {sum(success)} out of {len(success)} nodes ({percentage:.0f}%)"
         )

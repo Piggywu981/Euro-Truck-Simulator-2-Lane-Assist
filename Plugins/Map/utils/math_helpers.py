@@ -1,5 +1,4 @@
 from typing import Literal
-from scipy.spatial.transform import Rotation as R
 import numpy as np
 import math
 
@@ -202,6 +201,55 @@ def RotateAroundPoint(
     return new_x + origin_x, new_y + origin_y
 
 
+def RotateAroundPoint3D(
+    x: float,
+    y: float,
+    z: float,
+    yaw: float,
+    pitch: float,
+    origin_x: float,
+    origin_y: float,
+    origin_z: float,
+) -> tuple[float, float, float]:
+    """Rotate a point around another point in 3D space.
+
+    :param float x: X coordinate of the point to rotate.
+    :param float y: Y coordinate of the point to rotate.
+    :param float z: Z coordinate of the point to rotate.
+    :param float yaw: Yaw angle (rotation around Y-axis) in radians.
+    :param float pitch: Pitch angle (rotation around X-axis) in radians.
+    :param float origin_x: X coordinate of the origin point.
+    :param float origin_y: Y coordinate of the origin point.
+    :param float origin_z: Z coordinate of the origin point.
+    :return tuple[float, float, float]: The rotated point (x, y, z).
+    """
+    # Translate point to origin
+    x -= origin_x
+    y -= origin_y
+    z -= origin_z
+
+    # Apply pitch rotation (around X-axis)
+    sin_pitch = math.sin(pitch)
+    cos_pitch = math.cos(pitch)
+    y_pitch = y * cos_pitch - z * sin_pitch
+    z_pitch = y * sin_pitch + z * cos_pitch
+    y, z = y_pitch, z_pitch
+
+    # Apply yaw rotation (around Y-axis)
+    sin_yaw = math.sin(yaw)
+    cos_yaw = math.cos(yaw)
+    x_yaw = x * cos_yaw + z * sin_yaw
+    z_yaw = -x * sin_yaw + z * cos_yaw
+    x, z = x_yaw, z_yaw
+
+    # Translate point back
+    x += origin_x
+    y += origin_y
+    z += origin_z
+
+    return x, y, z
+
+
 def VectorBetweenPoints(
     p1: tuple[float, float] | tuple[float, float, float],
     p2: tuple[float, float] | tuple[float, float, float],
@@ -241,6 +289,37 @@ def QuatToEuler(quat: list[float]) -> list[float]:
         return [0, 0, 0]
 
 
+def EulerToQuat(euler: list[float]) -> list[float]:
+    """Convert Euler angles to quaternion with game-specific adjustments.
+
+    :param list[float] euler: Euler angles [pitch, yaw, roll] in radians
+    :return list[float]: Quaternion in [w,x,y,z] format
+    """
+    try:
+        pitch, yaw, roll = euler
+
+        # Adjust angles based on game-specific requirements
+        pitch += math.pi / 2
+        yaw += math.pi / 2
+        roll += math.pi / 2
+
+        cy = math.cos(yaw * 0.5)
+        sy = math.sin(yaw * 0.5)
+        cp = math.cos(pitch * 0.5)
+        sp = math.sin(pitch * 0.5)
+        cr = math.cos(roll * 0.5)
+        sr = math.sin(roll * 0.5)
+
+        qw = cr * cp * cy + sr * sp * sy
+        qx = sr * cp * cy - cr * sp * sy
+        qy = cr * sp * cy + sr * cp * sy
+        qz = cr * cp * sy - sr * sp * cy
+
+        return [qw, qx, qy, qz]
+    except Exception:
+        return [1, 0, 0, 0]
+
+
 def hermite_curve(P0, P1, T0, T1, t):
     """Hermite interpolation function.
 
@@ -269,13 +348,28 @@ def quaternion_rotate(q, v):
     :param (np.array) v: vector (x,y,z) to be rotated.
     :return (np.array) v_rotated: rotated vector (x,y,z).
     """
-    # Scipy use quaternion in (x, y, z, w) format
     qw, qx, qy, qz = q
-    q = np.array([qx, qy, qz, qw])
 
-    q_norm = q / np.linalg.norm(q)  # Normalize
-    r = R.from_quat(q_norm)
-    v_rotated = r.apply(v)
+    # Normalize quaternion
+    q_mag = math.sqrt(qw * qw + qx * qx + qy * qy + qz * qz)
+    if q_mag == 0:
+        return v
+
+    qw, qx, qy, qz = qw / q_mag, qx / q_mag, qy / q_mag, qz / q_mag
+
+    v = np.array(v)
+    # Quaternion rotation formula: v' = v + 2*r × (r × v + w*v)
+    # where r = (qx, qy, qz) is the vector part of quaternion
+    r = np.array([qx, qy, qz])
+    # Cross product: r × v
+    cross1 = np.cross(r, v)
+    # r × v + w*v
+    temp = cross1 + qw * v
+    # r × (r × v + w*v)
+    cross2 = np.cross(r, temp)
+    # v + 2 * cross2
+    v_rotated = v + 2 * cross2
+
     return v_rotated
 
 

@@ -24,3 +24,17 @@ decrement = ControlEvent(
     description=_("This will decrease the speed offset in the settings."),
     default="↓",
 )
+
+increment_distance = ControlEvent(
+    "increment_distance",
+    _("Increase Following Distance"),
+    "button",
+    description=_("This will increase the following distance in the settings."),
+)
+
+decrement_distance = ControlEvent(
+    "decrement_distance",
+    _("Decrease Following Distance"),
+    "button",
+    description=_("This will decrease the following distance in the settings."),
+)

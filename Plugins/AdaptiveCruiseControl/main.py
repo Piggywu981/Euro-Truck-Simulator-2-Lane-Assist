@@ -5,7 +5,7 @@ from ETS2LA.Utils.translator import _
 import ETS2LA.Handlers.sounds as sounds
 
 # Local imports
-from Plugins.AdaptiveCruiseControl.controls import enable_disable, increment, decrement
+from Plugins.AdaptiveCruiseControl.controls import enable_disable, increment, decrement, increment_distance, decrement_distance
 from Plugins.AdaptiveCruiseControl.speed import get_maximum_speed_for_points
 from Plugins.AdaptiveCruiseControl.settings import SettingsMenu, settings
 
@@ -96,7 +96,11 @@ class Plugin(ETS2LAPlugin):
         icon="https://avatars.githubusercontent.com/u/83072683?v=4",
     )
 
-    controls = [enable_disable, increment, decrement]
+    controls = [
+        enable_disable, 
+        increment, decrement, 
+        increment_distance, decrement_distance
+    ]
 
     pages = [SettingsMenu]
 
@@ -462,6 +466,20 @@ class Plugin(ETS2LAPlugin):
             self.last_change = 0
             return  # Callback for the lift up event
         self.holding_down = True
+        
+    @events.on("increment_distance")
+    def on_increment_distance(self, event_object, state: bool):
+        if not state:
+            return  # Callback for the lift up event
+        settings.following_distance = min(4, settings.following_distance + 0.25)
+        self.notify(_("Following distance increased to {distance:.1f} seconds").format(distance=settings.following_distance))
+        
+    @events.on("decrement_distance")
+    def on_decrement_distance(self, event_object, state: bool):
+        if not state:
+            return  # Callback for the lift up event
+        settings.following_distance = max(0.5, settings.following_distance - 0.25)
+        self.notify(_("Following distance decreased to {distance:.1f} seconds").format(distance=settings.following_distance))
 
     def get_distance_to_point(self, point1: list, point2: list) -> float:
         if len(point1) == 2 and len(point2) == 2:

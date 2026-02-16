@@ -11,7 +11,6 @@ import math
 
 importlib.reload(rc)
 
-
 def GetRoadsBehindRoad(road: c.Road, include_self: bool = True) -> list[c.Road]:
     if include_self:
         roads = [road]

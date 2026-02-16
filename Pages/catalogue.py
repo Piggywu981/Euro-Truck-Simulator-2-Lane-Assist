@@ -846,7 +846,7 @@ class Page(ETS2LAPage):
                         self.render_plugin_card(plugin)
 
             with Container(
-                styles.FlexVertical() + styles.Gap("20px") + styles.Padding("0px 4px")
+                styles.FlexVertical() + styles.Gap("20px") + styles.Padding("20px 4px")
             ):
                 Text(_("Available Plugins"), styles.Classname("font-semibold"))
                 if ads >= 2:

@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ETS2LA Backend 1.0.0\n"
 "POT-Creation-Date: 2026-02-01 15:00\n"
-"PO-Revision-Date: 2025-09-09 16:07+0000\n"
+"PO-Revision-Date: 2026-02-14 17:09+0000\n"
 "Last-Translator: hpfrunner <hpfrunner@ets2la.com>\n"
-"Language-Team: Dutch <http://weblate.ets2la.com/projects/ets2la/backend/nl/>\n"
+"Language-Team: Dutch <http://weblate.ets2la.com/projects/ets2la/backend/nl/>"
+"\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 "Generated-By: pygettext.py 1.5\n"
 
 #: .\ETS2LA\Controls\picker.py:81
@@ -383,7 +384,7 @@ msgstr "Een SDK voor {0} is verouderd. Installeer het opnieuw om bij te werken n
 
 #: .\Pages\about.py:414
 msgid "Open SDK Settings"
-msgstr ""
+msgstr "Open SDK Instellingen"
 
 #: .\Pages\about.py:419
 msgid "About"
@@ -412,8 +413,8 @@ msgstr "Uw gebruikstijd:"
 #: .\Pages\about.py:453
 msgid "over {count} session"
 msgid_plural "over {count} sessions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "meer dan {count} sessie"
+msgstr[1] "meer dan {count} sessies"
 
 #: .\Pages\about.py:469
 msgid "You are not logged in."
@@ -434,10 +435,14 @@ msgstr "Welkom terug, {0}!"
 #: .\Pages\about.py:499
 msgid "The ETS2LA backend might be partially unavailable, please mind any erroneous values or missing statistics!"
 msgstr ""
+"De ETS2LA-backend is mogelijk gedeeltelijk niet beschikbaar. Let op "
+"eventuele foutieve waarden of ontbrekende statistieken!"
 
 #: .\Pages\about.py:505
 msgid "We are working to restore full functionality as soon as possible. Hang on tight, this might take anywhere from a few minutes to several days!"
 msgstr ""
+"We werken eraan om zo snel mogelijk alle functies weer te herstellen. Nog "
+"even geduld, dit kan enkele minuten tot enkele dagen duren!"
 
 #: .\Pages\about.py:513
 msgid "Contributors"
@@ -524,23 +529,25 @@ msgstr "Plugin niet gevonden in de catalogus."
 
 #: .\Pages\catalogue.py:208
 msgid "Closing existing plugin processes"
-msgstr ""
+msgstr "Bestaande plug-inprocessen afsluiten"
 
 #: .\Pages\catalogue.py:214
 msgid "Failed to stop existing plugin processes."
-msgstr ""
+msgstr "Kan bestaande plugin-processen niet stoppen."
 
 #: .\Pages\catalogue.py:216
 msgid "Updating existing installation"
-msgstr ""
+msgstr "Bestaande installatie bijwerken"
 
 #: .\Pages\catalogue.py:241
 msgid "Restarting plugin process"
-msgstr ""
+msgstr "Plug-inproces opnieuw starten"
 
 #: .\Pages\catalogue.py:247
 msgid "Failed to start plugin background process, but the plugin files were updated."
 msgstr ""
+"Het achtergrondproces van de plug-in kon niet worden gestart, maar de plug-"
+"inbestanden zijn bijgewerkt."
 
 #: .\Pages\catalogue.py:252 .\Pages\catalogue.py:296 .\Pages\catalogue.py:386
 msgid "Success"
@@ -548,7 +555,7 @@ msgstr "Succes"
 
 #: .\Pages\catalogue.py:257
 msgid "Plugin '{name}' updated successfully."
-msgstr ""
+msgstr "Plug-in '{name}' succesvol bijgewerkt."
 
 #: .\Pages\catalogue.py:263 .\Pages\catalogue.py:304 .\Pages\catalogue.py:394
 msgid "Failed"
@@ -556,7 +563,7 @@ msgstr "Mislukt"
 
 #: .\Pages\catalogue.py:265
 msgid "Failed to update plugin '{name}'"
-msgstr ""
+msgstr "Kan plug-in niet bijwerken '{name}'"
 
 #: .\Pages\catalogue.py:272
 msgid "Cloning repository"
@@ -633,11 +640,11 @@ msgstr "Plugins {count} gevonden"
 
 #: .\Pages\catalogue.py:499
 msgid "Update Available {new}"
-msgstr ""
+msgstr "Update beschikbaar {new}"
 
 #: .\Pages\catalogue.py:522
 msgid "Failed to read version"
-msgstr ""
+msgstr "Kan versie niet lezen"
 
 #: .\Pages\catalogue.py:555
 msgid "Back"
@@ -823,7 +830,7 @@ msgstr "Gebruikersinterface"
 
 #: .\Pages\global_settings.py:231
 msgid "Window Settings"
-msgstr ""
+msgstr "Vensterinstellingen"
 
 #: .\Pages\global_settings.py:241 .\Pages\onboarding.py:567
 msgid "Window Width"
@@ -851,7 +858,7 @@ msgstr "Verander de transparantie van het venster bij het invoeren van de transp
 
 #: .\Pages\global_settings.py:292
 msgid "Language Settings"
-msgstr ""
+msgstr "Taalinstellingen"
 
 #: .\Pages\global_settings.py:300 .\Pages\onboarding.py:201
 msgid "Language"
@@ -879,7 +886,7 @@ msgstr "Audio"
 
 #: .\Pages\global_settings.py:355
 msgid "Sound Settings"
-msgstr ""
+msgstr "Geluidsinstellingen"
 
 #: .\Pages\global_settings.py:362
 msgid "Soundpack"
@@ -899,7 +906,7 @@ msgstr "Het volume aanpassen. Dit zal alle geluiden van ETS2LA beïnvloeden."
 
 #: .\Pages\global_settings.py:389
 msgid "Engage"
-msgstr ""
+msgstr "Activeer"
 
 #: .\Pages\global_settings.py:395
 msgid "Disengage"

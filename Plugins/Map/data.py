@@ -13,6 +13,7 @@ from Plugins.Map.classes import (
 from Modules.SDKController.main import SCSController
 from Plugins.Map.route.classes import RouteSection
 from Plugins.Map.settings import settings
+import threading
 import math
 import time
 import os
@@ -162,7 +163,55 @@ external_data_changed = False
 """Flag for the main file to update the external data in the main process."""
 update_navigation_plan = False
 """Whether we should calculate a new plan to drive to the destination."""
+is_updating_external_data = False
+"""Whether the plugin is currently updating the external data. This is used to prevent multiple updates at the same time."""
 
+def ExternalDataUpdateThread():
+    global external_data, external_data_time, data_needs_update, external_data_changed, is_updating_external_data
+    is_updating_external_data = True
+    start = time.perf_counter()
+    external_data = {}
+    
+    """
+    "prefabs": [prefab.json() for prefab in current_sector_prefabs],
+    "roads": [road.json() for road in current_sector_roads],
+    "models": [model.json() for model in current_sector_models],
+    "signs": [sign.json() for sign in current_sector_signs],
+    "elevations": [elevation.json() for elevation in current_sector_elevations]
+    if send_elevation_data
+    else [],
+    """
+    
+    external_data["prefabs"] = []
+    for prefab in current_sector_prefabs:
+        external_data["prefabs"].append(prefab.json())
+        time.sleep(0.001)
+    
+    external_data["roads"] = []
+    for road in current_sector_roads:
+        external_data["roads"].append(road.json())
+        time.sleep(0.001)    
+    
+    external_data["models"] = []
+    for model in current_sector_models:
+        external_data["models"].append(model.json())
+        time.sleep(0.001)
+        
+    external_data["signs"] = []
+    for sign in current_sector_signs:
+        external_data["signs"].append(sign.json())
+        time.sleep(0.001)
+        
+    if send_elevation_data:
+        external_data["elevations"] = []
+        for elevation in current_sector_elevations:
+            external_data["elevations"].append(elevation.json())
+            time.sleep(0.001)
+
+    external_data_changed = True
+    external_data_time = time.perf_counter()
+    data_needs_update = False
+    is_updating_external_data = False
 
 # MARK: Update functions
 def UpdateData(api_data):
@@ -202,10 +251,10 @@ def UpdateData(api_data):
     sector_center_x, sector_center_y = map.get_world_center_for_sector(
         (current_sector_x, current_sector_y)
     )
-
     plugin.tags.sector_center = (sector_center_x, sector_center_y)
-
-    if (current_sector_x, current_sector_y) != last_sector:
+    
+    if (current_sector_x, current_sector_y) != last_sector and not is_updating_external_data:
+        start = time.perf_counter()
         last_sector = (current_sector_x, current_sector_y)
         sectors_to_load = map.get_sectors_for_coordinate_and_distance(
             truck_x, truck_z, load_distance
@@ -228,20 +277,8 @@ def UpdateData(api_data):
 
         data_needs_update = True
 
-    if data_needs_update:
-        external_data = {
-            "prefabs": [prefab.json() for prefab in current_sector_prefabs],
-            "roads": [road.json() for road in current_sector_roads],
-            "models": [model.json() for model in current_sector_models],
-            "signs": [sign.json() for sign in current_sector_signs],
-            "elevations": [elevation.json() for elevation in current_sector_elevations]
-            if send_elevation_data
-            else [],
-        }
-
-        external_data_changed = True
-        external_data_time = time.perf_counter()
-        data_needs_update = False
+    if data_needs_update and not is_updating_external_data:
+        threading.Thread(target=ExternalDataUpdateThread).start()
 
     rotationX = api_data["truckPlacement"]["rotationX"]
     angle = rotationX * 360

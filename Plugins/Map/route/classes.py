@@ -387,48 +387,36 @@ class RouteSection:
     def discard_points_behind(
         self, points: list[c.Position], prune_far=True
     ) -> list[c.Position]:
-        forward_vector = [
-            -math.sin(data.truck_rotation),
-            -math.cos(data.truck_rotation),
-        ]
-        distances = []
+        tx, ty, tz = data.truck_x, data.truck_y, data.truck_z
+        forward_x = -math.sin(data.truck_rotation)
+        forward_z = -math.cos(data.truck_rotation)
+        
         points_in_front = []
+        distances = []
+        max_far_sq = 100 * 100
+        
         for i, point in enumerate(points):
-            distance = math_helpers.DistanceBetweenPoints(
-                point.tuple(), (data.truck_x, data.truck_y, data.truck_z)
-            )
-            if distance > 150 and i < len(points) - 4 and prune_far:
+            dx = point.x - tx
+            dy = point.y - ty
+            dz = point.z - tz
+            dist_sq = dx * dx + dy * dy + dz * dz
+
+            if dist_sq > max_far_sq and i < len(points) - 4 and prune_far:
                 continue
 
-            point_forward_vector = [point.x - data.truck_x, point.z - data.truck_z]
-
-            # Clip value to ensure it's within [-1, 1] before passing to np.arccos
-            dot_product = np.dot(forward_vector, point_forward_vector)
-            norms_product = np.linalg.norm(forward_vector) * np.linalg.norm(
-                point_forward_vector
-            )
-
-            if norms_product == 0:
-                angle = 0.0
-            else:
-                value = dot_product / norms_product
-                value = np.clip(value, -1.0, 1.0)
-                angle = np.arccos(value)
-
-            angle = math.degrees(angle)
-            if angle > 90 or angle < -90:
+            # in front (angle <= 90deg)
+            dot = forward_x * dx + forward_z * dz
+            if dot < 0:
                 continue
 
-            distances.append(distance)
+            distances.append(dist_sq)
             points_in_front.append(point)
 
         if points_in_front == [] or distances == []:
             return []
 
-        closest_point_index = distances.index(min(distances))
-        points_in_front = points_in_front[closest_point_index:]
-
-        return points_in_front
+        closest_idx = min(range(len(distances)), key=lambda k: distances[k])
+        return points_in_front[closest_idx:]
 
     def is_in_bounds(self, point: c.Position, offset: int = -5) -> bool:
         temp_y = point.y
@@ -487,7 +475,7 @@ class RouteSection:
 
     def get_points(self):
         # Check the setting so the indicators work correctly in UK for example
-        self._traffic_side = settings.Get("Map", "traffic_side", "")
+        self._traffic_side = data.settings.traffic_side
 
         # If not lane changing, return the normal lane points
         if not self.is_lane_changing or isinstance(self.items[0].item, c.Prefab):

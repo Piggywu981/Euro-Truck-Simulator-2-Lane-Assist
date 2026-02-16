@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ETS2LA Backend 1.0.0\n"
 "POT-Creation-Date: 2026-02-01 15:00\n"
-"PO-Revision-Date: 2026-02-10 18:00+0000\n"
+"PO-Revision-Date: 2026-02-14 17:09+0000\n"
 "Last-Translator: bot_lapis <botlapis@ets2la.com>\n"
 "Language-Team: Korean <http://weblate.ets2la.com/projects/ets2la/backend/ko/>"
 "\n"
@@ -21,11 +21,11 @@ msgstr ""
 
 #: .\ETS2LA\Controls\picker.py:81
 msgid "Timeout, please try again."
-msgstr "응답 시간이 초과되었습니다. 다시 시도해 주세요."
+msgstr "시간이 초과되었습니다. 다시 시도하십시오."
 
 #: .\ETS2LA\Controls\picker.py:86
 msgid "Event bound to {device} {action}"
-msgstr "{action}의 {device}과 연결된 이벤트"
+msgstr "{device} {action}에 바인딩된 이벤트"
 
 #: .\ETS2LA\Handlers\controls.py:100
 msgid "Refreshing joysticks..."
@@ -33,7 +33,7 @@ msgstr "조이스틱을 새로고침하는 중…"
 
 #: .\ETS2LA\Handlers\controls.py:114
 msgid "{} connected."
-msgstr "{}연결됨."
+msgstr "{} 연결됨."
 
 #: .\ETS2LA\Handlers\controls.py:116
 msgid "Found joystick: [bold]{name}[/bold] [dim]({uid})[/dim]"
@@ -54,15 +54,16 @@ msgstr "이벤트를 편집하는 중 문제가 발생했습니다."
 
 #: .\ETS2LA\Handlers\controls.py:449
 msgid "Controls listener started."
-msgstr "컨트롤 리스너 시작됨."
+msgstr "컨트롤 리스너가 시작되었습니다."
 
 #: .\ETS2LA\Handlers\plugins.py:197
 msgid ""
 "Plugin {0} failed to start: Timeout.\n"
 "Try to close other programs to give more memory and CPU to the plugin."
 msgstr ""
-"플러그인 {0} 시작 실패: 시간 초과되었습니다.\n"
-"다른 프로그램을 닫아 플러그인에 더 많은 메모리와 CPU 자원을 할당해 보세요."
+"플러그인 {0}을(를) 시작하지 못했습니다: 시간 초과\n"
+"플러그인에 더 많은 메모리와 CPU를 할당할 수 있도록 다른 프로그램을 종료해 보"
+"세요."
 
 #: .\ETS2LA\Handlers\plugins.py:230
 msgid "Plugin [yellow]{0}[/yellow] loaded successfully."
@@ -82,7 +83,7 @@ msgstr "플러그인 {0} 컨트롤을 가져오지 못했습니다: 시간 초�
 
 #: .\ETS2LA\Handlers\plugins.py:657
 msgid "Plugin {0} failed to get controls: {1}"
-msgstr "플러그인 {0} 컨트롤을 가져오지 못했습니다:{1}"
+msgstr "플러그인 {0}에서 컨트롤을 가져오는 데 실패했습니다: {1}"
 
 #: .\ETS2LA\Handlers\plugins.py:739
 msgid "Loaded {0} plugins."
@@ -111,977 +112,1021 @@ msgstr "플러그인을 찾을 수 없습니다. 이는 플러그인 충돌 또�
 
 #: .\ETS2LA\Handlers\plugins.py:875
 msgid "Plugin [yellow]{0}[/yellow] stopped successfully."
-msgstr ""
+msgstr "플러그인 [yellow]{0}[/yellow]이(가) 성공적으로 중지되었습니다."
 
 #: .\ETS2LA\Handlers\plugins.py:882
 msgid "Failed to stop plugin: {0}"
-msgstr ""
+msgstr "플러그인을 중지하지 못했습니다: {0}"
 
 #: .\ETS2LA\Handlers\plugins.py:903
 msgid "Failed to restart plugin: {0}"
-msgstr ""
+msgstr "플러그인을 다시 시작하지 못했습니다: {0}"
 
 #: .\ETS2LA\Handlers\plugins.py:940 .\ETS2LA\Handlers\plugins.py:959
 msgid "Plugin {0} not found for page {1}."
-msgstr ""
+msgstr "플러그인 {0}을(를) 페이지 {1}에서 찾을 수 없습니다."
 
 #: .\ETS2LA\Handlers\sounds.py:15
 msgid "Failed to download the ffmpeg library, please download it manually. (ie. [code]winget install ffmpeg[/code])"
 msgstr ""
+"ffmpeg 라이브러리를 다운로드하지 못했습니다. 수동으로 다운로드해 주세요. (예:"
+" [code]winget install ffmpeg[/code])"
 
 #: .\ETS2LA\Handlers\sounds.py:55
 msgid "Soundpack '{0}' is missing the required sound '{1}'"
-msgstr ""
+msgstr "사운드팩 '{0}'에 필수 사운드 '{1}'이(가) 없습니다"
 
 #: .\ETS2LA\Handlers\sounds.py:64
 msgid "Soundpack '{0}' has an invalid file type '{1}'"
-msgstr ""
+msgstr "사운드팩 '{0}'의 파일 형식 '{1}'이(가) 잘못되었습니다"
 
 #: .\ETS2LA\Handlers\sounds.py:103
 msgid "Tried to play sound '{0}', but it was not found in soundpack '{1}'"
-msgstr ""
+msgstr "사운드 '{0}'을(를) 재생하려 했으나 사운드팩 '{1}'에서 찾을 수 없었습니다"
 
 #: .\ETS2LA\Networking\Servers\discovery.py:33
 msgid "Successfully registered [bold]http://{address}[/bold] to point to [dim]{local_ip}[/dim]."
 msgstr ""
+"성공적으로 [bold]http://{address}[/bold]를 [dim]{local_ip}[/dim]로 가리키도록"
+" 등록했습니다."
 
 #: .\ETS2LA\Networking\Servers\notifications.py:94
 msgid "An error occurred while processing a message."
-msgstr ""
+msgstr "메시지를 처리하는 중에 오류가 발생했습니다."
 
 #: .\ETS2LA\Networking\Servers\notifications.py:192
 msgid "Tried to send an empty page."
-msgstr ""
+msgstr "빈 페이지를 전송하려고 시도했습니다."
 
 #: .\ETS2LA\Networking\Servers\notifications.py:262
 msgid "Frontend popup websocket started."
-msgstr ""
+msgstr "프론트엔드 팝업 웹소켓이 시작되었습니다."
 
 #: .\ETS2LA\Networking\Servers\webserver.py:120
 msgid "Frontend"
-msgstr ""
+msgstr "프론트엔드"
 
 #: .\ETS2LA\Networking\Servers\webserver.py:120
 msgid "The frontend wants to perform an update."
-msgstr ""
+msgstr "프론트엔드에서 업데이트를 수행하려고 합니다."
 
 #: .\ETS2LA\Networking\Servers\webserver.py:190
 msgid "Failed to set transparency"
-msgstr ""
+msgstr "투명도 설정 실패"
 
 #: .\ETS2LA\Networking\Servers\webserver.py:415
 msgid "Failed to get tag data"
-msgstr ""
+msgstr "태그 데이터를 가져오지 못했습니다"
 
 #: .\ETS2LA\Networking\Servers\webserver.py:454
 msgid "Failed to get pages"
-msgstr ""
+msgstr "페이지를 가져오지 못했습니다"
 
 #: .\ETS2LA\Networking\Servers\webserver.py:467
 msgid "Failed to reload plugins"
-msgstr ""
+msgstr "플러그인을 다시 불러오지 못했습니다"
 
 #: .\ETS2LA\Networking\Servers\webserver.py:482
 msgid "Failed to build frontend"
-msgstr ""
+msgstr "프론트엔드 빌드 실패"
 
 #: .\ETS2LA\Networking\Servers\webserver.py:492
 msgid "Building frontend... please wait..."
-msgstr ""
+msgstr "프론트엔드 빌드 중... 잠시 기다려 주세요..."
 
 #: .\ETS2LA\Networking\Servers\webserver.py:496
 msgid "Failed to start frontend"
-msgstr ""
+msgstr "프론트엔드 시작 실패"
 
 #: .\ETS2LA\Networking\Servers\webserver.py:521
 msgid "Webserver started at http://{ip}:37520"
-msgstr ""
+msgstr "웹서버가 http://{ip}:37520에서 시작되었습니다"
 
 #: .\ETS2LA\Networking\Servers\webserver.py:530
 msgid "Frontend started at http://{ip}:{port}"
-msgstr ""
+msgstr "프론트엔드가 http://{ip}:{port}에서 시작되었습니다"
 
 #: .\ETS2LA\Utils\Console\logging.py:100
 msgid "Logging initialized."
-msgstr ""
+msgstr "로깅이 초기화되었습니다."
 
 #: .\ETS2LA\Utils\Console\logs.py:15
 msgid "Error removing log files. Probably another running ETS2LA instance. Please close it and try again."
 msgstr ""
+"로그 파일을 제거하는 중 오류가 발생했습니다. 현재 실행 중인 다른 ETS2LA 인스"
+"턴스가 있는 것 같습니다. 해당 인스턴스를 종료하고 다시 시도해 주세요."
 
 #: .\ETS2LA\Utils\Console\logs.py:21
 msgid "Errors and warnings in the log files:"
-msgstr ""
+msgstr "로그 파일에 오류 및 경고가 있습니다:"
 
 #: .\ETS2LA\Utils\Console\logs.py:37
 msgid "Errors: "
-msgstr ""
+msgstr "오류: "
 
 #: .\ETS2LA\Utils\Console\logs.py:39
 msgid "Warnings: "
-msgstr ""
+msgstr "경고: "
 
 #: .\ETS2LA\Utils\Console\logs.py:44
 msgid "No errors or warnings found."
-msgstr ""
+msgstr "오류나 경고가 없습니다."
 
 #: .\ETS2LA\Window\html.py:88
 msgid "Please wait while we initialize the user interface"
-msgstr ""
+msgstr "사용자 인터페이스를 초기화하고 있습니다. 잠시만 기다려 주십시오"
 
 #: .\ETS2LA\Window\utils.py:209
 msgid "Couldn't find / start the ETS2LA window. Is your PC powerful enough? Use https://app.ets2la.com if you think you should be able to run it."
 msgstr ""
+"ETS2LA 창을 찾거나 시작할 수 없습니다. PC 성능이 충분하지 않을 수 있습니다. "
+"실행이 가능하다고 생각되면 https://app.ets2la.com 을(를) 사용해 주세요."
 
 #: .\ETS2LA\Window\utils.py:223
 msgid "Failed to set window attributes or icon."
-msgstr ""
+msgstr "창 속성이나 아이콘을 설정하지 못했습니다."
 
 #: .\ETS2LA\core.py:58
 msgid "Backend started successfully"
-msgstr ""
+msgstr "백엔드가 성공적으로 시작되었습니다"
 
 #: .\Pages\about.py:41
 msgid "Lead developer and creator of ETS2LA, backend & frontend."
-msgstr ""
+msgstr "ETS2LA의 수석 개발자이자 창작자, 백엔드 및 프론트엔드 담당."
 
 #: .\Pages\about.py:50
 msgid "Navigation Detection, Traffic Light Detection, ETS2LA Lite, 'co-owner'"
-msgstr ""
+msgstr "내비게이션 감지, 신호등 감지, ETS2LA Lite, '공동 소유자'"
 
 #: .\Pages\about.py:57
 msgid "Various additions and improvements, Object Detection AI models & development"
-msgstr ""
+msgstr "다양한 추가 및 개선, 객체 탐지 AI 모델 및 개발"
 
 #: .\Pages\about.py:67
 msgid "ETS2LA game-side SDK developer. Vehicles, Traffic Lights, Camera data and more direct from the game."
-msgstr ""
+msgstr "ETS2LA 게임 측 SDK 개발자. 차량, 신호등, 카메라 데이터 등을 게임에서 직접 가"
+"져옵니다."
 
 #: .\Pages\about.py:74
 msgid "Game data extraction and processing"
-msgstr ""
+msgstr "게임 데이터 추출 및 처리"
 
 #: .\Pages\about.py:79
 msgid "Linux & Unix Port, various improvements and bug fixes"
-msgstr ""
+msgstr "Linux 및 Unix 포팅, 다양한 개선 사항 및 버그 수정"
 
 #: .\Pages\about.py:84
 msgid "ETS2LA SDK C++ developer, Linux & Unix Port, bug fixes"
-msgstr ""
+msgstr "ETS2LA SDK C++ 개발자, Linux 및 Unix 포팅, 버그 수정"
 
 #: .\Pages\about.py:89
 msgid "Help with Navigate on ETS2LA & Map"
-msgstr ""
+msgstr "ETS2LA 및 지도의 내비게이션 기능 지원"
 
 #: .\Pages\about.py:94
 msgid "scs-sdk-controller developer"
-msgstr ""
+msgstr "SCS SDK 컨트롤러 개발자"
 
 #: .\Pages\about.py:99
 msgid "3D models for the visualization"
-msgstr ""
+msgstr "시각화용 3D 모델"
 
 #: .\Pages\about.py:104
 msgid "Data extractor development, support for modded maps."
-msgstr ""
+msgstr "데이터 추출기 개발, 모드 맵 지원."
 
 #: .\Pages\about.py:109
 msgid "Discord rich presence plugin developer, slight backend updates."
-msgstr ""
+msgstr "Discord 리치 프레즌스 플러그인 개발자, 일부 백엔드 업데이트 담당."
 
 #: .\Pages\about.py:116
 msgid "Chinese translation, bug fixes"
-msgstr ""
+msgstr "중국어 번역, 버그 수정"
 
 #: .\Pages\about.py:121
 msgid "Chinese translations, bug fixes"
-msgstr ""
+msgstr "중국어 번역 및 버그 수정"
 
 #: .\Pages\about.py:126
 msgid "Automatic offset calculations for the Map plugin."
-msgstr ""
+msgstr "지도 플러그인 오프셋 자동 계산."
 
 #: .\Pages\about.py:135
 msgid "Discord server support, Chinese-English translator developer."
-msgstr ""
+msgstr "Discord 서버 지원, 중국어-영어 번역기 개발자."
 
 #: .\Pages\about.py:142
 msgid "Maintaining CN mirrors for ETS2LA services."
-msgstr ""
+msgstr "ETS2LA 중국 미러 서버 유지 관리."
 
 #: .\Pages\about.py:145
 msgid "Game hooks"
-msgstr ""
+msgstr "게임 후크"
 
 #: .\Pages\about.py:146 .\Pages\about.py:149 .\Pages\about.py:152
 #: .\Pages\about.py:153 .\Pages\about.py:154 .\Pages\about.py:155
 msgid "Bug fixes"
-msgstr ""
+msgstr "버그 수정"
 
 #: .\Pages\about.py:213
 msgid "Fixing wipers (5s timer)"
-msgstr ""
+msgstr "자동 와이퍼 문제 해결 (5초 타이머)"
 
 #: .\Pages\about.py:219
 msgid "Fixing wipers in {0} seconds..."
-msgstr ""
+msgstr "{0}초 동안 와이퍼 문제 해결 중..."
 
 #: .\Pages\about.py:229 .\Pages\about.py:230
 msgid "Wipers should be fixed now."
-msgstr ""
+msgstr "와이퍼가 이제 정상 작동할 것입니다."
 
 #: .\Pages\about.py:233
 msgid "Triggering update"
-msgstr ""
+msgstr "업데이트를 시작중"
 
 #: .\Pages\about.py:250 .\Pages\about.py:252 .\Pages\about.py:257
 #: .\Pages\about.py:263
 msgid "{0} minute"
 msgid_plural "{0} minutes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0}분"
 
 #: .\Pages\about.py:259 .\Pages\about.py:262
 msgid "{0} hour"
 msgid_plural "{0} hours"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0}시간"
 
 #: .\Pages\about.py:261
 msgid "{0} and {1}"
-msgstr ""
+msgstr "{0}와(과) {1}"
 
 #: .\Pages\about.py:290
 msgid "{0} users"
-msgstr ""
+msgstr "{0}명의 사용자"
 
 #: .\Pages\about.py:292
 msgid "{0} unique users"
-msgstr ""
+msgstr "{0}명의 고유 사용자"
 
 #: .\Pages\about.py:330
 msgid "Hey There!"
-msgstr ""
+msgstr "안녕하십니까!"
 
 #: .\Pages\about.py:339
 msgid "I see you've disabled ads. That's totally fine, but you can still support ETS2LA development by donating via Ko-Fi. *Every donation is equal to weeks(!) of ad revenue*, we are eternally grateful for every bit of support we get!"
 msgstr ""
+"광고를 비활성화하셨군요. 전혀 문제없습니다! 그럼에도 불구하고 Ko-Fi를 통한 기"
+"부로 ETS2LA 개발을 후원하실 수 있습니다.모든 기부는 몇 주(!) 분량의 광고 수익"
+"과 맞먹습니다., 여러분의 작은 응원 하나하나에 깊이 감사드립니다!"
 
 #: .\Pages\about.py:354
 msgid "Donate via Ko-Fi"
-msgstr ""
+msgstr "Ko-Fi를 통해 후원하기"
 
 #: .\Pages\about.py:372
 msgid "Hide"
-msgstr ""
+msgstr "숨기기"
 
 #: .\Pages\about.py:398
 msgid "Notice!"
-msgstr ""
+msgstr "알림!"
 
 #: .\Pages\about.py:403
 msgid "An SDK for {0} is outdated. Please reinstall it to update to the latest version in the SDK settings."
-msgstr ""
+msgstr "{0}용 SDK가 최신 버전이 아닙니다. SDK 설정에서 최신 버전으로 업데이트하려면 "
+"다시 설치해 주세요."
 
 #: .\Pages\about.py:414
 msgid "Open SDK Settings"
-msgstr ""
+msgstr "SDK 설정 열기"
 
 #: .\Pages\about.py:419
 msgid "About"
-msgstr ""
+msgstr "정보"
 
 #: .\Pages\about.py:422
 msgid "ETS2LA is a project that aims to provide an easy to use self driving solution for ETS2 and ATS, if you want to learn more then you can visit the github page or the wiki via the sidebar."
 msgstr ""
+"ETS2LA는 ETS2와 ATS를 위한 쉽고 간편한 자율 주행 솔루션을 제공하는 프로젝트입"
+"니다. 더 자세한 내용을 원하시면 사이드바의 GitHub 페이지나 위키를 방문해 주세"
+"요."
 
 #: .\Pages\about.py:430
 msgid "Statistics"
-msgstr ""
+msgstr "통계"
 
 #: .\Pages\about.py:434
 msgid "Users online:"
-msgstr ""
+msgstr "현재 온라인유저:"
 
 #: .\Pages\about.py:437
 msgid "Past 24 hours:"
-msgstr ""
+msgstr "최근 24시간:"
 
 #: .\Pages\about.py:443
 msgid "Your usage time:"
-msgstr ""
+msgstr "사용 시간:"
 
 #: .\Pages\about.py:453
 msgid "over {count} session"
 msgid_plural "over {count} sessions"
-msgstr[0] ""
+msgstr[0] "{count}개 세션 이상"
 
 #: .\Pages\about.py:469
 msgid "You are not logged in."
-msgstr ""
+msgstr "로그인되어 있지 않습니다."
 
 #: .\Pages\about.py:471
 msgid "Your anonymous user ID is: {0}"
-msgstr ""
+msgstr "익명 ID: {0}"
 
 #: .\Pages\about.py:479
 msgid "You are logged in."
-msgstr ""
+msgstr "로그인되었습니다."
 
 #: .\Pages\about.py:481
 msgid "Welcome back, {0}!"
-msgstr ""
+msgstr "돌아오신 것을 환영합니다, {0}님!"
 
 #: .\Pages\about.py:499
 msgid "The ETS2LA backend might be partially unavailable, please mind any erroneous values or missing statistics!"
-msgstr ""
+msgstr "ETS2LA 백엔드가 일부 사용이 원활하지 않을 수 있습니다, 잘못된 값이나 누락된 "
+"통계가 있을 수 있으니 양해 부탁드립니다!"
 
 #: .\Pages\about.py:505
 msgid "We are working to restore full functionality as soon as possible. Hang on tight, this might take anywhere from a few minutes to several days!"
-msgstr ""
+msgstr "전체 기능을 최대한 빨리 복구할 수 있도록 노력하고 있습니다. 몇 분에서 며칠까"
+"지 걸릴 수 있으니 조금만 기다려 주세요!"
 
 #: .\Pages\about.py:513
 msgid "Contributors"
-msgstr ""
+msgstr "기여자"
 
 #: .\Pages\about.py:535
 msgid "Translations"
-msgstr ""
+msgstr "번역 기여자"
 
 #: .\Pages\about.py:565 .\Pages\global_settings.py:337
 #: .\Pages\onboarding.py:237
 msgid "List Contributors"
-msgstr ""
+msgstr "기여자 목록"
 
 #: .\Pages\about.py:573 .\Pages\global_settings.py:345
 #: .\Pages\onboarding.py:245
 msgid "Help Translate"
-msgstr ""
+msgstr "번역에 기여하기"
 
 #: .\Pages\about.py:582
 msgid "Support Development"
-msgstr ""
+msgstr "개발 후원하기"
 
 #: .\Pages\about.py:591
 msgid "If you like the project and want to support the development, you can do so by donating via Ko-Fi."
-msgstr ""
+msgstr "프로젝트가 마음에 드시고 개발을 후원하고 싶으시다면, Ko-Fi를 통한 기부로 참여"
+"하실 수 있습니다."
 
 #: .\Pages\about.py:609
 msgid "If you want to contribute, then I recommend joining the discord server and checking out the github page."
-msgstr ""
+msgstr "프로젝트에 기여하고 싶으시다면, Discord 서버에 참여하시고 GitHub 페이지를 확"
+"인해 보시길 추천드립니다."
 
 #: .\Pages\about.py:633
 msgid "If you want to contribute to the translations, then you can do so by joining the discord and contacting a moderator."
-msgstr ""
+msgstr "번역 작업에 기여하고 싶으시다면, Discord 서버에 참여하셔서 운영진(모더레이터)"
+"에게 문의하시면 됩니다."
 
 #: .\Pages\about.py:647
 msgid "Utils"
-msgstr ""
+msgstr "유틸리티"
 
 #: .\Pages\about.py:651
 msgid "Fix Wipers"
-msgstr ""
+msgstr "자동 와이퍼 문제 해결"
 
 #: .\Pages\about.py:652
 msgid "Did your wipers get stuck? Click the button and alt tab to the game. They should turn off in 5 seconds."
-msgstr ""
+msgstr "와이퍼가 멈췄나요? 버튼을 클릭한 후 알트탭(Alt+Tab)으로 게임으로 전환하세요. "
+"5초 후 와이퍼가 꺼질 것입니다."
 
 #: .\Pages\about.py:655
 msgid "Activate"
-msgstr ""
+msgstr "활성화"
 
 #: .\Pages\about.py:660
 msgid "Force an update"
-msgstr ""
+msgstr "업데이트 강제 실행"
 
 #: .\Pages\about.py:661
 msgid "Do you think there should've been an update? Click this button and the app will restart and check for them."
-msgstr ""
+msgstr "업데이트가 있어야 한다고 생각하시나요? 이 버튼을 누르면 앱이 다시 시작되며 업"
+"데이트를 확인합니다."
 
 #: .\Pages\about.py:664 .\Pages\catalogue.py:572 .\Plugins\Map\ui.py:313
 msgid "Update"
-msgstr ""
+msgstr "업데이트"
 
 #: .\Pages\catalogue.py:130 .\Pages\catalogue.py:135
 #: .\Plugins\HUD\elements\closest.py:33
 msgid "Unknown"
-msgstr ""
+msgstr "알 수 없음"
 
 #: .\Pages\catalogue.py:131
 msgid "No overview provided."
-msgstr ""
+msgstr "제공된 개요 없음."
 
 #: .\Pages\catalogue.py:132
 msgid "No description provided."
-msgstr ""
+msgstr "제공된 설명 없음."
 
 #: .\Pages\catalogue.py:187
 msgid "Installing"
-msgstr ""
+msgstr "설치 중"
 
 #: .\Pages\catalogue.py:198 .\Pages\catalogue.py:326
 msgid "Plugin not found in the catalogue."
-msgstr ""
+msgstr "카탈로그에서 플러그인을 찾을 수 없습니다."
 
 #: .\Pages\catalogue.py:208
 msgid "Closing existing plugin processes"
-msgstr ""
+msgstr "실행 중인 플러그인 프로세스 종료 중"
 
 #: .\Pages\catalogue.py:214
 msgid "Failed to stop existing plugin processes."
-msgstr ""
+msgstr "기존 플러그인 프로세스를 중지하지 못했습니다."
 
 #: .\Pages\catalogue.py:216
 msgid "Updating existing installation"
-msgstr ""
+msgstr "설치된 버전 업데이트 중"
 
 #: .\Pages\catalogue.py:241
 msgid "Restarting plugin process"
-msgstr ""
+msgstr "플러그인 프로세스 재시작 중"
 
 #: .\Pages\catalogue.py:247
 msgid "Failed to start plugin background process, but the plugin files were updated."
-msgstr ""
+msgstr "플러그인 백그라운드 프로세스를 시작하지 못했으나, 플러그인 파일은 업데이트되"
+"었습니다."
 
 #: .\Pages\catalogue.py:252 .\Pages\catalogue.py:296 .\Pages\catalogue.py:386
 msgid "Success"
-msgstr ""
+msgstr "성공"
 
 #: .\Pages\catalogue.py:257
 msgid "Plugin '{name}' updated successfully."
-msgstr ""
+msgstr "플러그인 {name}이(가) 성공적으로 업데이트되었습니다."
 
 #: .\Pages\catalogue.py:263 .\Pages\catalogue.py:304 .\Pages\catalogue.py:394
 msgid "Failed"
-msgstr ""
+msgstr "실패"
 
 #: .\Pages\catalogue.py:265
 msgid "Failed to update plugin '{name}'"
-msgstr ""
+msgstr "플러그인 '{name}'을(를) 업데이트하지 못했습니다"
 
 #: .\Pages\catalogue.py:272
 msgid "Cloning repository"
-msgstr ""
+msgstr "저장소 복제 중"
 
 #: .\Pages\catalogue.py:281
 msgid "Installing requirements"
-msgstr ""
+msgstr "필수 구성 요소 설치 중"
 
 #: .\Pages\catalogue.py:287
 msgid "Starting plugin background process"
-msgstr ""
+msgstr "플러그인 백그라운드 프로세스를 시작하는 중"
 
 #: .\Pages\catalogue.py:291
 msgid "Failed to start plugin background process, but the plugin files were installed."
-msgstr ""
+msgstr "플러그인 파일은 설치되었으나 백그라운드 프로세스 시작에 실패했습니다."
 
 #: .\Pages\catalogue.py:301
 msgid "Plugin '{name}' installed successfully."
-msgstr ""
+msgstr "플러그인 {name}이(가) 성공적으로 설치되었습니다."
 
 #: .\Pages\catalogue.py:308
 msgid "Failed to install plugin '{name}': {error}"
-msgstr ""
+msgstr "플러그인 {name}을(를) 설치하지 못했습니다: {error}"
 
 #: .\Pages\catalogue.py:315
 msgid "Uninstalling"
-msgstr ""
+msgstr "제거 중"
 
 #: .\Pages\catalogue.py:330
 msgid "Closing plugin processes"
-msgstr ""
+msgstr "플러그인 프로세스를 종료하는 중"
 
 #: .\Pages\catalogue.py:336
 msgid "Failed to stop plugin processes."
-msgstr ""
+msgstr "플러그인 프로세스를 중지하지 못했습니다."
 
 #: .\Pages\catalogue.py:338
 msgid "Unregistering git repository"
-msgstr ""
+msgstr "Git 저장소 등록을 해제하는 중"
 
 #: .\Pages\catalogue.py:348
 msgid "Removing plugin files"
-msgstr ""
+msgstr "플러그인 파일을 제거하는 중"
 
 #: .\Pages\catalogue.py:373
 msgid "Retrying removal ({cur}/{max})"
-msgstr ""
+msgstr "제거를 다시 시도하는 중 ({cur}/{max})"
 
 #: .\Pages\catalogue.py:381
 msgid "Failed to remove plugin files after {max} attempts"
-msgstr ""
+msgstr "{max}번 시도했으나 플러그인 파일을 제거하지 못했습니다"
 
 #: .\Pages\catalogue.py:391
 msgid "Plugin '{name}' uninstalled successfully."
-msgstr ""
+msgstr "플러그인 '{name}'이(가) 성공적으로 제거되었습니다."
 
 #: .\Pages\catalogue.py:397
 msgid "Failed to uninstall plugin '{name}': {error}"
-msgstr ""
+msgstr "플러그인 '{name}'을(를) 제거하지 못했습니다: {error}"
 
 #: .\Pages\catalogue.py:431
 msgid "Couldn't find source code for this plugin."
-msgstr ""
+msgstr "이 플러그인의 소스 코드를 찾을 수 없습니다."
 
 #. TRANSLATORS: This text is shown when the plugin catalogue is refreshing the database.
 #: .\Pages\catalogue.py:443
 msgid "Refreshing..."
-msgstr ""
+msgstr "새로고침 중..."
 
 #: .\Pages\catalogue.py:446
 msgid "Found {count} plugins"
-msgstr ""
+msgstr "플러그인 {count}개를 찾았습니다"
 
 #: .\Pages\catalogue.py:499
 msgid "Update Available {new}"
-msgstr ""
+msgstr "새 버전 {new} 사용 가능"
 
 #: .\Pages\catalogue.py:522
 msgid "Failed to read version"
-msgstr ""
+msgstr "버전을 읽지 못했습니다"
 
 #: .\Pages\catalogue.py:555
 msgid "Back"
-msgstr ""
+msgstr "돌아가기"
 
 #: .\Pages\catalogue.py:560
 msgid "Source Code"
-msgstr ""
+msgstr "소스 코드"
 
 #: .\Pages\catalogue.py:565 .\Pages\catalogue.py:741
 msgid "Uninstall"
-msgstr ""
+msgstr "설치제거"
 
 #: .\Pages\catalogue.py:576 .\Pages\catalogue.py:674
 msgid "Install"
-msgstr ""
+msgstr "설치"
 
 #: .\Pages\catalogue.py:648
 msgid "Are you sure you want to install this plugin?"
-msgstr ""
+msgstr "정말로 이 플러그인을 설치하시겠습니까?"
 
 #: .\Pages\catalogue.py:657
 msgid "ETS2LA is not responsible for any issues caused by 3rd party plugins."
-msgstr ""
+msgstr "ETS2LA는 서드파티 플러그인으로 인해 발생하는 모든 문제에 대해 책임을 지지 않"
+"습니다."
 
 #: .\Pages\catalogue.py:667 .\Pages\catalogue.py:734
 msgid "Cancel"
-msgstr ""
+msgstr "취소"
 
 #: .\Pages\catalogue.py:684
 msgid "Installing {plugin}"
-msgstr ""
+msgstr "{plugin} 설치 중"
 
 #: .\Pages\catalogue.py:694 .\Pages\catalogue.py:713
 msgid "Close"
-msgstr ""
+msgstr "닫기"
 
 #: .\Pages\catalogue.py:702
 msgid "Uninstalling {plugin}"
-msgstr ""
+msgstr "{plugin} 제거 중"
 
 #: .\Pages\catalogue.py:724
 msgid "Are you sure you want to uninstall this plugin?"
-msgstr ""
+msgstr "정말로 이 플러그인을 제거하시겠습니까?"
 
 #: .\Pages\catalogue.py:757 .\Pages\plugins.py:468
 msgid "Search plugins..."
-msgstr ""
+msgstr "플러그인 검색..."
 
 #: .\Pages\catalogue.py:760
 msgid "Refresh"
-msgstr ""
+msgstr "새로 고침"
 
 #: .\Pages\catalogue.py:774
 msgid "No plugins found in the plugin catalogue."
-msgstr ""
+msgstr "플러그인 카탈로그에 플러그인이 없습니다."
 
 #: .\Pages\catalogue.py:782
 msgid "Refresh Catalogue"
-msgstr ""
+msgstr "카탈로그 갱신"
 
 #: .\Pages\catalogue.py:840
 msgid "Installed Plugins"
-msgstr ""
+msgstr "설치된 플러그인"
 
 #: .\Pages\catalogue.py:843
 msgid "No plugins are installed."
-msgstr ""
+msgstr "설치된 플러그인이 없습니다."
 
 #: .\Pages\catalogue.py:851 .\Pages\plugins.py:583
 msgid "Available Plugins"
-msgstr ""
+msgstr "플러그인 목록"
 
 #: .\Pages\catalogue.py:868
 msgid "You have installed all available plugins."
-msgstr ""
+msgstr "설치할 수 있는 모든 플러그인을 설치했습니다."
 
 #: .\Pages\changelog.py:24 .\Pages\updater.py:29
 msgid "{seconds} second ago"
 msgid_plural "{seconds} seconds ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{seconds}초 전"
 
 #: .\Pages\changelog.py:28 .\Pages\updater.py:33
 msgid "{minutes} minute ago"
 msgid_plural "{minutes} minutes ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{minutes}분 전"
 
 #: .\Pages\changelog.py:32 .\Pages\updater.py:37
 msgid "{hours} hour ago"
 msgid_plural "{hours} hours ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{hours} 시간 전"
 
 #: .\Pages\changelog.py:36 .\Pages\updater.py:41
 msgid "{days} day ago"
 msgid_plural "{days} days ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{days}일 전"
 
 #: .\Pages\changelog.py:48
 msgid "Fetching changelog and possible changes."
-msgstr ""
+msgstr "변경 로그 및 예상 변경 사항을 가져오는 중..."
 
 #: .\Pages\changelog.py:50
 msgid "Changelog fetched."
-msgstr ""
+msgstr "변경 로그를 가져왔습니다."
 
 #: .\Pages\changelog.py:121 .\Pages\updater.py:145
 msgid "View Changes"
-msgstr ""
+msgstr "변경 사항 보기"
 
 #: .\Pages\changelog.py:137 .\Pages\updater.py:161
 msgid "Only the last 20 updates are shown. You can check the repository for further history."
-msgstr ""
+msgstr "최근 20개의 업데이트만 표시됩니다. 전체 변경 내역은 저장소에서 확인할 수 있습"
+"니다."
 
 #: .\Pages\controls.py:54 .\Pages\controls.py:101 .\Pages\controls.py:102
 msgid "Show all plugins"
-msgstr ""
+msgstr "모든 플러그인 표시"
 
 #: .\Pages\controls.py:67
 msgid "Please press the key / button you want to bind to this event."
-msgstr ""
+msgstr "이 이벤트에 할당할 키 또는 버튼을 눌러 주십시오."
 
 #: .\Pages\controls.py:74
 msgid "Event unbound."
-msgstr ""
+msgstr "이벤트 바인딩이 해제되었습니다."
 
 #: .\Pages\controls.py:94
 msgid "Controls"
-msgstr ""
+msgstr "컨트롤"
 
 #: .\Pages\controls.py:96
 msgid "You can change plugins' control events here."
-msgstr ""
+msgstr "여기서 플러그인의 컨트롤 이벤트를 변경할 수 있습니다."
 
 #: .\Pages\controls.py:109
 msgid "Search Controls or Plugins"
-msgstr ""
+msgstr "컨트롤/플러그인 검색"
 
 #: .\Pages\controls.py:150
 msgid "No controls found, try again with different filters."
-msgstr ""
+msgstr "검색된 컨트롤이 없습니다. 다른 필터로 다시 시도해 보세요."
 
 #: .\Pages\controls.py:211
 msgid "This event has not been bound to a device yet."
-msgstr ""
+msgstr "이 이벤트에 바인딩된 장치가 없습니다."
 
 #: .\Pages\controls.py:216
 msgid "Keyboard: "
-msgstr ""
+msgstr "키보드: "
 
 #: .\Pages\global_settings.py:37 .\Pages\global_settings.py:429
 #: .\Pages\plugins.py:343
 msgid "None"
-msgstr ""
+msgstr "없음"
 
 #: .\Pages\global_settings.py:38 .\Pages\global_settings.py:176
 #: .\Pages\global_settings.py:187 .\Pages\global_settings.py:430
 msgid "Minimal (recommended)"
-msgstr ""
+msgstr "최소 (권장)"
 
 #: .\Pages\global_settings.py:39 .\Pages\global_settings.py:431
 msgid "Medium"
-msgstr ""
+msgstr "중간"
 
 #: .\Pages\global_settings.py:40 .\Pages\global_settings.py:432
 msgid "Full"
-msgstr ""
+msgstr "최대"
 
 #: .\Pages\global_settings.py:208
 msgid "Global Settings"
-msgstr ""
+msgstr "일반 설정"
 
 #: .\Pages\global_settings.py:209
 msgid "Here you can find settings that affect the entire application. Things such as the window size and language."
-msgstr ""
+msgstr "여기에서 창 크기, 언어 등 애플리케이션 전체에 영향을 미치는 설정을 변경할 수 "
+"있습니다."
 
 #: .\Pages\global_settings.py:217
 msgid "User Interface"
-msgstr ""
+msgstr "사용자 인터페이스"
 
 #: .\Pages\global_settings.py:231
 msgid "Window Settings"
-msgstr ""
+msgstr "창 설정"
 
 #: .\Pages\global_settings.py:241 .\Pages\onboarding.py:567
 msgid "Window Width"
-msgstr ""
+msgstr "창 너비"
 
 #: .\Pages\global_settings.py:253
 msgid "Change the width of the window. Please note that ETS2LA is not tested on non-standard resolutions, so use at your own risk!"
-msgstr ""
+msgstr "창 너비 설정입니다. ETS2LA는 비표준 해상도에서 테스트되지 않았으니, 사용에 주"
+"의해 주세요!"
 
 #: .\Pages\global_settings.py:262 .\Pages\onboarding.py:576
 msgid "Window Height"
-msgstr ""
+msgstr "창 높이"
 
 #: .\Pages\global_settings.py:274
 msgid "Change the height of the window. Please note that ETS2LA is not tested on non-standard resolutions, so use at your own risk!"
-msgstr ""
+msgstr "창 높이를 변경합니다. ETS2LA는 비표준 해상도에서 테스트되지 않았으므로, 사용 "
+"시 주의하시기 바랍니다!"
 
 #: .\Pages\global_settings.py:280
 msgid "Transparency mode Alpha"
-msgstr ""
+msgstr "투명 모드: 알파"
 
 #: .\Pages\global_settings.py:281
 msgid "Change the transparency of the window when entering transparency mode. This can be done by right-clicking the green button in the top right corner."
-msgstr ""
+msgstr "투명 모드 진입 시 창의 투명도를 변경합니다. 오른쪽 상단의 녹색 버튼을 우클릭"
+"하여 투명 모드로 전환할 수 있습니다."
 
 #: .\Pages\global_settings.py:292
 msgid "Language Settings"
-msgstr ""
+msgstr "언어 설정"
 
 #: .\Pages\global_settings.py:300 .\Pages\onboarding.py:201
 msgid "Language"
-msgstr ""
+msgstr "언어"
 
 #: .\Pages\global_settings.py:301
 msgid "Select the language for the application."
-msgstr ""
+msgstr "애플리케이션의 언어를 선택하세요."
 
 #: .\Pages\global_settings.py:309 .\Pages\onboarding.py:209
 msgid "Search Languages..."
-msgstr ""
+msgstr "언어 검색..."
 
 #: .\Pages\global_settings.py:309 .\Pages\onboarding.py:209
 msgid "Help us translate on discord!"
-msgstr ""
+msgstr "Discord에서 함께 번역에 참여해 주세요!"
 
 #: .\Pages\global_settings.py:328
 msgid "This translation is {percentage:.2f}% complete."
-msgstr ""
+msgstr "이 번역은 {percentage:.2f}% 완료되었습니다."
 
 #: .\Pages\global_settings.py:353
 msgid "Audio"
-msgstr ""
+msgstr "오디오"
 
 #: .\Pages\global_settings.py:355
 msgid "Sound Settings"
-msgstr ""
+msgstr "오디오 설정"
 
 #: .\Pages\global_settings.py:362
 msgid "Soundpack"
-msgstr ""
+msgstr "사운드팩"
 
 #: .\Pages\global_settings.py:363
 msgid "Select the soundpack to use, these can be added to app/ETS2LA/Assets/Sounds."
-msgstr ""
+msgstr "사용할 사운드팩을 선택하세요. 새 사운드팩은 app/ETS2LA/Assets/Sounds 폴더에 "
+"추가할 수 있습니다."
 
 #: .\Pages\global_settings.py:372 .\Plugins\TTS\main.py:169
 msgid "Volume"
-msgstr ""
+msgstr "볼륨"
 
 #: .\Pages\global_settings.py:373
 msgid "Adjust the volume. This will affect all sounds played by ETS2LA."
-msgstr ""
+msgstr "볼륨을 조절하세요. ETS2LA에서 재생되는 모든 소리에 적용됩니다."
 
 #: .\Pages\global_settings.py:389
 msgid "Engage"
-msgstr ""
+msgstr "켜기"
 
 #: .\Pages\global_settings.py:395
 msgid "Disengage"
-msgstr ""
+msgstr "끄기"
 
 #: .\Pages\global_settings.py:401
 msgid "Warning"
-msgstr ""
+msgstr "경고"
 
 #: .\Pages\global_settings.py:407
 msgid "Prompt"
-msgstr ""
+msgstr "프롬프트"
 
 #: .\Pages\global_settings.py:409
 msgid "Toggle Sounds"
-msgstr ""
+msgstr "소리 전환"
 
 #: .\Pages\global_settings.py:413
 msgid "Startup Sound"
-msgstr ""
+msgstr "시작음"
 
 #: .\Pages\global_settings.py:414
 msgid "Toggle the startup sound on or off. This plays every time the ETS2LA window is opened."
-msgstr ""
+msgstr "시작 사운드를 켜거나 끕니다. ETS2LA 창이 열릴 때마다 재생됩니다."
 
 #: .\Pages\global_settings.py:422
 msgid "Variables"
-msgstr ""
+msgstr "변수"
 
 #: .\Pages\global_settings.py:455
 msgid "Support ETS2LA Development on Ko-Fi"
-msgstr ""
+msgstr "Ko-Fi에서 ETS2LA 개발 후원하기"
 
 #: .\Pages\global_settings.py:475
 msgid "You will see exactly one ad in the about page. There will be no other ads. This option is recommended to support further development of ETS2LA."
 msgstr ""
+"정보(About) 페이지에 단 하나의 광고만 표시됩니다. 다른 광고는 없습니다. 이 옵"
+"션은 ETS2LA 개발 지원을 위해 권장됩니다."
 
 #: .\Pages\global_settings.py:482
 msgid "You will see non intrusive ads in non essential pages. Visualization pages will be ad free. This option is recommended if you want to support development further."
 msgstr ""
+"주요 기능 외 페이지에는 눈에 거슬리지 않는 광고가 표시됩니다. 시각화 페이지는"
+" 광고 없이 유지됩니다. 지속적인 개발 후원을 원하신다면 이 옵션을 권장합니다."
 
 #: .\Pages\global_settings.py:489
 msgid "You will see as many ads as I thought would not completely destroy the usage. Visualization pages are still ad free when enabled."
 msgstr ""
+"사용 환경을 완전히 망치지 않을 선에서 최대한 많은 광고가 표시됩니다. 이 옵션"
+"을 활성화해도 시각화 페이지는 계속 광고 없이 유지됩니다."
 
 #: .\Pages\global_settings.py:510
 msgid "Fallback to old acceleration method"
-msgstr ""
+msgstr "이전 가속 방식으로 대체"
 
 #: .\Pages\global_settings.py:511
 msgid "If you are experiencing issues with the truck not accelerating / braking properly, then you can enable this option to use another method. Please keep in mind that if the new one has gotten stuck, you might need to restart the game after toggling this."
 msgstr ""
+"트럭이 제대로 가속하거나 제동하지 않는 문제가 발생하는 경우, 이 옵션을 활성화"
+"하여 다른 방식을 사용할 수 있습니다. 새 방식이 멈추는 경우, 이 옵션을 전환한 "
+"후 게임을 다시 시작해야 할 수도 있습니다."
 
 #: .\Pages\global_settings.py:520 .\Pages\onboarding.py:374
 msgid "High Priority"
-msgstr ""
+msgstr "우선 순위 높음"
 
 #: .\Pages\global_settings.py:521 .\Pages\onboarding.py:375
 msgid "Run ETS2LA in high priority mode. This will tell your OS to give more CPU time to ETS2LA, which can improve performance at the cost of other applications."
 msgstr ""
+"ETS2LA를 높은 우선순위 모드로 실행합니다. 운영체제가 ETS2LA에 더 많은 CPU 시"
+"간을 할당하도록 요청하여, 다른 애플리케이션의 성능을 희생하더라도 ETS2LA의 성"
+"능을 향상시킬 수 있습니다."
 
 #: .\Pages\global_settings.py:542
 msgid "You need to restart ETS2LA to apply the priority change!"
-msgstr ""
+msgstr "우선순위 변경을 적용하려면 ETS2LA를 다시 시작해야 합니다!"
 
 #: .\Pages\global_settings.py:549
 msgid "Slow Loading"
-msgstr ""
+msgstr "로딩 속도 낮춤"
 
 #: .\Pages\global_settings.py:550
 msgid "If your PC has troubles loading all plugins in parallel, you can enable this option to load them one by one. Please note that enabling this option will mean you have to wait a while for the plugins to become available."
 msgstr ""
+"PC가 모든 플러그인을 동시에 로딩하는 데 문제가 있는 경우, 이 옵션을 활성화하"
+"여 하나씩 순차적으로 로드할 수 있습니다. 이 옵션을 켜면 플러그인을 사용할 수 "
+"있을 때까지 잠시 기다려야 합니다."
 
 #: .\Pages\global_settings.py:557
 msgid "Miscellaneous"
-msgstr ""
+msgstr "기타항목"
 
 #: .\Pages\global_settings.py:558
 msgid "UI Settings"
-msgstr ""
+msgstr "사용자 인터페이스 설정"
 
 #: .\Pages\global_settings.py:563
 msgid "Frontend Port"
-msgstr ""
+msgstr "프론트엔드 포트"
 
 #: .\Pages\global_settings.py:564
 msgid "Change the port used by the frontend. This is only used in local mode."
-msgstr ""
+msgstr "프론트엔드에서 사용하는 포트를 변경합니다. 이 설정은 로컬 모드에서만 사용됩니"
+"다."
 
 #: .\Pages\global_settings.py:573
 msgid "Frameless Window"
-msgstr ""
+msgstr "테두리 없는 창"
 
 #: .\Pages\global_settings.py:574
 msgid "Disable this option if you have any issues moving the window around."
-msgstr ""
+msgstr "창 이동에 문제가 있는 경우 이 옵션을 비활성화하세요."
 
 #: .\Pages\global_settings.py:581
 msgid "Debug Mode"
-msgstr ""
+msgstr "디버그 모드"
 
 #: .\Pages\global_settings.py:582
 msgid "Enable this option to use the edge debugger for the frontend."
-msgstr ""
+msgstr "프론트엔드에 엣지 디버거를 사용하려면 이 옵션을 활성화하세요."
 
 #: .\Pages\global_settings.py:589
 msgid "Default UI Mirror"
-msgstr ""
+msgstr "기본 UI 미러"
 
 #: .\Pages\global_settings.py:590
 msgid "The default ETS2LA UI mirror to use. Auto will choose the best available mirror."
-msgstr ""
+msgstr "사용할 기본 ETS2LA UI 미러입니다. 자동으로 설정하면 사용 가능한 최상의 미러를"
+" 선택합니다."
 
 #: .\Pages\global_settings.py:598
 msgid "ETS2LA Window Timeout"
-msgstr ""
+msgstr "ETS2LA 창 타임아웃"
 
 #: .\Pages\global_settings.py:599
 msgid "The amount of time ETS2LA waits for the window to show up."
-msgstr ""
+msgstr "ETS2LA 창이 표시될 때까지 기다리는 시간을 설정합니다."
 
 #: .\Pages\global_settings.py:609
 msgid "Backend Settings"
-msgstr ""
+msgstr "백엔드 설정"
 
 #: .\Pages\global_settings.py:611
 msgid "Send Crash Reports"
-msgstr ""
+msgstr "충돌 보고서 보내기"
 
 #: .\Pages\global_settings.py:612
 msgid "Automatically send crash reports to help improve the application."
-msgstr ""
+msgstr "충돌 보고서를 자동으로 전송하여 애플리케이션 개선에 도움을 줍니다."
 
 #: .\Pages\global_settings.py:619
 msgid "Use Fancy Traceback"
-msgstr ""
+msgstr "상세 오류 출력 사용"
 
 #: .\Pages\global_settings.py:620
 msgid "Enable this option to use a fancy traceback for errors."
-msgstr ""
+msgstr "오류 발생 시 고급 추적 정보를 표시하려면 이 옵션을 활성화하세요."
 
 #: .\Pages\global_settings.py:627
 msgid "Seasonal Effects"
-msgstr ""
+msgstr "계절 효과"
 
 #: .\Pages\global_settings.py:634
 msgid "Fireworks"
-msgstr ""
+msgstr "불꽃놀이"
 
 #: .\Pages\global_settings.py:635
 msgid "Enable this option to use fireworks effects during the new year's."
-msgstr ""
+msgstr "새해에 불꽃놀이 효과를 사용하려면 이 옵션을 활성화하세요."
 
 #: .\Pages\global_settings.py:643
 msgid "Snow"
-msgstr ""
+msgstr "눈"
 
 #: .\Pages\global_settings.py:644
 msgid "Enable this option to use snow effects during the winter season."
-msgstr ""
+msgstr "겨울철에 눈 효과를 사용하려면 이 옵션을 활성화하세요."
 
 #: .\Pages\onboarding.py:79
 msgid "If you've done the onboarding before, you know how to exit. ETS2LA will not work without doing the onboarding once."
 msgstr ""
+"이전에 온보딩(초기 설정)을 완료하셨다면, 종료하는 방법을 알고 계실 것입니다. "
+"ETS2LA는 온보딩을 한 번이라도 반드시 진행해야 정상적으로 작동합니다."
 
 #: .\Pages\onboarding.py:120 .\Plugins\HUD\main.py:451
 #: .\Plugins\HUD\main.py:498
 msgid "Loading..."
-msgstr ""
+msgstr "불러오는 중..."
 
 #: .\Pages\onboarding.py:122
 msgid "We are doing something that is taking a while. Just sit tight and relax!"
-msgstr ""
+msgstr "시간이 다소 걸리는 작업을 진행 중입니다. 잠시만 편안히 기다려 주세요!"
 
 #: .\Pages\onboarding.py:130
 msgid "Welcome to ETS2LA!"
-msgstr ""
+msgstr "ETS2LA에 오신 것을 환영합니다!"
 
 #: .\Pages\onboarding.py:132
 msgid "Let's get you setup with the basics right off the bat! Press the button below to continue."
-msgstr ""
+msgstr "기본 설정을 지금 바로 시작해 볼까요! 아래 버튼을 눌러 계속 진행하세요."
 
 #: .\Pages\onboarding.py:139 .\Pages\onboarding.py:192
 #: .\Pages\onboarding.py:272 .\Pages\onboarding.py:292
@@ -1089,161 +1134,188 @@ msgstr ""
 #: .\Pages\onboarding.py:563 .\Pages\onboarding.py:627
 #: .\Pages\onboarding.py:722
 msgid "Continue"
-msgstr ""
+msgstr "계속하기"
 
 #: .\Pages\onboarding.py:146
 msgid "Skip Onboarding"
-msgstr ""
+msgstr "초기 설정 건너뛰기"
 
 #: .\Pages\onboarding.py:161
 msgid "You can change the theme here!"
-msgstr ""
+msgstr "여기에서 테마를 변경할 수 있습니다!"
 
 #: .\Pages\onboarding.py:181
 msgid "Language Selection"
-msgstr ""
+msgstr "언어 선택"
 
 #: .\Pages\onboarding.py:183
 msgid "Please select your preferred language for ETS2LA. This option can be changed later in the options. All our translations are community made!"
 msgstr ""
+"ETS2LA에서 사용하실 언어를 선택해 주세요. 이 설정은 나중에 옵션에서 언제든지 "
+"변경할 수 있습니다. 모든 번역은 커뮤니티에서 직접 만들어 주셨어요!"
 
 #: .\Pages\onboarding.py:202
 msgid "Select your preferred language for ETS2LA."
-msgstr ""
+msgstr "ETS2LA에서 사용하실 언어를 선택해 주세요."
 
 #: .\Pages\onboarding.py:257 .\Pages\sdk_installation.py:262
 msgid "SDK Setup"
-msgstr ""
+msgstr "SDK 설정"
 
 #: .\Pages\onboarding.py:259
 msgid "To get started, we need to set up the SDK. This will allow ETS2LA to interact with your game. To the right you will find a list of games, click install on one of them and then continue."
 msgstr ""
+"시작하려면 SDK를 설정해야 합니다. 이렇게 하면 ETS2LA가 게임과 연동됩니다. 오"
+"른쪽에 게임 목록이 표시됩니다. 원하시는 게임의 설치를 클릭한 후 계속 진행해 "
+"주세요."
 
 #: .\Pages\onboarding.py:267
 msgid "Waiting for SDK installation..."
-msgstr ""
+msgstr "SDK 설치를 기다리는 중..."
 
 #: .\Pages\onboarding.py:281 .\Pages\performance.py:255
 msgid "Plugins"
-msgstr ""
+msgstr "플러그인"
 
 #: .\Pages\onboarding.py:283
 msgid "ETS2LA uses plugins to provide most of it's functionality. You can select between a simple mode, and an advanced mode. This can be changed later on in the settings."
 msgstr ""
+"ETS2LA는 대부분의 기능을 플러그인을 통해 제공합니다. 간단 모드와 고급 모드 중"
+"에서 선택할 수 있으며, 이 설정은 나중에 설정 화면에서 언제든지 변경할 수 있습"
+"니다."
 
 #: .\Pages\onboarding.py:301
 msgid "Advanced Plugin Mode"
-msgstr ""
+msgstr "고급 플러그인 모드"
 
 #: .\Pages\onboarding.py:302
 msgid "Enables advanced plugin management features. Can be changed at any time in the plugin manager."
-msgstr ""
+msgstr "고급 플러그인 관리 기능을 활성화합니다. 플러그인 관리자에서 언제든지 변경할 "
+"수 있습니다."
 
 #: .\Pages\onboarding.py:328
 msgid "Keeping **Advanced Plugin Mode** disabled is recommended, however advanced users who want to select plugins themselves might want it enabled."
 msgstr ""
+"고급 플러그인 모드는 비활성화된 상태로 유지하는 것을 권장합니다. 단, 플러그인"
+"을 직접 선택하려는 고급 사용자의 경우 이 모드를 활성화할 수 있습니다."
 
 #: .\Pages\onboarding.py:341
 msgid "**Advanced Plugin Mode** unlocks manual control of enabled plugins. It also lets you download more plugins from other repositories. Keep in mind that these 3rd party plugins are not *officially* supported by ETS2LA."
 msgstr ""
+"고급 플러그인 모드는 활성화된 플러그인을 수동으로 제어할 수 있게 해 줍니다. "
+"또한 다른 저장소에서 추가 플러그인을 다운로드할 수 있습니다. 이러한 서드파티 "
+"플러그인은 ETS2LA에서 공식적으로 지원되지 않는다는 점에 유의하세요."
 
 #: .\Pages\onboarding.py:352
 msgid "High Priority Mode"
-msgstr ""
+msgstr "높은 우선순위 모드"
 
 #: .\Pages\onboarding.py:354
 msgid "ETS2LA can automatically tell your operating system that it should run in a high priority mode. This is recommended especially on lower end devices."
 msgstr ""
+"ETS2LA는 운영체제에 높은 우선순위 모드로 실행하도록 자동으로 요청할 수 있습니"
+"다. 이 기능은 특히 저사양 기기에서 사용하는 것을 권장합니다."
 
 #: .\Pages\onboarding.py:400
 msgid "You'll need to restart ETS2LA after doing the onboarding to apply this change."
-msgstr ""
+msgstr "온보딩 완료 후 이 변경 사항을 적용하려면 ETS2LA를 다시 시작해야 합니다."
 
 #: .\Pages\onboarding.py:411
 msgid "Map Data"
-msgstr ""
+msgstr "맵 데이터"
 
 #: .\Pages\onboarding.py:413
 msgid "ETS2LA uses pre-extracted map data from the game. We handle the data beforehand and you can then just download it as necessary. Please select the data you need for your current game version below."
 msgstr ""
+"ETS2LA는 게임에서 미리 추출된 지도 데이터를 사용합니다. 데이터는 사전에 처리"
+"해 두며, 필요할 때 다운로드만 하면 됩니다. 아래에서 현재 게임 버전에 맞는 데"
+"이터를 선택해 주세요."
 
 #: .\Pages\onboarding.py:425
 msgid "Waiting for data selection..."
-msgstr ""
+msgstr "데이터 선택을 기다리는 중..."
 
 #: .\Pages\onboarding.py:444 .\Plugins\Map\ui.py:296
 msgid "Selected Data"
-msgstr ""
+msgstr "선택한 데이터"
 
 #: .\Pages\onboarding.py:445
 msgid "Select the data that matches your game and mods."
-msgstr ""
+msgstr "게임 및 모드와 일치하는 데이터를 선택해 주세요."
 
 #: .\Pages\onboarding.py:449 .\Plugins\Map\ui.py:303
 msgid "Search data"
-msgstr ""
+msgstr "데이터 검색"
 
 #: .\Pages\onboarding.py:449 .\Plugins\Map\ui.py:303
 msgid "No matching data found"
-msgstr ""
+msgstr "일치하는 데이터 없음"
 
 #: .\Pages\onboarding.py:506
 msgid "The"
-msgstr ""
+msgstr " "
 
 #: .\Pages\onboarding.py:510
 msgid "download size"
-msgstr ""
+msgstr "다운로드 크기"
 
 #: .\Pages\onboarding.py:514
 msgid "for this data is"
-msgstr ""
+msgstr "이 데이터의"
 
 #: .\Pages\onboarding.py:522
 msgid "that will unpack to a"
-msgstr ""
+msgstr "압축 해제 시"
 
 #: .\Pages\onboarding.py:526
 msgid "total size"
-msgstr ""
+msgstr "전체 용량"
 
 #: .\Pages\onboarding.py:541
 msgid "No data selected"
-msgstr ""
+msgstr "선택한 데이터 없음"
 
 #: .\Pages\onboarding.py:543
 msgid "Please select the data you want to use from the dropdown above."
-msgstr ""
+msgstr "위 드롭다운에서 사용할 데이터를 선택해 주세요."
 
 #: .\Pages\onboarding.py:554
 msgid "Window Size"
-msgstr ""
+msgstr "창 크기"
 
 #: .\Pages\onboarding.py:556
 msgid "ETS2LA bypasses Windows to provide custom window features. Due to this you cannot resize the window normally. These are sliders to manually change the window size."
 msgstr ""
+"ETS2LA는 Windows의 기본 창 기능을 건너뛰고 자체적인 창 기능을 사용합니다. 따"
+"라서 일반적인 방법으로 창 크기를 조절할 수 없습니다. 아래 슬라이더를 사용하여"
+" 창 크기를 수동으로 변경할 수 있습니다."
 
 #: .\Pages\onboarding.py:568
 msgid "Adjust the width of the ETS2LA window."
-msgstr ""
+msgstr "ETS2LA 창의 너비를 조절합니다."
 
 #: .\Pages\onboarding.py:577
 msgid "Adjust the height of the ETS2LA window."
-msgstr ""
+msgstr "ETS2LA 창의 높이를 조절합니다."
 
 #: .\Pages\onboarding.py:605
 msgid ""
 "**Changing the window size may cause pages to display incorrectly**.\n"
 "You can adjust the window scaling by holding Left CTRL and using the scrollwheel."
 msgstr ""
+"창 크기를 변경하면 페이지가 올바르게 표시되지 않을 수 있습니다.\n"
+"왼쪽 Ctrl 키를 누른 상태에서 스크롤휠을 사용하여 창 배율을 조절할 수 있습니다"
+"."
 
 #: .\Pages\onboarding.py:618
 msgid "Window Controls"
-msgstr ""
+msgstr "창 컨트롤"
 
 #: .\Pages\onboarding.py:620
 msgid "ETS2LA provides custom window controls that might be useful to you. These can be accessed through the green button in the top right corner."
 msgstr ""
+"ETS2LA는 유용하게 사용할 수 있는 자체 창 컨트롤을 제공합니다. 이 기능은 오른"
+"쪽 상단의 녹색 버튼을 통해 사용할 수 있습니다."
 
 #: .\Pages\onboarding.py:643
 msgid ""
@@ -1251,6 +1323,10 @@ msgid ""
 "\n"
 "You can *left click* the green button to make the ETS2LA window stay on top of other windows."
 msgstr ""
+"항상 위에 고정\n"
+"\n"
+"녹색 버튼을 왼쪽 클릭하면 ETS2LA 창을 다른 창보다 항상 위에 유지할 수 있습니"
+"다."
 
 #: .\Pages\onboarding.py:661
 msgid ""
@@ -1258,6 +1334,10 @@ msgid ""
 "\n"
 "You can *right click* the green button to make the ETS2LA window slightly transparent. The amount of transparency can be adjusted in the settings."
 msgstr ""
+"투명도\n"
+"\n"
+"녹색 버튼을 오른쪽 클릭하면 ETS2LA 창을 약간 투명하게 만들 수 있습니다. 투명"
+"도는 설정에서 조절할 수 있습니다."
 
 #: .\Pages\onboarding.py:679
 msgid ""
@@ -1265,26 +1345,30 @@ msgid ""
 "\n"
 "You can *middle click* the green button to make the ETS2LA window fullscreen."
 msgstr ""
+"전체 화면\n"
+"\n"
+"녹색 버튼을 가운데 클릭하면 ETS2LA 창을 전체 화면으로 전환할 수 있습니다."
 
 #: .\Pages\onboarding.py:694
 msgid "It's this green button!"
-msgstr ""
+msgstr "바로 이 녹색 버튼이에요!"
 
 #: .\Pages\onboarding.py:710
 msgid "Visualization Notice"
-msgstr ""
+msgstr "시각화 안내"
 
 #: .\Pages\onboarding.py:712
 msgid "Sometimes the ETS2LA window might not work as expected. If you find any weird issues, then pressing the F5 key will reload the window."
-msgstr ""
+msgstr "ETS2LA 창이 가끔 예상대로 작동하지 않을 수 있습니다. 이상한 문제가 발생하면 "
+"F5 키를 눌러 창을 다시 로드해 주세요."
 
 #: .\Pages\onboarding.py:720
 msgid "Press F5 to Continue"
-msgstr ""
+msgstr "계속하려면 F5 키를 누르세요"
 
 #: .\Pages\onboarding.py:726
 msgid "Bypass"
-msgstr ""
+msgstr "바이패스"
 
 #: .\Pages\onboarding.py:742
 msgid ""
@@ -1292,104 +1376,118 @@ msgid ""
 "\n"
 "A key you can use to refresh websites. Since this page is also a website it works just the same here."
 msgstr ""
+"F5\n"
+"\n"
+"웹사이트를 새로고침할 때 사용하는 키입니다. 이 페이지도 웹사이트이기 때문에 "
+"동일하게 작동합니다."
 
 #: .\Pages\onboarding.py:748
 msgid "Example of a broken visualization page."
-msgstr ""
+msgstr "다음은 깨진 시각화 페이지의 예시입니다."
 
 #: .\Pages\onboarding.py:752
 msgid "Onboarding Complete!"
-msgstr ""
+msgstr "초기 설정 완료!"
 
 #: .\Pages\onboarding.py:754
 msgid "You have successfully completed the onboarding process. You can now start using ETS2LA. If you need help, feel free to join our Discord server."
 msgstr ""
+"초기 설정이 성공적으로 완료되었습니다! 이제 ETS2LA를 사용하실 수 있습니다. 도"
+"움이 필요하시면 언제든지 Discord 서버에 참여해 주세요."
 
 #: .\Pages\onboarding.py:761
 msgid "Finish"
-msgstr ""
+msgstr "마침"
 
 #: .\Pages\onboarding.py:773
 msgid ""
 "<- Press this edge to open and close the sidebar.\n"
 "      Open the Manager to enable plugins."
 msgstr ""
+"← 이 가장자리를 눌러 사이드바를 열거나 닫으세요.\n"
+"플러그인을 활성화하려면 관리자(Manager) 를 여세요."
 
 #: .\Pages\onboarding.py:829
 msgid "Page not found"
-msgstr ""
+msgstr "페이지를 찾을 수 없음"
 
 #: .\Pages\onboarding.py:831
 msgid "Go back"
-msgstr ""
+msgstr "뒤로 가기"
 
 #: .\Pages\performance.py:159
 msgid "System"
-msgstr ""
+msgstr "시스템"
 
 #: .\Pages\performance.py:166
 msgid "Data is still being collected, please wait a few seconds for the graphs to stabilize."
-msgstr ""
+msgstr "데이터를 계속 수집하는 중입니다. 그래프가 안정화될 때까지 몇 초간 기다려 주세"
+"요."
 
 #: .\Pages\performance.py:184
 msgid "CPU Usage"
-msgstr ""
+msgstr "CPU 사용량"
 
 #: .\Pages\performance.py:199
 msgid "CPU Usage "
-msgstr ""
+msgstr "CPU 사용량 "
 
 #: .\Pages\performance.py:215
 msgid "RAM Usage"
-msgstr ""
+msgstr "RAM 사용량"
 
 #: .\Pages\performance.py:237
 msgid "RAM Usage "
-msgstr ""
+msgstr "RAM 사용량 "
 
 #: .\Pages\performance.py:239
 msgid "ETS2LA RAM Usage  "
-msgstr ""
+msgstr "ETS2LA의 RAM 사용량  "
 
 #: .\Pages\performance.py:262 .\Pages\plugins.py:563
 msgid "No plugins are currently running."
-msgstr ""
+msgstr "현재 실행 중인 플러그인이 없습니다."
 
 #: .\Pages\performance.py:355
 msgid "Warning: Graph is still gathering data, please wait 60 seconds for it to stabilize."
-msgstr ""
+msgstr "경고: 그래프가 데이터를 계속 수집 중입니다. 안정화될 때까지 60초간 기다려 주"
+"세요."
 
 #: .\Pages\performance.py:389
 msgid "Failed to render plugin {plugin_name}."
-msgstr ""
+msgstr "플러그인 {plugin_name}을(를) 렌더링하지 못했습니다."
 
 #: .\Pages\performance.py:402
 msgid "All displayed data is averaged over a second."
-msgstr ""
+msgstr "표시되는 모든 데이터는 1초 평균값입니다."
 
 #: .\Pages\performance.py:406
 msgid "This page took {time:.2f} ms to render."
-msgstr ""
+msgstr "이 페이지를 렌더링하는 데 {time:.2f}ms가 소요되었습니다."
 
 #: .\Pages\plugins.py:44 .\Plugins\Map\ui.py:236
 msgid "Steering"
-msgstr ""
+msgstr "스티어링"
 
 #: .\Pages\plugins.py:45
 msgid "Enable automated steering using ETS2LA. You can toggle it on and off using the 'Toggle Steering' keybind in the control settings."
 msgstr ""
+"ETS2LA를 사용한 자동 조향을 활성화합니다. 컨트롤 설정에서 '조향 켜기/끄기' 키"
+" 바인딩으로 이 기능을 켜거나 끌 수 있습니다."
 
 #: .\Pages\plugins.py:51
 msgid "Lateral Control"
-msgstr ""
+msgstr "차선 유지 제어"
 
 #: .\Pages\plugins.py:52
 msgid "Enable automated acceleration and deceleration using ETS2LA. You can toggle it on and off using the 'Toggle Speed Control' keybind in the control settings."
 msgstr ""
+"ETS2LA를 사용한 자동 가속 및 감속을 활성화합니다. 컨트롤 설정에서 '속도 제어 "
+"켜기/끄기' 키 바인딩으로 이 기능을 켜거나 끌 수 있습니다."
 
 #: .\Pages\plugins.py:58
 msgid "Visualization"
-msgstr ""
+msgstr "시각화"
 
 #: .\Pages\plugins.py:59
 msgid ""
@@ -1397,1389 +1495,1459 @@ msgid ""
 "\n"
 "**This is required for the visualization tab to work.**"
 msgstr ""
+"시각화 탭 작동에 필요한 플러그인을 활성화합니다.\n"
+"\n"
+"**이 옵션은 시각화 탭 사용을 위해 반드시 필요합니다**"
 
 #: .\Pages\plugins.py:65 .\Plugins\CollisionAvoidance\main.py:17
 #: .\Plugins\CollisionAvoidance\ui.py:15 .\Plugins\CollisionAvoidance\ui.py:37
 msgid "Collision Avoidance"
-msgstr ""
+msgstr "충돌 방지"
 
 #: .\Pages\plugins.py:66
 msgid "Enable collision avoidance features when the truck is under 30km/h and in tight turns / intersections."
-msgstr ""
+msgstr "트럭이 30km/h 미만으로 주행 중이고, 급커브 또는 교차로 진입 시 충돌 방지 기능"
+"을 활성화합니다."
 
 #: .\Pages\plugins.py:72 .\Plugins\HUD\main.py:23 .\Plugins\HUD\ui.py:127
 msgid "HUD"
-msgstr ""
+msgstr "헤드업 디스플레이"
 
 #: .\Pages\plugins.py:73
 msgid "Enable the HUD to display information about the truck and route. Shown on top of the game screen using accurate 3D mapping."
-msgstr ""
+msgstr "HUD를 활성화하여 트럭 및 경로 정보를 표시합니다. 정확한 3D 매핑을 기반으로 게"
+"임 화면 위에 오버레이로 표시됩니다."
 
 #: .\Pages\plugins.py:80
 msgid "Text To Speech"
-msgstr ""
+msgstr "텍스트 음성 변환"
 
 #: .\Pages\plugins.py:81
 msgid "Enable text-to-speech for notifications and alerts. This is mostly an accessibility feature but some people might find it useful."
-msgstr ""
+msgstr "알림 및 경고에 텍스트 음성 변환(TTS)을 활성화합니다. 주로 접근성을 위한 기능"
+"이지만, 필요하신 분들께 유용할 수 있습니다."
 
 #: .\Pages\plugins.py:123
 msgid "Feature '{0}' not found."
-msgstr ""
+msgstr "기능 '{0}'을(를) 찾을 수 없습니다."
 
 #: .\Pages\plugins.py:290
 msgid "Loading plugins..."
-msgstr ""
+msgstr "플러그인 로딩 중..."
 
 #: .\Pages\plugins.py:315
 msgid "Plugins (Basic)"
-msgstr ""
+msgstr "플러그인 (기본)"
 
 #: .\Pages\plugins.py:317
 msgid "You can enable different ETS2LA features on the right side. All of the plugins described by these features will be enabled automatically without any additional configuration."
 msgstr ""
+"오른쪽에서 다양한 ETS2LA 기능을 활성화할 수 있습니다. 이 기능들에 포함된 모든"
+" 플러그인은 별도의 추가 설정 없이 자동으로 활성화됩니다."
 
 #: .\Pages\plugins.py:327
 msgid "Disable Plugins"
-msgstr ""
+msgstr "플러그인 비활성화"
 
 #: .\Pages\plugins.py:329
 msgid "Enable Plugins"
-msgstr ""
+msgstr "플러그인 활성화"
 
 #: .\Pages\plugins.py:338
 msgid "Currently enabled plugins:"
-msgstr ""
+msgstr "현재 활성화된 플러그인:"
 
 #: .\Pages\plugins.py:413
 msgid "Enabled"
-msgstr ""
+msgstr "활성화됨"
 
 #: .\Pages\plugins.py:415
 msgid "Disabled"
-msgstr ""
+msgstr "비활성화됨"
 
 #: .\Pages\plugins.py:435
 msgid "Switch to Advanced Mode"
-msgstr ""
+msgstr "고급 모드로 전환"
 
 #: .\Pages\plugins.py:475
 msgid "Search tags..."
-msgstr ""
+msgstr "태그 검색..."
 
 #: .\Pages\plugins.py:475
 msgid "No tags found"
-msgstr ""
+msgstr "일치하는 태그 없음"
 
 #: .\Pages\plugins.py:484
 msgid "Search authors..."
-msgstr ""
+msgstr "작성자 검색..."
 
 #: .\Pages\plugins.py:485
 msgid "No authors found"
-msgstr ""
+msgstr "일치하는 작성자 없음"
 
 #: .\Pages\plugins.py:489
 msgid "Back to Basic Mode"
-msgstr ""
+msgstr "기본 모드로 돌아가기"
 
 #: .\Pages\plugins.py:558
 msgid "Running Plugins"
-msgstr ""
+msgstr "실행 중인 플러그인"
 
 #: .\Pages\plugins.py:569
 msgid "Want to enable the plugins you had running last time?"
-msgstr ""
+msgstr "지난번에 실행 중이었던 플러그인을 다시 활성화하시겠어요?"
 
 #: .\Pages\plugins.py:573
 msgid "Enable Last Plugins"
-msgstr ""
+msgstr "지난 플러그인 활성화"
 
 #: .\Pages\sdk_installation.py:136
 msgid "Could not find version for {game}, skipping installation"
-msgstr ""
+msgstr "{game}의 버전을 찾을 수 없어 설치를 건너뜁니다"
 
 #: .\Pages\sdk_installation.py:144
 msgid "Installing SDKs for {game}"
-msgstr ""
+msgstr "{game} SDK 설치 중"
 
 #: .\Pages\sdk_installation.py:153
 msgid "SDKs for {game} installed successfully."
-msgstr ""
+msgstr "{game} SDK가 성공적으로 설치되었습니다."
 
 #: .\Pages\sdk_installation.py:160
 msgid "SDKs for {game} already installed, skipping installation"
-msgstr ""
+msgstr "{game} SDK가 이미 설치되어 있어 설치를 건너뜁니다"
 
 #: .\Pages\sdk_installation.py:166 .\Pages\sdk_installation.py:210
 msgid "Please make sure the game is closed and try again. {error}"
-msgstr ""
+msgstr "게임을 종료한 후 다시 시도해 주세요. {error}"
 
 #: .\Pages\sdk_installation.py:172
 msgid "Error installing SDKs for {game}, please make sure the game is closed."
-msgstr ""
+msgstr "{game} SDK 설치 중 오류가 발생했습니다. 게임이 종료되어 있는지 확인해 주세요."
 
 #: .\Pages\sdk_installation.py:183
 msgid "Could not find version for {game}, skipping uninstallation"
-msgstr ""
+msgstr "{game}의 버전을 찾을 수 없어 제거를 건너뜁니다"
 
 #: .\Pages\sdk_installation.py:191
 msgid "Uninstalling SDKs for {game}"
-msgstr ""
+msgstr "{game} SDK 제거 중"
 
 #: .\Pages\sdk_installation.py:197
 msgid "SDKs for {game} uninstalled successfully."
-msgstr ""
+msgstr "{game} SDK가 성공적으로 제거되었습니다."
 
 #: .\Pages\sdk_installation.py:204
 msgid "SDKs for {game} not installed, skipping uninstallation"
-msgstr ""
+msgstr "{game} SDK가 설치되지 않아 제거를 건너뜁니다"
 
 #: .\Pages\sdk_installation.py:216
 msgid "Error uninstalling SDKs for {game}, please make sure the game is closed."
-msgstr ""
+msgstr "{game} SDK 제거 중 오류가 발생했습니다. 게임이 종료되어 있는지 확인해 주세요."
 
 #: .\Pages\sdk_installation.py:224
 msgid "Select the game directory"
-msgstr ""
+msgstr "게임 디렉토리 선택"
 
 #: .\Pages\sdk_installation.py:228
 msgid "Could not find version for the selected game, please select a valid game directory."
-msgstr ""
+msgstr "선택한 게임의 버전을 찾을 수 없습니다. 유효한 게임 디렉토리를 선택해 주세요."
 
 #: .\Pages\sdk_installation.py:234
 msgid "Could not find version for {path}, skipping installation"
-msgstr ""
+msgstr "{path}에서 버전을 찾을 수 없어 설치를 건너뜁니다"
 
 #: .\Pages\sdk_installation.py:242
 msgid "Found game version {version}."
-msgstr ""
+msgstr "게임 버전 {version}을(를) 찾았습니다."
 
 #: .\Pages\sdk_installation.py:248
 msgid "Path {path} does not exist."
-msgstr ""
+msgstr "경로 {path}이(가) 존재하지 않습니다."
 
 #: .\Pages\sdk_installation.py:263
 msgid "Check that you have the necessary DLLs installed for us to communicate with the game."
-msgstr ""
+msgstr "게임과의 통신에 필요한 DLL이 설치되어 있는지 확인해 주세요."
 
 #: .\Pages\sdk_installation.py:274
 msgid "We could not find any SCS games on your system. Please note that ETS2LA will only work with legitimate versions downloaded from Steam."
-msgstr ""
+msgstr "시스템에서 SCS 게임을 찾을 수 없습니다. ETS2LA는 Steam에서 다운로드한 정식 버"
+"전 게임에서만 작동합니다."
 
 #: .\Pages\sdk_installation.py:280
 msgid "Select directory manually"
-msgstr ""
+msgstr "수동으로 디렉토리 선택"
 
 #: .\Pages\sdk_installation.py:320
 msgid " - Needs Reinstall"
-msgstr ""
+msgstr " - 재설치 필요"
 
 #: .\Pages\sdk_installation.py:326 .\Pages\sdk_installation.py:385
 msgid "- Installed"
-msgstr ""
+msgstr "- 설치됨"
 
 #: .\Pages\sdk_installation.py:328 .\Pages\sdk_installation.py:387
 msgid "- Not Installed"
-msgstr ""
+msgstr "- 설치 안 됨"
 
 #: .\Pages\sdk_installation.py:344
 msgid "This game version is not supported"
-msgstr ""
+msgstr "이 게임 버전은 지원되지 않습니다"
 
 #: .\Pages\sdk_installation.py:372
 msgid "No files found."
-msgstr ""
+msgstr "파일을 찾을 수 없습니다."
 
 #: .\Pages\sdk_installation.py:403
 msgid "File Sources"
-msgstr ""
+msgstr "파일 소스"
 
 #: .\Pages\sdk_installation.py:420 .\Pages\sdk_installation.py:453
 msgid "Uninstall SDKs"
-msgstr ""
+msgstr "SDK 제거"
 
 #: .\Pages\sdk_installation.py:430 .\Pages\sdk_installation.py:464
 msgid "Install SDKs"
-msgstr ""
+msgstr "SDK 설치"
 
 #: .\Pages\sdk_installation.py:436
 msgid "Please close the game before installing or uninstalling SDKs."
-msgstr ""
+msgstr "SDK를 설치하거나 제거하기 전에 게임을 종료해 주세요."
 
 #: .\Pages\updater.py:63
 msgid "You have a local commit that is waiting to be pushed."
-msgstr ""
+msgstr "푸시 대기 중인 로컬 커밋이 있습니다."
 
 #: .\Pages\updater.py:68
 msgid "No updates available. (It might take up to a minute for the page to update after a new commit)"
-msgstr ""
+msgstr "업데이트할 내용이 없습니다. (새 커밋 후 페이지가 갱신되기까지 최대 1분 정도 "
+"소요될 수 있습니다.)"
 
 #: .\Pages\updater.py:74
 msgid "Update Anyway"
-msgstr ""
+msgstr "강제 업데이트"
 
 #: .\Pages\updater.py:78
 msgid "Restart and apply {count} update"
 msgid_plural "Restart and apply {count} updates"
-msgstr[0] ""
+msgstr[0] "재시작 및 {count}개 업데이트 적용"
 
 #: .\Plugins\AR\main.py:224 .\Plugins\AR\main.py:277 .\Plugins\AR\main.py:339
 msgid "AR"
-msgstr ""
+msgstr "AR"
 
 #: .\Plugins\AR\main.py:278
 msgid "Change the AR overlay settings here."
-msgstr ""
+msgstr "여기에서 AR 오버레이 설정을 변경할 수 있습니다."
 
 #: .\Plugins\AR\main.py:282 .\Plugins\Map\ui.py:138
 msgid "General"
-msgstr ""
+msgstr "일반"
 
 #: .\Plugins\AR\main.py:284
 msgid "Don't hide AR from recording software"
-msgstr ""
+msgstr "AR 녹화 소프트웨어 표시"
 
 #: .\Plugins\AR\main.py:285
 msgid "By default the AR overlay is hidden from recording software to prevent it showing up when ETS2LA is using vision systems. If you want to record videos or stream with the overlay, you might want to enable this option."
 msgstr ""
+"기본적으로 AR 오버레이는 ETS2LA가 비전 시스템을 사용할 때 녹화 소프트웨어에 "
+"표시되지 않도록 숨겨져 있습니다. 오버레이를 포함한 동영상을 녹화하거나 스트리"
+"밍하려는 경우 이 옵션을 활성화하는 것이 좋습니다."
 
 #: .\Plugins\AR\main.py:293
 msgid "Show when not in focus"
-msgstr ""
+msgstr "포커스 해제 시 표시"
 
 #: .\Plugins\AR\main.py:294
 msgid "Show the AR overlay even when the game is not in focus. This can be useful for changing settings. Please note that this will also make AR run at the max possible FPS, this might cause some lag."
 msgstr ""
+"게임이 활성화되지 않은 상태에서도 AR 오버레이를 표시합니다. 설정 변경 시 유용"
+"할 수 있습니다. 단, 이 경우 AR이 가능한 최대 FPS로 실행되어 일부 성능 저하가 "
+"발생할 수 있습니다."
 
 #: .\Plugins\AR\main.py:302
 msgid "Show test objects"
-msgstr ""
+msgstr "테스트 오브젝트 표시"
 
 #: .\Plugins\AR\main.py:303
 msgid "Show test objects in the AR overlay."
-msgstr ""
+msgstr "AR 오버레이에 테스트 객체를 표시합니다."
 
 #: .\Plugins\AR\main.py:309
 msgid "Performance Overlay"
-msgstr ""
+msgstr "성능 오버레이"
 
 #: .\Plugins\AR\main.py:312
 msgid "Show Performance Overlay"
-msgstr ""
+msgstr "성능 오버레이 표시"
 
 #: .\Plugins\AR\main.py:313
 msgid "Show the performance overlay. This will show a number of useful statistics."
-msgstr ""
+msgstr "성능 오버레이를 표시합니다. 여러 유용한 통계 정보를 보여줍니다."
 
 #: .\Plugins\AR\main.py:321
 msgid "Show Game Statistics"
-msgstr ""
+msgstr "게임 통계 표시"
 
 #: .\Plugins\AR\main.py:322
 msgid "Show game statistics in the performance overlay."
-msgstr ""
+msgstr "성능 오버레이에 게임 통계를 표시합니다."
 
 #: .\Plugins\AR\main.py:328
 msgid "Show Background"
-msgstr ""
+msgstr "배경 표시"
 
 #: .\Plugins\AR\main.py:329
 msgid "Show the background in the performance overlay. This will make the performance overlay more readable, but it will also make it less transparent."
-msgstr ""
+msgstr "성능 오버레이에 배경을 표시합니다. 이렇게 하면 성능 오버레이의 가독성이 좋아"
+"지지만, 투명도는 낮아집니다."
 
 #: .\Plugins\AR\main.py:341
 msgid "The AR plugin provides an augmented reality overlay for ETS2LA. It used by plugin like HUD to display information in the game world."
 msgstr ""
+"AR 플러그인은 ETS2LA에 증강 현실(AR) 오버레이를 제공합니다. HUD와 같은 플러그"
+"인에서 게임 화면에 정보를 표시하는 데 활용됩니다."
 
 #: .\Plugins\AR\main.py:730
 msgid "Items: {}"
-msgstr ""
+msgstr "항목: {}"
 
 #: .\Plugins\AR\main.py:732
 msgid "Draw Calls: {} ({:.0f}%)"
-msgstr ""
+msgstr "드로우 콜: {} ({:.0f}%)"
 
 #: .\Plugins\AR\main.py:738
 msgid "Frustum Culled: {} ({:.0f}%)"
-msgstr ""
+msgstr "절두체 컬링: {} ({:.0f}%)"
 
 #: .\Plugins\AR\main.py:748
 msgid "Text Cache Length: {}"
-msgstr ""
+msgstr "텍스트 캐시 길이: {}"
 
 #: .\Plugins\AR\main.py:750
 msgid "Last Render: {:.2f} ms ({:.0f} fps)"
-msgstr ""
+msgstr "렌더링 시간: {:.2f} ms ({:.0f} fps)"
 
 #: .\Plugins\AR\main.py:758
 msgid "Last Loop: {:.2f} ms ({:.0f} fps)"
-msgstr ""
+msgstr "루프 시간: {:.2f} ms ({:.0f} fps)"
 
 #: .\Plugins\AR\main.py:766
 msgid "Sync to game: {}"
-msgstr ""
+msgstr "게임 싱크: {}"
 
 #: .\Plugins\AR\main.py:767
 msgid "Yes"
-msgstr ""
+msgstr "네"
 
 #: .\Plugins\AR\main.py:767
 msgid "No"
-msgstr ""
+msgstr "아니요"
 
 #: .\Plugins\AR\main.py:773
 msgid "Game Statistics"
-msgstr ""
+msgstr "게임 통계 정보"
 
 #: .\Plugins\AR\main.py:774
 msgid "Framerate: {:.1f}"
-msgstr ""
+msgstr "프레임레이트: {:.1f}"
 
 #: .\Plugins\AR\main.py:776
 msgid "Camera Position: ({:.1f}, {:.1f}, {:.1f})"
-msgstr ""
+msgstr "카메라 위치: ({:.1f}, {:.1f}, {:.1f})"
 
 #: .\Plugins\AR\main.py:781
 msgid "Camera Rotation: ({:.1f}, {:.1f}, {:.1f})"
-msgstr ""
+msgstr "카메라 회전: ({:.1f}, {:.1f}, {:.1f})"
 
 #: .\Plugins\AdaptiveCruiseControl\controls.py:6
 msgid "Toggle Speed Control"
-msgstr ""
+msgstr "속도 제어 전환"
 
 #: .\Plugins\AdaptiveCruiseControl\controls.py:8
 msgid "When ACC is running this will toggle the speed control on/off."
-msgstr ""
+msgstr "ACC 작동 중에는 이 기능이 속도 제어를 켜거나 끕니다."
 
 #: .\Plugins\AdaptiveCruiseControl\controls.py:14
 msgid "Increase Driving Speed Offset"
-msgstr ""
+msgstr "설정 속도 오프셋 증가"
 
 #: .\Plugins\AdaptiveCruiseControl\controls.py:16
 msgid "This will increase the speed offset in the settings."
-msgstr ""
+msgstr "이 기능은 설정된 속도 오프셋 값을 높입니다."
 
 #: .\Plugins\AdaptiveCruiseControl\controls.py:22
 msgid "Decrease Driving Speed Offset"
-msgstr ""
+msgstr "설정 속도 오프셋 감소"
 
 #: .\Plugins\AdaptiveCruiseControl\controls.py:24
 msgid "This will decrease the speed offset in the settings."
-msgstr ""
+msgstr "이 기능은 설정된 속도 오프셋 값을 낮춥니다."
 
 #: .\Plugins\AdaptiveCruiseControl\main.py:83
 #: .\Plugins\AdaptiveCruiseControl\settings.py:46
 #: .\Plugins\AdaptiveCruiseControl\settings.py:141
 #: .\Plugins\AdaptiveCruiseControl\settings.py:149
 msgid "Adaptive Cruise Control"
-msgstr ""
+msgstr "적응형 크루즈 컨트롤(ACC)"
 
 #: .\Plugins\AdaptiveCruiseControl\main.py:85
 msgid "Adaptive Cruise Control (ACC) provides automatic acceleration and braking depending on road conditions and vehicles ahead."
-msgstr ""
+msgstr "적응형 크루즈 컨트롤(ACC)은 도로 상황과 전방 차량에 따라 자동으로 가속과 제동"
+"을 수행합니다."
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:142
 msgid "Adaptive Cruise Control (ACC) controls the speed of the truck based on information gathered from the game."
-msgstr ""
+msgstr "적응형 크루즈 컨트롤(ACC)은 게임에서 수집한 정보를 기반으로 트럭의 속도를 제"
+"어합니다."
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:152
 msgid "ACC Settings"
-msgstr ""
+msgstr "적응형 크루즈 컨트롤(ACC) 설정"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:156
 msgid "Aggressiveness"
-msgstr ""
+msgstr "추월 성향"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:157
 msgid "How aggressively should the ACC follow the car in front and change the speedlimit?"
-msgstr ""
+msgstr "ACC가 앞차를 추종하고 설정 속도를 변경할 때의 적극성은 어느 정도여야 합니까?"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:170
 msgid "Follow Distance"
-msgstr ""
+msgstr "차간 거리"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:171
 msgid "How far should the ACC keep from the vehicle in front?"
-msgstr ""
+msgstr "ACC가 앞차와 유지해야 할 거리는 어느 정도여야 합니까?"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:186
 msgid "At 80km/h ETS2LA will keep approximately {distance}m ({distance_ft}ft) from the vehicle in front."
-msgstr ""
+msgstr "80km/h 주행 시 ETS2LA는 앞차와 약 {distance}m ({distance_ft}ft)의 거리를 유지"
+"합니다."
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:200
 msgid "Obstruction Settings"
-msgstr ""
+msgstr "도로 장애물 설정"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:203
 msgid "Ignore Gates"
-msgstr ""
+msgstr "게이트 무시"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:204
 msgid "Whether the ACC should ignore gates. Please note that this will, as it says ignore the gates."
-msgstr ""
+msgstr "ACC가 게이트를 무시할지 여부를 설정합니다. 말 그대로 게이트를 무시한다는 점에"
+" 유의하세요."
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:213
 msgid "Ignore Traffic Lights"
-msgstr ""
+msgstr "신호등 무시"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:214
 msgid "Whether the ACC should ignore traffic lights. Please note that this will, as it says ignore the traffic lights."
-msgstr ""
+msgstr "ACC가 신호등을 무시할지 여부를 설정합니다. 말 그대로 신호등을 무시한다는 점에"
+" 유의하세요."
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:224
 msgid "Traffic Light Mode"
-msgstr ""
+msgstr "신호등 인식 모드"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:227
 msgid "Select how the ACC should handle traffic lights. Normal mode handles lights on the other side of the intersection better."
-msgstr ""
+msgstr "ACC가 신호등을 처리하는 방식을 선택하세요. 일반 모드는 교차로 반대편 신호등을"
+" 더 잘 인식합니다."
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:233
 msgid "Speed Control"
-msgstr ""
+msgstr "속도 제어"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:236
 msgid "Curve Settings"
-msgstr ""
+msgstr "커브 설정"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:238
 msgid "Coefficient of Friction"
-msgstr ""
+msgstr "마찰 계수"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:239
 msgid "The coefficient of friction used for the ACC calculations. Higher values allow the truck to drive faster in curves."
-msgstr ""
+msgstr "ACC 계산에 사용되는 마찰 계수입니다. 값이 높을수록 커브에서 트럭이 더 빠르게 "
+"주행할 수 있습니다."
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:250
 msgid "Speed Limit Settings"
-msgstr ""
+msgstr "제한 속도 설정"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:262
 msgid "Maximum Speed"
-msgstr ""
+msgstr "최고 속도"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:264
 msgid "The maximum speed ACC will drive at. Set this to 0 to disable."
-msgstr ""
+msgstr "ACC가 주행할 최고 속도입니다. 0으로 설정하면 기능이 비활성화됩니다."
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:281
 msgid "Fallback speed"
-msgstr ""
+msgstr "안전 속도"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:283
 msgid "The speed to drive when the game tells us that the speed limit is 0 km/h."
-msgstr ""
+msgstr "게임에서 제한 속도를 0km/h로 알려줄 때 주행할 속도입니다."
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:293
 msgid "Ignore Speed Limit"
-msgstr ""
+msgstr "제한 속도 무시"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:294
 msgid "Whether the ACC should ignore the speed limit."
-msgstr ""
+msgstr "ACC가 제한 속도를 무시할지 여부를 설정합니다."
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:305
 msgid "Speed Offset Type"
-msgstr ""
+msgstr "속도 오프셋 유형"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:307
 msgid "Select the type of speed offset to apply."
-msgstr ""
+msgstr "적용할 속도 오프셋 유형을 선택하세요."
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:311
 msgid "Speed Offset"
-msgstr ""
+msgstr "속도 오프셋"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:312
 msgid "The speed offset to apply to all speedlimits. Please note that you can also change this dynamically with the keybinds in the controls."
-msgstr ""
+msgstr "모든 제한 속도에 적용할 속도 오프셋입니다. 참고로 컨트롤 설정의 키 바인딩으로"
+" 이 값을 실시간으로 변경할 수도 있습니다."
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:324
 msgid "PID"
-msgstr ""
+msgstr "PID 제어"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:327
 msgid "Show Debug Data"
-msgstr ""
+msgstr "디버그 데이터 표시"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:328
 msgid "Show ACC debug information on the AR overlay, can help when tuning the PID controller."
-msgstr ""
+msgstr "AR 오버레이에 ACC 디버그 정보를 표시합니다. PID 제어기 튜닝 시 유용할 수 있습"
+"니다."
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:337
 msgid "Unlock PID"
-msgstr ""
+msgstr "PID 잠금 해제"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:338
 msgid "You can unlock the PID settings to adjust them manually. This isn't recommended unless you know what a PID is and how you can tune it correctly."
 msgstr ""
+"PID 설정을 잠금 해제하여 수동으로 조정할 수 있습니다. PID가 무엇인지, 올바른 "
+"튜닝 방법을 알고 있는 경우가 아니라면 권장되지 않습니다."
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:347
 msgid "PID Kp"
-msgstr ""
+msgstr "PID Kp"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:348
 msgid "Are we there yet? No? Then we need to accelerate more! (Proportional gain for the PID controller.)"
-msgstr ""
+msgstr "아직 도착 안 했어요? 아니요? 그럼 더 가속해야죠! (PID 제어기의 비례 게인입니"
+"다.)"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:358
 msgid "PID Ki"
-msgstr ""
+msgstr "PID Ki"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:359
 msgid "Has it been a while since we were there? Then we need to accelerate more! (Integral gain for the PID controller.)"
-msgstr ""
+msgstr "목표 지점을 떠난 지 오래됐나요? 그럼 더 가속해야죠! (PID 제어기의 적분 게인입"
+"니다.)"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:369
 msgid "PID Kd"
-msgstr ""
+msgstr "PID Kd"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:370
 msgid "How fast are we approaching the target? If we are approaching too fast, we need to decelerate more! (Derivative gain for the PID controller.)"
-msgstr ""
+msgstr "목표에 얼마나 빠르게 접근하고 있을까요? 너무 빠르게 접근 중이라면 더 감속해야"
+"죠! (PID 제어기의 미분 게인입니다.)"
 
 #: .\Plugins\AdaptiveCruiseControl\settings.py:381
 msgid "This video visually explains how a PID controller works. Please watch it fully if you are not familiar with them."
-msgstr ""
+msgstr "이 비디오는 PID 제어기의 작동 방식을 시각적으로 설명합니다. PID 제어기에 익숙"
+"하지 않다면 끝까지 시청해 주세요."
 
 #: .\Plugins\CollisionAvoidance\main.py:19
 msgid "Provide collision avoidance when inside intersections."
-msgstr ""
+msgstr "교차로 내에서 충돌 방지 기능을 제공합니다."
 
 #: .\Plugins\CollisionAvoidance\main.py:119
 msgid "Collision avoidance disabled"
-msgstr ""
+msgstr "충돌 방지 비활성화됨"
 
 #: .\Plugins\CollisionAvoidance\main.py:127
 msgid "Collision avoidance enabled"
-msgstr ""
+msgstr "충돌 방지 활성화됨"
 
 #: .\Plugins\CollisionAvoidance\ui.py:38
 msgid "These settings will affect how ETS2LA reacts to traffic around it. Please note that this does not affect lane changes."
-msgstr ""
+msgstr "이 설정들은 ETS2LA가 주변 교통에 반응하는 방식에 영향을 미칩니다. 단, 차선 변"
+"경에는 영향을 미치지 않습니다."
 
 #: .\Plugins\CollisionAvoidance\ui.py:44 .\Plugins\Map\ui.py:179
 #: .\Plugins\Map\ui.py:204
 msgid "[Experimental]"
-msgstr ""
+msgstr "[실험적 기능]"
 
 #: .\Plugins\CollisionAvoidance\ui.py:51
 msgid "Sensitivity"
-msgstr ""
+msgstr "민감도"
 
 #: .\Plugins\CollisionAvoidance\ui.py:52
 msgid "How close a vehicle has to be to the truck's path to be considered a threat. Higher values make the system more sensitive."
-msgstr ""
+msgstr "차량이 트럭의 주행 경로에 얼마나 가까이 있어야 위협으로 간주할지 설정합니다. "
+"값이 높을수록 시스템이 더 민감하게 반응합니다."
 
 #: .\Plugins\CollisionAvoidance\ui.py:67
 msgid "Max Speed"
-msgstr ""
+msgstr "최대 속도"
 
 #: .\Plugins\CollisionAvoidance\ui.py:68
 msgid "The maximum speed the truck can be going for collision avoidance to be active."
-msgstr ""
+msgstr "충돌 방지 기능이 활성화되는 최고 속도입니다."
 
 #: .\Plugins\CollisionAvoidance\ui.py:81
 msgid "Lookahead Time"
-msgstr ""
+msgstr "전방 예측 시간"
 
 #: .\Plugins\CollisionAvoidance\ui.py:82
 msgid "How far ahead the system looks for potential collisions."
-msgstr ""
+msgstr "시스템이 잠재적인 충돌을 감지하기 위해 얼마나 먼 미래까지 예측할지 설정합니다"
+"."
 
 #. TRANSLATORS: This means seconds, basically 3s = 3 seconds
 #: .\Plugins\CollisionAvoidance\ui.py:84
 msgid "s"
-msgstr ""
+msgstr "초"
 
 #: .\Plugins\CollisionAvoidance\ui.py:93
 msgid "Announce State"
-msgstr ""
+msgstr "상태 알림"
 
 #: .\Plugins\CollisionAvoidance\ui.py:94
 msgid "Announce when collision avoidance is activated or deactivated."
-msgstr ""
+msgstr "충돌 방지가 활성화 또는 비활성화될 때 알림을 제공합니다."
 
 #: .\Plugins\EventListener\main.py:20
 msgid "Event Listener"
-msgstr ""
+msgstr "이벤트 리스너"
 
 #: .\Plugins\EventListener\main.py:22
 msgid "This plugin listens to the events provided by the game SDK and the log files."
-msgstr ""
+msgstr "이 플러그인은 게임 SDK와 로그 파일에서 제공하는 이벤트를 수신합니다."
 
 #: .\Plugins\HUD\elements\acc.py:9 .\Plugins\HUD\main.py:320
 #: .\Plugins\HUD\main.py:324
 msgid "ACC Information"
-msgstr ""
+msgstr "적응형 크루즈 컨트롤(ACC) 정보"
 
 #: .\Plugins\HUD\elements\acc.py:10
 msgid "Draw ACC information like vehicle distance and speed."
-msgstr ""
+msgstr "차량 거리 및 속도 등 ACC 정보를 표시합니다."
 
 #: .\Plugins\HUD\elements\acceleration.py:9
 msgid "Acceleration"
-msgstr ""
+msgstr "가속도"
 
 #: .\Plugins\HUD\elements\acceleration.py:10
 msgid "Draw the current acceleration of the truck."
-msgstr ""
+msgstr "트럭의 현재 가속도를 표시합니다."
 
 #: .\Plugins\HUD\elements\assists.py:16 .\Plugins\HUD\main.py:49
 msgid "Assist Information"
-msgstr ""
+msgstr "주행 보조 정보"
 
 #: .\Plugins\HUD\elements\assists.py:17
 msgid "Draw ACC and Steering status information."
-msgstr ""
+msgstr "ACC 및 조향 상태 정보를 표시합니다."
 
 #: .\Plugins\HUD\elements\closest.py:10 .\Plugins\HUD\main.py:51
 msgid "Closest City"
-msgstr ""
+msgstr "가장 가까운 도시"
 
 #: .\Plugins\HUD\elements\closest.py:11
 msgid "Displays the closest city and its distance ( relative to the text )."
-msgstr ""
+msgstr "가장 가까운 도시와 그 거리를 표시합니다(텍스트 기준 상대적 위치)."
 
 #: .\Plugins\HUD\elements\fuel.py:7
 msgid "Fuel Status"
-msgstr ""
+msgstr "연료 잔량"
 
 #: .\Plugins\HUD\elements\fuel.py:8
 msgid "Draw the current fuel status of the truck."
-msgstr ""
+msgstr "트럭의 현재 연료 상태를 표시합니다."
 
 #: .\Plugins\HUD\elements\gap.py:7
 msgid "ACC Gap"
-msgstr ""
+msgstr "ACC 차간 거리"
 
 #: .\Plugins\HUD\elements\gap.py:8
 msgid "Shows the gap to the vehicle in front."
-msgstr ""
+msgstr "앞차와의 거리를 표시합니다."
 
 #: .\Plugins\HUD\elements\gear.py:7 .\Plugins\HUD\main.py:47
 msgid "RPM & Gear"
-msgstr ""
+msgstr "RPM & 기어"
 
 #: .\Plugins\HUD\elements\gear.py:8
 msgid "Draw the current RPM and gear of the truck."
-msgstr ""
+msgstr "트럭의 현재 RPM 및 기어를 표시합니다."
 
 #: .\Plugins\HUD\elements\income.py:7
 msgid "Income"
-msgstr ""
+msgstr "수입"
 
 #: .\Plugins\HUD\elements\income.py:8
 msgid "Shows the income from the current job."
-msgstr ""
+msgstr "현재 작업의 수입을 표시합니다."
 
 #: .\Plugins\HUD\elements\income.py:27
 msgid "No job"
-msgstr ""
+msgstr "작업 없음"
 
 #: .\Plugins\HUD\elements\income.py:47
 msgid "Job Income"
-msgstr ""
+msgstr "운송 수입"
 
 #: .\Plugins\HUD\elements\media.py:21 .\Plugins\HUD\main.py:47
 #: .\Plugins\HUD\main.py:50
 msgid "Media"
-msgstr ""
+msgstr "미디어"
 
 #: .\Plugins\HUD\elements\media.py:22
 msgid "Displays media information such as song title, artist and playback progress."
-msgstr ""
+msgstr "노래 제목, 아티스트, 재생 진행 상태 등 미디어 정보를 표시합니다."
 
 #: .\Plugins\HUD\elements\media.py:27
 msgid "No Media Playing"
-msgstr ""
+msgstr "재생 중인 미디어 없음"
 
 #: .\Plugins\HUD\elements\media.py:28 .\Plugins\HUD\elements\media.py:72
 msgid "No Artist"
-msgstr ""
+msgstr "아티스트 정보 없음"
 
 #: .\Plugins\HUD\elements\media.py:71
 msgid "No Title"
-msgstr ""
+msgstr "제목 정보 없음"
 
 #: .\Plugins\HUD\elements\navigation.py:9
 msgid "Navigation"
-msgstr ""
+msgstr "내비게이션"
 
 #: .\Plugins\HUD\elements\navigation.py:10
 msgid "Draw navigation information."
-msgstr ""
+msgstr "내비게이션 정보를 표시합니다."
 
 #. TRANSLATORS: "arrival" is the text in the bottom right corner of the navigation widget
 #: .\Plugins\HUD\elements\navigation.py:71
 msgid "arrival"
-msgstr ""
+msgstr "도착 예정"
 
 #: .\Plugins\HUD\elements\power.py:10
 msgid "Throttle / Brake"
-msgstr ""
+msgstr "스로틀 / 브레이크"
 
 #: .\Plugins\HUD\elements\power.py:11
 msgid "Display current throttle and brake percentage."
-msgstr ""
+msgstr "현재 스로틀 및 브레이크 비율(%)을 표시합니다."
 
 #: .\Plugins\HUD\elements\semaphores.py:8 .\Plugins\HUD\main.py:321
 #: .\Plugins\HUD\main.py:324
 msgid "Traffic Lights"
-msgstr ""
+msgstr "신호등"
 
 #: .\Plugins\HUD\elements\semaphores.py:9
 msgid "Draw traffic light information."
-msgstr ""
+msgstr "신호등 정보를 표시합니다."
 
 #: .\Plugins\HUD\elements\speed.py:8 .\Plugins\HUD\main.py:47
 #: .\Plugins\TTS\main.py:159
 msgid "Speed"
-msgstr ""
+msgstr "속도"
 
 #: .\Plugins\HUD\elements\speed.py:9
 msgid "A normal speed display, will also show speed limit changes."
-msgstr ""
+msgstr "일반 속도 표시이며, 제한 속도 변경 사항도 함께 보여줍니다."
 
 #: .\Plugins\HUD\elements\steering.py:9 .\Plugins\HUD\main.py:322
 #: .\Plugins\HUD\main.py:324
 msgid "Steering Line"
-msgstr ""
+msgstr "주행 경로선"
 
 #: .\Plugins\HUD\elements\steering.py:10
 msgid "Draw steering line from Map."
-msgstr ""
+msgstr "지도에서 조향선을 표시합니다."
 
 #: .\Plugins\HUD\main.py:25
 msgid "Creates a heads up display on the windshield. Needs the AR plugin to work."
-msgstr ""
+msgstr "앞유리에 헤드업 디스플레이(HUD)를 생성합니다. 이 기능은 AR 플러그인이 필요합"
+"니다."
 
 #: .\Plugins\HUD\ui.py:121 .\Plugins\HUD\ui.py:344
 msgid "Enable"
-msgstr ""
+msgstr "활성화"
 
 #: .\Plugins\HUD\ui.py:121 .\Plugins\HUD\ui.py:344
 msgid "Disable"
-msgstr ""
+msgstr "비활성화"
 
 #: .\Plugins\HUD\ui.py:128
 msgid "This plugin provides a HUD using the AR plugin as the renderer."
-msgstr ""
+msgstr "이 플러그인은 AR 플러그인을 렌더러로 사용하여 HUD를 제공합니다."
 
 #: .\Plugins\HUD\ui.py:132
 msgid "Please enable the plugin to edit the settings."
-msgstr ""
+msgstr "설정을 수정하려면 플러그인을 활성화해 주세요."
 
 #: .\Plugins\HUD\ui.py:138
 msgid "Transform"
-msgstr ""
+msgstr "변환"
 
 #: .\Plugins\HUD\ui.py:142
 msgid "Offset X"
-msgstr ""
+msgstr "오프셋 X"
 
 #: .\Plugins\HUD\ui.py:143
 msgid "The horizontal offset of the HUD."
-msgstr ""
+msgstr "HUD의 가로 오프셋입니다."
 
 #: .\Plugins\HUD\ui.py:151
 msgid "Offset Y"
-msgstr ""
+msgstr "오프셋 Y"
 
 #: .\Plugins\HUD\ui.py:152
 msgid "The vertical offset of the HUD."
-msgstr ""
+msgstr "HUD의 세로 오프셋입니다."
 
 #: .\Plugins\HUD\ui.py:160
 msgid "Offset Z"
-msgstr ""
+msgstr "오프셋 Z"
 
 #: .\Plugins\HUD\ui.py:161
 msgid "The depth offset of the HUD."
-msgstr ""
+msgstr "HUD의 깊이 오프셋입니다."
 
 #: .\Plugins\HUD\ui.py:170
 msgid "Widget Sizing"
-msgstr ""
+msgstr "위젯 크기"
 
 #: .\Plugins\HUD\ui.py:172
 msgid "These settings control the sizing of the widgets."
-msgstr ""
+msgstr "이 설정들은 위젯의 크기를 조정합니다."
 
 #: .\Plugins\HUD\ui.py:181
 msgid "Widget Scaling"
-msgstr ""
+msgstr "위젯 배율"
 
 #: .\Plugins\HUD\ui.py:182
 msgid "The scaling factor for the widgets. 1 is normal size, 0.5 is half size, 2 is double size."
-msgstr ""
+msgstr "위젯의 배율 요소입니다. 1은 기본 크기, 0.5는 절반 크기, 2는 두 배 크기입니다."
 
 #: .\Plugins\HUD\ui.py:189
 msgid "Scale Height"
-msgstr ""
+msgstr "높이 배율"
 
 #: .\Plugins\HUD\ui.py:190
 msgid "Scale the height of widgets too, please note that this will cause layout issues with some widgets, use with caution."
-msgstr ""
+msgstr "위젯의 높이도 함께 조절합니다. 일부 위젯에서 레이아웃 문제가 발생할 수 있으니"
+" 주의해서 사용하세요."
 
 #: .\Plugins\HUD\ui.py:198
 msgid "Widget Background"
-msgstr ""
+msgstr "위젯 배경"
 
 #: .\Plugins\HUD\ui.py:200
 msgid "You can control how much the widget background should be darkened by, either all the time or just during the day."
-msgstr ""
+msgstr "위젯 배경의 어두운 정도(밝기)를 조절할 수 있습니다. 항상 어둡게 하거나, 낮에"
+"만 어둡게 하는 옵션을 선택할 수 있습니다."
 
 #: .\Plugins\HUD\ui.py:208
 msgid "Darkness"
-msgstr ""
+msgstr "어두운 정도"
 
 #: .\Plugins\HUD\ui.py:209
 msgid "The darkness of the widget background. 0 is no darkness, 1 is fully dark."
-msgstr ""
+msgstr "위젯 배경의 어두운 정도입니다. 0은 어둡지 않음, 1은 완전히 어두움을 의미합니"
+"다."
 
 #: .\Plugins\HUD\ui.py:220
 msgid "Day Darkness"
-msgstr ""
+msgstr "주간 어두운 정도"
 
 #: .\Plugins\HUD\ui.py:221
 msgid "The darkness of the widget background during the day. 0 is no darkness, 1 is fully dark."
-msgstr ""
+msgstr "위젯 배경의 주간 어두운 정도입니다. 0은 어둡지 않음, 1은 완전히 어두움을 의미"
+"합니다."
 
 #: .\Plugins\HUD\ui.py:232
 msgid "Elements"
-msgstr ""
+msgstr "구성 요소"
 
 #: .\Plugins\HUD\ui.py:247
 msgid "Enabled Widgets"
-msgstr ""
+msgstr "활성화된 위젯"
 
 #: .\Plugins\HUD\ui.py:249
 msgid "This displays your enabled widgets and their respective sizes. Click one to disable it, you cannot yet move them around, you will instead have to Disable -> Enable to get them where you want them."
 msgstr ""
+"이 영역에는 활성화된 위젯과 각 위젯의 크기가 표시됩니다. 위젯을 클릭하면 비활"
+"성화할 수 있습니다. 현재 위젯을 자유롭게 이동할 수는 없으며, 원하는 위치에 배"
+"치하려면 위젯을 비활성화한 후 다시 활성화해야 합니다."
 
 #: .\Plugins\HUD\ui.py:296
 msgid "Available Widgets"
-msgstr ""
+msgstr "사용 가능한 위젯"
 
 #: .\Plugins\HUD\ui.py:298
 msgid "These widgets are available to be enabled:"
-msgstr ""
+msgstr "활성화할 수 있는 위젯 목록입니다:"
 
 #: .\Plugins\HUD\ui.py:308
 msgid "Renderers"
-msgstr ""
+msgstr "렌더러"
 
 #: .\Plugins\HUD\ui.py:310
 msgid "These renderers are used to draw non anchored elements. These are usually elements in the game world that move around."
-msgstr ""
+msgstr "이 렌더러들은 고정되지 않은 요소를 그리는 데 사용됩니다. 이는 주로 게임 세계"
+"에서 움직이는 요소들입니다."
 
 #: .\Plugins\Map\controls.py:6
 msgid "Toggle Steering"
-msgstr ""
+msgstr "조향 켜기/끄기"
 
 #: .\Plugins\Map\controls.py:8
 msgid "When the Map plugin is running, this will toggle the steering on/off."
-msgstr ""
+msgstr "지도 플러그인 실행 중에는 이 기능이 조향을 켜거나 끕니다."
 
 #: .\Plugins\Map\main.py:54 .\Plugins\Map\ui.py:28
 msgid "Map"
-msgstr ""
+msgstr "지도"
 
 #: .\Plugins\Map\main.py:55
 msgid "This plugin provides steering and navigation features. It is the most important plugin in ETS2LA."
-msgstr ""
+msgstr "이 플러그인은 조향 및 내비게이션 기능을 제공합니다. ETS2LA에서 가장 중요한 플"
+"러그인입니다."
 
 #: .\Plugins\Map\main.py:241
 msgid "Error initializing Map plugin: {0}"
-msgstr ""
+msgstr "지도 플러그인 초기화 오류: {0}"
 
 #: .\Plugins\Map\main.py:277
 msgid "Preparing to load data..."
-msgstr ""
+msgstr "데이터 로딩 준비 중..."
 
 #: .\Plugins\Map\main.py:291
 msgid "Waiting for game data selection in the Settings -> Map..."
-msgstr ""
+msgstr "설정 -> 지도에서 게임 데이터 선택을 기다리는 중..."
 
 #: .\Plugins\Map\main.py:325
 msgid "Invalid steering value received"
-msgstr ""
+msgstr "유효하지 않은 조향 값 수신됨"
 
 #: .\Plugins\Map\main.py:352
 msgid "Error in Map plugin run loop: {0}"
-msgstr ""
+msgstr "지도 플러그인 실행 루프 오류: {0}"
 
 #: .\Plugins\Map\main.py:413
 msgid "Warning: Steering might be compromised due to low FPS. ({0} fps)"
-msgstr ""
+msgstr "경고: 낮은 FPS({0}fps)로 인해 조향 성능이 저하될 수 있습니다"
 
 #: .\Plugins\Map\ui.py:37
 msgid "Not Found"
-msgstr ""
+msgstr "찾을 수 없음"
 
 #: .\Plugins\Map\ui.py:130
 msgid "Map Settings"
-msgstr ""
+msgstr "지도 설정"
 
 #: .\Plugins\Map\ui.py:131
 msgid "Configure the settings for the Map plugin. Here you can adjust various options related to navigation, steering, and data handling."
-msgstr ""
+msgstr "지도 플러그인의 설정을 구성합니다. 여기에서 내비게이션, 조향 및 데이터 처리와"
+" 관련된 다양한 옵션을 조정할 수 있습니다."
 
 #: .\Plugins\Map\ui.py:141
 msgid "Disable FPS Notices"
-msgstr ""
+msgstr "FPS 알림 비활성화"
 
 #: .\Plugins\Map\ui.py:142
 msgid "When enabled map will not notify of any FPS related issues."
-msgstr ""
+msgstr "활성화 시 지도가 FPS 관련 문제 알림을 표시하지 않습니다."
 
 #: .\Plugins\Map\ui.py:150
 msgid "Takeover When Unreliable"
-msgstr ""
+msgstr "불안정 시 운전자 인계"
 
 #: .\Plugins\Map\ui.py:151
 msgid "When enabled, the map will automatically take over control when the truck is not following the route correctly."
-msgstr ""
+msgstr "활성화하면 트럭이 경로를 올바르게 따르지 않을 때 지도가 자동으로 제어를 인계"
+"합니다."
 
 #: .\Plugins\Map\ui.py:183
 msgid "Automatic Tolls"
-msgstr ""
+msgstr "통행료 자동 결제"
 
 #: .\Plugins\Map\ui.py:186
 msgid "Attempt to automatically solve tolls. This may or may not work. Requires a restart to fully reload toll data."
 msgstr ""
+"통행료를 자동으로 처리하려고 시도합니다. 작동할 수도 있고 그렇지 않을 수도 있"
+"습니다. 통행료 데이터를 완전히 다시 불러오려면 재시작이 필요합니다."
 
 #: .\Plugins\Map\ui.py:240
 msgid "Compute Steering Data"
-msgstr ""
+msgstr "조향 데이터 계산"
 
 #: .\Plugins\Map\ui.py:241
 msgid "When enabled map will compute and send steering data to the game."
-msgstr ""
+msgstr "활성화 시 지도가 조향 데이터를 계산하여 게임으로 전송합니다."
 
 #: .\Plugins\Map\ui.py:248
 msgid "Drive Based On Trailer"
-msgstr ""
+msgstr "트레일러 기반 주행"
 
 #: .\Plugins\Map\ui.py:249
 msgid "When enabled map will take into account the trailer when calculating the current steering point."
-msgstr ""
+msgstr "활성화 시 지도가 트레일러를 고려하여 현재 조향 지점을 계산합니다."
 
 #: .\Plugins\Map\ui.py:256
 msgid "Steering Smoothness"
-msgstr ""
+msgstr "조향 부드러움"
 
 #: .\Plugins\Map\ui.py:257
 msgid "Set the time we average the steering data over. A value of 0.5 means that the steering from the last half a second is used to calculate the current value."
-msgstr ""
+msgstr "조향 데이터를 평균화하는 시간을 설정합니다. 값이 0.5이면 지난 0.5초 동안의 조"
+"향 데이터를 사용하여 현재 값을 계산합니다."
 
 #: .\Plugins\Map\ui.py:268
 msgid "Data"
-msgstr ""
+msgstr "데이터"
 
 #: .\Plugins\Map\ui.py:287
 msgid "NOTE!"
-msgstr ""
+msgstr "참고!"
 
 #: .\Plugins\Map\ui.py:289
 msgid "If you encounter an error after changing the changing the data please restart the plugin! If this doesn't resolve your issue then please contact the data creators or the developers on Discord!"
 msgstr ""
+"데이터 변경 후 오류가 발생하면 플러그인을 재시작해 주세요! 그래도 문제가 해결"
+"되지 않으면 데이터 제작자나 Discord의 개발자에게 문의해 주세요!"
 
 #: .\Plugins\Map\ui.py:297
 msgid "Please select the data you want to use. This will begin the download process and Map will be ready once the data is loaded."
-msgstr ""
+msgstr "사용할 데이터를 선택해 주세요. 선택 시 다운로드가 시작되며, 데이터가 로드되면"
+" 지도를 사용할 수 있습니다."
 
 #: .\Plugins\Map\ui.py:309
 msgid "Update Data"
-msgstr ""
+msgstr "데이터 업데이트"
 
 #: .\Plugins\Map\ui.py:310
 msgid "Update the currently selected data, this can be helpful if the data is corrupted or there has been an update."
-msgstr ""
+msgstr "현재 선택된 데이터를 업데이트합니다. 데이터가 손상되었거나 업데이트가 있는 경"
+"우 유용할 수 있습니다."
 
 #: .\Plugins\Map\ui.py:318
 msgid "Traffic Side"
-msgstr ""
+msgstr "차선 통행 방향"
 
 #: .\Plugins\Map\ui.py:319
 msgid "This will make the indicators behave correctly when lane changing in left handed or right handed countries."
-msgstr ""
+msgstr "이 설정은 좌측 통행 국가와 우측 통행 국가에서 차선 변경 시 방향 지시등이 올바"
+"르게 작동하도록 합니다."
 
 #: .\Plugins\Map\ui.py:373
 msgid "The download size for this data is"
-msgstr ""
+msgstr "이 데이터의 다운로드 용량은"
 
 #: .\Plugins\Map\ui.py:381
 msgid "that will unpack to a total size of"
-msgstr ""
+msgstr "압축 해제 시 전체 용량은"
 
 #: .\Plugins\NavigationSockets\main.py:123
 msgid "Navigation Sockets"
-msgstr ""
+msgstr "내비게이션 소켓"
 
 #: .\Plugins\NavigationSockets\main.py:125
 msgid "This plugin provides a WebSocket server for navigation data on a world map."
-msgstr ""
+msgstr "이 플러그인은 세계 지도의 내비게이션 데이터를 위한 WebSocket 서버를 제공합니"
+"다."
 
 #: .\Plugins\TTS\main.py:89 .\Plugins\TTS\main.py:199
 msgid "TTS"
-msgstr ""
+msgstr "텍스트 음성 변환"
 
 #: .\Plugins\TTS\main.py:90
 msgid "The TTS plugin provides text-to-speech functionality for accessibility and voiced announcements."
-msgstr ""
+msgstr "TTS 플러그인은 접근성 및 음성 알림을 위한 텍스트 음성 변환 기능을 제공합니다."
 
 #: .\Plugins\TTS\main.py:97
 msgid "Voices"
-msgstr ""
+msgstr "TTS 음성"
 
 #: .\Plugins\TTS\main.py:110
 msgid "Please select a provider!"
-msgstr ""
+msgstr "제공자를 선택해 주세요!"
 
 #: .\Plugins\TTS\main.py:115
 msgid "This will show provider information once the plugin is loaded."
-msgstr ""
+msgstr "플러그인이 로드되면 제공자 정보를 표시합니다."
 
 #: .\Plugins\TTS\main.py:121
 msgid "Select TTS provider"
-msgstr ""
+msgstr "TTS 제공자 선택"
 
 #: .\Plugins\TTS\main.py:122
 msgid "Select the TTS provider to use."
-msgstr ""
+msgstr "사용할 TTS 제공자를 선택하세요."
 
 #: .\Plugins\TTS\main.py:130
 msgid "Please select a provider to show voices."
-msgstr ""
+msgstr "음성을 표시하려면 제공자를 선택해 주세요."
 
 #: .\Plugins\TTS\main.py:140 .\Plugins\TTS\main.py:323
 msgid "Voice {0} not found, using default: {1}"
-msgstr ""
+msgstr "음성 {0} 없음, 기본값 {1} 사용"
 
 #: .\Plugins\TTS\main.py:146
 msgid "Select TTS voice"
-msgstr ""
+msgstr "TTS 음성 선택"
 
 #: .\Plugins\TTS\main.py:147
 msgid "Select the TTS voice to use."
-msgstr ""
+msgstr "사용할 TTS 음성을 선택하세요."
 
 #: .\Plugins\TTS\main.py:152
 msgid "Search for a voice..."
-msgstr ""
+msgstr "음성 검색..."
 
 #: .\Plugins\TTS\main.py:153
 msgid "No voices found."
-msgstr ""
+msgstr "음성을 찾을 수 없음."
 
 #: .\Plugins\TTS\main.py:160
 msgid "Set the target speed of the voice."
-msgstr ""
+msgstr "음성 속도를 설정합니다."
 
 #: .\Plugins\TTS\main.py:170
 msgid "Set the target volume of the voice."
-msgstr ""
+msgstr "음성의 볼륨을 설정합니다."
 
 #: .\Plugins\TTS\main.py:178
 msgid "Test Mode"
-msgstr ""
+msgstr "테스트 모드"
 
 #: .\Plugins\TTS\main.py:179
 msgid "Enable test mode to test the TTS provider without loading the game."
-msgstr ""
+msgstr "게임을 실행하지 않고 TTS 제공자를 테스트하려면 테스트 모드를 활성화하세요."
 
 #: .\Plugins\TTS\main.py:186
 msgid "Settings"
-msgstr ""
+msgstr "설정"
 
 #: .\Plugins\TTS\main.py:188
 msgid "Enable Road Proximity Beep"
-msgstr ""
+msgstr "도로 근접 경고음 활성화"
 
 #: .\Plugins\TTS\main.py:189
 msgid "Enable a proximity beep that indicates the distance and angle to the closest road."
-msgstr ""
+msgstr "가장 가까운 도로까지의 거리와 각도를 알려주는 근접 경고음을 활성화합니다."
 
 #: .\Plugins\TTS\main.py:201
 msgid "Text To Speech plugin for accessibility. Some people might also like voiced announcements."
-msgstr ""
+msgstr "접근성을 위한 TTS(텍스트 음성 변환) 플러그인입니다. 음성 알림을 선호하는 분들"
+"께도 유용할 수 있습니다."
 
 #: .\Plugins\TTS\main.py:283
 msgid "Voice {0} not found in provider {1}."
-msgstr ""
+msgstr "제공자 {1}에 음성 {0} 없음."
 
 #: .\Plugins\TTS\main.py:289
 msgid "No provider selected. Cannot select voice."
-msgstr ""
+msgstr "선택된 제공자가 없어 음성을 선택할 수 없습니다."
 
 #: .\Plugins\TTS\main.py:317
 msgid "Loading TTS provider: {0}"
-msgstr ""
+msgstr "TTS 제공자 로딩 중: {0}"
 
 #: .\Plugins\TTS\main.py:329
 msgid "Loading TTS voice: {0}"
-msgstr ""
+msgstr "TTS 음성 로딩 중: {0}"
 
 #: .\Plugins\TTS\main.py:376
 msgid "Map steering enabled."
-msgstr ""
+msgstr "지도 조향이 활성화되었습니다."
 
 #: .\Plugins\TTS\main.py:378
 msgid "Map steering disabled."
-msgstr ""
+msgstr "지도 조향이 비활성화되었습니다."
 
 #: .\Plugins\TTS\main.py:392
 msgid "Adaptive Cruise Control enabled."
-msgstr ""
+msgstr "적응형 크루즈 컨트롤(ACC)이 활성화되었습니다."
 
 #: .\Plugins\TTS\main.py:394
 msgid "Adaptive Cruise Control disabled."
-msgstr ""
+msgstr "적응형 크루즈 컨트롤(ACC)이 비활성화되었습니다."
 
 #: .\Plugins\TTS\main.py:415
 msgid "Closest city is now {city} at a distance of {distance} kilometer."
 msgid_plural "Closest city is now {city} at a distance of {distance} kilometers."
-msgstr[0] ""
+msgstr[0] "가장 가까운 도시가 {city}(으)로 변경되었으며, 거리는 {distance}km입니다."
 
 #: .\Plugins\TTS\main.py:432
 msgid "Speed limit changed to {0} kilometer per hour."
 msgid_plural "Speed limit changed to {0} kilometers per hour."
-msgstr[0] ""
+msgstr[0] "제한 속도가 {0}km/h로 변경되었습니다."
 
 #: .\Plugins\TTS\main.py:448
 msgid "Fuel range is now only {0} kilometer, please refuel soon."
 msgid_plural "Fuel range is now only {0} kilometers, please refuel soon."
-msgstr[0] ""
+msgstr[0] "주행 가능 연료 범위가 이제 {0}km만 남았습니다. 곧 주유해 주세요."
 
 #: .\Plugins\TTS\main.py:457
 msgid "Fuel range is now critical at only {0} kilometer, please refuel as soon as possible."
 msgid_plural "Fuel range is now critical at only {0} kilometers, please refuel as soon as possible."
-msgstr[0] ""
+msgstr[0] "주행 가능 연료 범위가 이제 {0}km만 남아 심각한 수준입니다. 최대한 빨리 주유해"
+" 주세요."
 
 #: .\Plugins\TTS\main.py:484 .\Plugins\TTS\main.py:498
 #: .\Plugins\TTS\main.py:520
 msgid "It's {0} kilometers to the next waypoint."
-msgstr ""
+msgstr "다음 경유지까지 {0}km입니다."
 
 #: .\Plugins\TTS\main.py:539
 msgid "Engine damage is now at {0}%."
-msgstr ""
+msgstr "엔진 데미지가 현재 {0}%입니다."
 
 #: .\Plugins\TTS\main.py:542
 msgid "Cabin damage is now at {0}%."
-msgstr ""
+msgstr "캐빈 데미지가 현재 {0}%입니다."
 
 #: .\Plugins\TTS\main.py:545
 msgid "Chassis damage is now at {0}%."
-msgstr ""
+msgstr "샤시 데미지가 현재 {0}%입니다."
 
 #: .\Plugins\TTS\main.py:549
 msgid "Transmission damage is now at {0}%."
-msgstr ""
+msgstr "변속기 데미지가 현재 {0}%입니다."
 
 #: .\Plugins\TTS\main.py:553
 msgid "Wheel damage is now at {0}%."
-msgstr ""
+msgstr "휠 데미지가 현재 {0}%입니다."
 
 #: .\Plugins\TTS\main.py:556
 msgid "Cargo damage is now at {0}%."
-msgstr ""
+msgstr "화물 데미지가 현재 {0}%입니다."
 
 #: .\Plugins\TTS\main.py:575
 msgid "Speed {0} kilometers per hour, limit {1}, fuel {2}%, and it's {3} kilometers to the next waypoint."
-msgstr ""
+msgstr "속도 {0}km/h, 제한 속도 {1}km/h, 연료 {2}%, 그리고 다음 경유지까지 {3}km입니"
+"다."
 
 #: .\Plugins\TTS\main.py:631 .\Plugins\TTS\main.py:650
 msgid "Traffic light ahead in {distance} meters. Currently {state}."
-msgstr ""
+msgstr "전방 {distance}미터에 신호등이 있습니다. 현재 {state}입니다."
 
 #: .\Plugins\TTS\main.py:641
 msgid "Traffic light changed to {state}. Now at {distance} meters."
-msgstr ""
+msgstr "신호등이 {state}(으)로 변경되었습니다. 현재 {distance}미터 전방에 있습니다."
 
 #: .\Plugins\TTS\main.py:659
 msgid "{distance} meter"
 msgid_plural "{distance} meters"
-msgstr[0] ""
+msgstr[0] "{distance}미터"
 
 #: .\Plugins\TTS\main.py:675
 msgid "Headlights turned on."
-msgstr ""
+msgstr "헤드라이트가 켜졌습니다."
 
 #: .\Plugins\TTS\main.py:677
 msgid "Headlights turned off."
-msgstr ""
+msgstr "헤드라이트가 꺼졌습니다."
 
 #: .\Plugins\TTS\main.py:694
 msgid "Test mode enabled. This is a test message."
-msgstr ""
+msgstr "테스트 모드가 활성화되었습니다. 이것은 테스트 메시지입니다."
 
 #: .\Plugins\VisualizationSockets\main.py:214
 #: .\Plugins\VisualizationSockets\main.py:229
 #: .\Plugins\VisualizationSockets\main.py:387
 msgid "Visualization Sockets"
-msgstr ""
+msgstr "시각화 소켓"
 
 #: .\Plugins\VisualizationSockets\main.py:230
 msgid "This plugin provides a websocket server for the ETS2LA Visualization."
-msgstr ""
+msgstr "이 플러그인은 ETS2LA 시각화를 위한 WebSocket 서버를 제공합니다."
 
 #. TRANSLATORS: Host device in this context means the device that is running ETS2LA.
 #: .\Plugins\VisualizationSockets\main.py:237
 msgid "Host Device"
-msgstr ""
+msgstr "호스트 장치"
 
 #: .\Plugins\VisualizationSockets\main.py:240
 msgid "If you want to view the ETS2LA Visualization on the current device, simply open the 'Visualization' tab on the sidebar, you can then select between the official and Goodnightan mirrors."
 msgstr ""
+"현재 기기에서 ETS2LA 시각화를 보려면 사이드바에서 '시각화' 탭을 열기만 하면 "
+"됩니다. 그런 다음 공식 미러와 Goodnightan 미러 중에서 선택할 수 있습니다."
 
 #: .\Plugins\VisualizationSockets\main.py:247
 msgid "You can also use the following website:"
-msgstr ""
+msgstr "다음 웹사이트를 사용할 수도 있습니다:"
 
 #: .\Plugins\VisualizationSockets\main.py:256
 msgid "Other Device"
-msgstr ""
+msgstr "다른 기기"
 
 #: .\Plugins\VisualizationSockets\main.py:262
 msgid "1. Open the following URL in your device's browser: "
-msgstr ""
+msgstr "1. 기기의 브라우저에서 다음 URL을 여세요. "
 
 #: .\Plugins\VisualizationSockets\main.py:275
 msgid "NOTE: You must load the site as http instead of https. Google Chrome will not work!"
-msgstr ""
+msgstr "참고: 반드시 https 대신 http로 사이트에 접속해야 합니다. 구글 크롬에서는 작동"
+"하지 않습니다!"
 
 #: .\Plugins\VisualizationSockets\main.py:282
 msgid "2. Once the website loads press the red 'Remote Connection' button. If this doesn't connect then enter the following IP address:"
-msgstr ""
+msgstr "2. 웹사이트가 로드되면 빨간색 '원격 연결' 버튼을 누르세요. 연결되지 않으면 다"
+"음 IP 주소를 입력하세요:"
 
 #: .\Plugins\VisualizationSockets\main.py:293
 msgid "3. If you have any issues please verify that your device is on the same network as the host. You should also make sure that your firewall does not block the connection between the devices."
 msgstr ""
+"3. 문제가 발생하면 호스트와 동일한 네트워크에 내 기기가 연결되어 있는지 확인"
+"하세요. 또한 방화벽이 기기 간 연결을 차단하지 않는지 확인해야 합니다."
 
 #: .\Plugins\VisualizationSockets\main.py:300
 msgid "Your IP address could not be found, this is likely due to a network issue. Viewing the visualization externally is not possible."
-msgstr ""
+msgstr "IP 주소를 찾을 수 없습니다. 네트워크 문제로 인한 것 같습니다. 외부에서 시각화"
+"를 볼 수 없습니다."
 
 #: .\Plugins\VisualizationSockets\main.py:309
 msgid "Waiting for plugin start..."
-msgstr ""
+msgstr "플러그인 시작 대기 중..."
 
 #: .\Plugins\VisualizationSockets\main.py:315
 msgid "Waiting for plugin to load..."
-msgstr ""
+msgstr "플러그인 로드 대기 중..."
 
 #: .\Plugins\VisualizationSockets\main.py:319
 msgid "The following clients are currently connected:"
-msgstr ""
+msgstr "현재 다음 클라이언트가 연결되어 있습니다:"
 
 #: .\Plugins\VisualizationSockets\main.py:340
 msgid "Latency: {latency:.2f}ms"
-msgstr ""
+msgstr "지연 시간: {latency:.2f}ms"
 
 #: .\Plugins\VisualizationSockets\main.py:348
 msgid "Channels: {channels}"
-msgstr ""
+msgstr "채널: {channels}"
 
 #: .\Plugins\VisualizationSockets\main.py:358
 msgid "Not acknowledged yet."
-msgstr ""
+msgstr "아직 확인되지 않음."
 
 #: .\Plugins\VisualizationSockets\main.py:363
 msgid "There are no currently connected clients."
-msgstr ""
+msgstr "현재 연결된 클라이언트가 없습니다."
 
 #: .\Plugins\VisualizationSockets\main.py:389
 msgid "This plugin provides a websocket server for the ETS2LA Visualization. It allows you to connect to the visualization from other devices and view the ETS2LA data in real-time."
 msgstr ""
+"이 플러그인은 ETS2LA 시각화를 위한 WebSocket 서버를 제공합니다. 이를 통해 다"
+"른 기기에서 시각화에 연결하여 ETS2LA 데이터를 실시간으로 볼 수 있습니다."
 
 #: .\main.py:147
 msgid "Checking mirrors..."
-msgstr ""
+msgstr "미러 확인 중..."
 
 #: .\main.py:161
 msgid "- Reached {0} in {1:.0f}ms"
-msgstr ""
+msgstr "{0} 연결됨 (소요 시간: {1:.0f}ms)"
 
 #: .\main.py:166
 msgid " - Reached {0} in (TIMEOUT)"
-msgstr ""
+msgstr " -{0} 연결 실패 (시간 초과)"
 
 #: .\main.py:189
 msgid " -- Running post download action for submodule:  Interface  -- "
-msgstr ""
+msgstr " -- 서브모듈: Interface 에 대한 다운로드 후 작업 실행 중 -- "
 
 #: .\main.py:214
 msgid "Running ETS2LA in development mode."
-msgstr ""
+msgstr "개발 모드로 ETS2LA를 실행 중입니다."
 
 #: .\main.py:221
 msgid "No connection to remote UI mirrors. Running locally."
-msgstr ""
+msgstr "원격 UI 미러에 연결할 수 없습니다. 로컬 모드로 실행합니다."
 
 #: .\main.py:234
 msgid "Running UI in China mode"
-msgstr ""
+msgstr "중국 모드로 UI를 실행 중입니다"
 
 #: .\main.py:237
 msgid "> Using mirror {0} for UI."
-msgstr ""
+msgstr "> UI에 미러 {0}를 사용 중입니다."
 
 #: .\main.py:247
 msgid "--no-console cannot be used in combination with --no-ui. The console will not close."
-msgstr ""
+msgstr "--no-console은 --no-ui와 함께 사용할 수 없습니다. 콘솔이 닫히지 않습니다."
 
 #: .\main.py:253
 msgid "Closing console after UI start."
-msgstr ""
+msgstr "UI 시작 후 콘솔을 닫습니다."
 
 #: .\main.py:280
 msgid "Running in the background without a window."
-msgstr ""
+msgstr "창 없이 백그라운드에서 실행 중입니다."
 
 #: .\main.py:284
 msgid "Running UI locally"
-msgstr ""
+msgstr "로컬 모드로 UI를 실행 중입니다"
 
 #: .\main.py:302
 msgid "The window process has crashed!"
-msgstr ""
+msgstr "창 프로세스에 오류가 발생했습니다!"
 
 #: .\main.py:310
 msgid "ETS2LA Overseer started!"
-msgstr ""
+msgstr "ETS2LA 감독자가 시작되었습니다!"
 
 #: .\main.py:341
 msgid "ETS2LA is restarting..."
-msgstr ""
+msgstr "ETS2LA 다시 시작 중..."
 
 #: .\main.py:349
 msgid "Skipping update due to development mode."
-msgstr ""
+msgstr "개발 모드로 인해 업데이트를 건너뜁니다."
 
 #: .\main.py:353
 msgid "ETS2LA is updating..."
-msgstr ""
+msgstr "ETS2LA 업데이트 중..."
 
 #: .\main.py:356
 msgid "Update done... restarting!"
-msgstr ""
+msgstr "업데이트 완료... 재시작합니다!"
 
 #: .\main.py:361
 msgid "ETS2LA has crashed!"
-msgstr ""
+msgstr "ETS2LA에 오류가 발생했습니다!"
 
 #: .\main.py:375
 msgid "Send the above traceback to the developers."
-msgstr ""
+msgstr "위의 오류 추적 정보를 개발자에게 보내 주세요."
 
 #: .\main.py:377
 msgid "ETS2LA has closed."
-msgstr ""
+msgstr "ETS2LA가 종료되었습니다."
 
 #: .\main.py:378
 msgid "Press enter to exit."
-msgstr ""
+msgstr "종료하려면 Enter 키를 누르세요."

@@ -189,6 +189,10 @@ class Plugin(ETS2LAPlugin):
         data.enabled = False
         Play("warning")
         self.tags.status = {"Map": data.enabled}
+        if settings.PauseWhenTakeover:
+            data.controller.pause = True
+            time.sleep(1/10) # wait for the game to register
+            data.controller.pause = False
 
     @events.on("JobFinished")
     def JobFinished(self, event_object, *args, **kwargs):
@@ -340,8 +344,7 @@ class Plugin(ETS2LAPlugin):
 
             external_map_start_time = time.perf_counter()
             if data.external_data_changed:
-                external_data = json.dumps(data.external_data)
-                self.tags.map = json.loads(external_data)
+                self.tags.map = data.external_data
                 self.tags.map_update_time = data.external_data_time
                 data.external_data_changed = False
 

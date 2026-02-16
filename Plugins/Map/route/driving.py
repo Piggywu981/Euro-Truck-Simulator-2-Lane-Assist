@@ -205,6 +205,10 @@ def GetSteering():
                         points.append(point)
 
     if len(points) == 0:
+        if data.enabled and data.takeover_when_unreliable:
+            events.trigger("takeover", Event())
+            data.plugin.notify("Takeover: No points in route, please drive manually")
+            
         data.route_points = []
         return 0
 
@@ -220,6 +224,7 @@ def GetSteering():
         if data.enabled and data.takeover_when_unreliable:
             events.trigger("takeover", Event())
             data.plugin.notify("Takeover: Steering unreliable")
+        
         data.route_points = points
         return 0
 

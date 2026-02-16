@@ -1,5 +1,6 @@
 import Plugins.Map.utils.prefab_helpers as prefab_helpers
 import Plugins.Map.utils.road_helpers as road_helpers
+from Plugins.Map.settings import settings
 import Plugins.Map.data as data
 import numpy as np
 import subprocess
@@ -7,10 +8,8 @@ import math
 import cv2
 
 # Change These
-DRAW_DETAILED_ROADS = True
-
-WINDOW_WIDTH = 1000
-WINDOW_HEIGHT = 1000
+WINDOW_WIDTH = int(1000 * settings.IntnernalVisualizationWindowScale)
+WINDOW_HEIGHT = int(1000 * settings.IntnernalVisualizationWindowScale)
 
 LINE_THICKNESS = 1
 FONT_SIZE = 0.5
@@ -288,7 +287,7 @@ def DrawRoads(sector_change: bool) -> None:
     for road in data.current_sector_roads:
         if data.heavy_calculations_this_frame >= data.allowed_heavy_calculations:
             break
-        if not DRAW_DETAILED_ROADS:
+        if not settings.InternalVisualizationPerformance:
             __ = road.points
         else:
             for lane in road.lanes:
@@ -314,7 +313,7 @@ def DrawRoads(sector_change: bool) -> None:
         road_highlighted = (
             HIGHLIGHTED_ROAD is not None and HIGHLIGHTED_ROAD == road.road_look.name
         )
-        if not DRAW_DETAILED_ROADS:
+        if not settings.InternalVisualizationPerformance:
             poly_points = [
                 ToLocalSectorCoordinates((point.x), (point.z), SCALING_FACTOR)
                 for point in lane.points

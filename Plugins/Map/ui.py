@@ -102,6 +102,19 @@ class SettingsMenu(ETS2LAPage):
             value = not settings.InternalVisualisation
         settings.InternalVisualisation = value
 
+    def handle_internal_visualisation_performance(self, *args):
+        if args:
+            value = args[0]
+        else:
+            value = not settings.InternalVisualizationPerformance
+        settings.InternalVisualizationPerformance = value
+    
+    def handle_internal_visualisation_window_scale(self, value):
+        if isinstance(value, str):
+            value = float(value)
+
+        settings.IntnernalVisualizationWindowScale = value
+
     def handle_override_lane_offsets(self, *args):
         if args:
             value = args[0]
@@ -124,6 +137,14 @@ class SettingsMenu(ETS2LAPage):
             value = not settings.TakeoverWhenUnreliable
 
         settings.TakeoverWhenUnreliable = value
+        
+    def handle_pause_when_takeover(self, *args):
+        if args:
+            value = args[0]
+        else:
+            value = not settings.PauseWhenTakeover
+
+        settings.PauseWhenTakeover = value
 
     def render(self):
         TitleAndDescription(
@@ -149,10 +170,19 @@ class SettingsMenu(ETS2LAPage):
                 CheckboxWithTitleDescription(
                     title=_("Takeover When Unreliable"),
                     description=_(
-                        "When enabled, the map will automatically take over control when the truck is not following the route correctly."
+                        "When enabled, a takeover event will be automatically triggered when the truck is not following the route correctly."
                     ),
                     default=settings.TakeoverWhenUnreliable,
                     changed=self.handle_takeover_when_unreliable,
+                )
+                
+                CheckboxWithTitleDescription(
+                    title=_("Pause When Takeover"),
+                    description=_(
+                        "When enabled, ETS2LA will pause the game when a takeover is triggered. This is especially useful if you leave the computer for a while."
+                    ),
+                    default=settings.PauseWhenTakeover,
+                    changed=self.handle_pause_when_takeover,
                 )
 
                 Text("Experimental Features", styles.Classname("font-semibold"))
@@ -502,6 +532,21 @@ class SettingsMenu(ETS2LAPage):
                             description="Enable internal visualisation for debugging.",
                             changed=self.handle_internal_visualisation,
                             default=settings.InternalVisualisation,
+                        )
+                        CheckboxWithTitleDescription(
+                            title="Internal Visualisation Performance Mode",
+                            description="Enable performance mode for internal visualisation (will result in less detail).",
+                            changed=self.handle_internal_visualisation_performance,
+                            default=settings.InternalVisualizationPerformance,
+                        )
+                        SliderWithTitleDescription(
+                            title="Internal Visualization Window Scale",
+                            description="Scale the size of the internal visualization window.",
+                            default=settings.IntnernalVisualizationWindowScale, 
+                            min=0.1,
+                            max=1.0,
+                            step=0.1,
+                            changed=self.handle_internal_visualisation_window_scale,
                         )
                         ButtonWithTitleDescription(
                             title="Reload Lane Offsets",

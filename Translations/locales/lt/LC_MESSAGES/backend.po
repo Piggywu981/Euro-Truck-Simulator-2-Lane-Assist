@@ -7,15 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ETS2LA Backend 1.0.0\n"
 "POT-Creation-Date: 2026-02-01 15:00\n"
-"PO-Revision-Date: 2025-10-28 17:07+0000\n"
+"PO-Revision-Date: 2026-02-15 14:17+0000\n"
 "Last-Translator: Dano <dano@ets2la.com>\n"
-"Language-Team: Lithuanian <http://weblate.ets2la.com/projects/ets2la/backend/lt/>\n"
+"Language-Team: Lithuanian <http://weblate.ets2la.com/projects/ets2la/backend/"
+"lt/>\n"
+"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n % 10 == 1 && (n % 100 < 11 || n % 100 > 19)) ? 0 : ((n % 10 >= 2 && n % 10 <= 9 && (n % 100 < 11 || n % 100 > 19)) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"Plural-Forms: nplurals=3; plural="
+"(n % 10 == 1 && (n % 100 < 11 || n % 100 > 19)) ? 0 : "
+"((n % 10 >= 2 && n % 10 <= 9 && (n % 100 < 11 || n % 100 > 19)) ? 1 : 2);\n"
+"X-Generator: Weblate 5.14.3\n"
 "Generated-By: pygettext.py 1.5\n"
 
 #: .\ETS2LA\Controls\picker.py:81
@@ -353,11 +356,11 @@ msgstr "{0} ir {1}"
 
 #: .\Pages\about.py:290
 msgid "{0} users"
-msgstr ""
+msgstr "{0}naudotojų"
 
 #: .\Pages\about.py:292
 msgid "{0} unique users"
-msgstr ""
+msgstr "{0}unikalių naudotojų"
 
 #: .\Pages\about.py:330
 msgid "Hey There!"
@@ -366,77 +369,87 @@ msgstr "Sveikas!"
 #: .\Pages\about.py:339
 msgid "I see you've disabled ads. That's totally fine, but you can still support ETS2LA development by donating via Ko-Fi. *Every donation is equal to weeks(!) of ad revenue*, we are eternally grateful for every bit of support we get!"
 msgstr ""
+"Aš matau tu išjungei reklamas. Viskas gerai, bet tu gali padėti ETS2LA "
+"kūrimą aukodamas per Ko-Fi programą. *Kiekviena auka lygi dviem(!) savaitėm "
+"reklamų pinigų, mes labai dėkingi už jūsų visą pagalbą, net jeigu ir mažą!"
 
 #: .\Pages\about.py:354
 msgid "Donate via Ko-Fi"
-msgstr ""
+msgstr "Aukoti per Ko-Fi"
 
 #: .\Pages\about.py:372
 msgid "Hide"
-msgstr ""
+msgstr "Paslėpti"
 
 #: .\Pages\about.py:398
 msgid "Notice!"
-msgstr ""
+msgstr "Įspėjimas!"
 
 #: .\Pages\about.py:403
 msgid "An SDK for {0} is outdated. Please reinstall it to update to the latest version in the SDK settings."
 msgstr ""
+"{0} SDK yra pasenęs. Prašome jį iš naujo įdiegti, kad atnaujintumėte į "
+"naujausią versiją SDK nustatymuose."
 
 #: .\Pages\about.py:414
 msgid "Open SDK Settings"
-msgstr ""
+msgstr "Atidaryti SDK nustatymus"
 
 #: .\Pages\about.py:419
 msgid "About"
-msgstr ""
+msgstr "Apie"
 
 #: .\Pages\about.py:422
 msgid "ETS2LA is a project that aims to provide an easy to use self driving solution for ETS2 and ATS, if you want to learn more then you can visit the github page or the wiki via the sidebar."
 msgstr ""
+"ETS2LA yra projektas kuris nori padaryti prieiga prie lengvai naudojamo "
+"automatinio vairavimo sprendimą žaidimams ETS2 ir ATS, jeigu tu nori daugiau "
+"apie jį sužinoti eik į Github puslapį arba į Vikipediją per šoninį valdiklį."
 
 #: .\Pages\about.py:430
 msgid "Statistics"
-msgstr ""
+msgstr "Statistika"
 
 #: .\Pages\about.py:434
 msgid "Users online:"
-msgstr ""
+msgstr "Aktyvūs naudotojai:"
 
 #: .\Pages\about.py:437
 msgid "Past 24 hours:"
-msgstr ""
+msgstr "Paskutinės 24 valandos:"
 
 #: .\Pages\about.py:443
 msgid "Your usage time:"
-msgstr ""
+msgstr "Tavo naudojimo laikas:"
 
 #: .\Pages\about.py:453
 msgid "over {count} session"
 msgid_plural "over {count} sessions"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "per {count} sesiją"
+msgstr[1] "per {count} sesijas"
+msgstr[2] "per {count} sesijų"
 
 #: .\Pages\about.py:469
 msgid "You are not logged in."
-msgstr ""
+msgstr "Tu nesi prisijungęs."
 
 #: .\Pages\about.py:471
 msgid "Your anonymous user ID is: {0}"
-msgstr ""
+msgstr "Tavo slaptojo naudotojo ID yra: {0}"
 
 #: .\Pages\about.py:479
 msgid "You are logged in."
-msgstr ""
+msgstr "Tu esi prisijungęs."
 
 #: .\Pages\about.py:481
 msgid "Welcome back, {0}!"
-msgstr ""
+msgstr "Sveikas sugrįžęs, {0}!"
 
 #: .\Pages\about.py:499
 msgid "The ETS2LA backend might be partially unavailable, please mind any erroneous values or missing statistics!"
 msgstr ""
+"ETS2LA galinė dalis gali būti neprieinama, atkreipkite dėmesį į galimas "
+"klaidingas reikšmes ar trūkstamą statistiką!"
 
 #: .\Pages\about.py:505
 msgid "We are working to restore full functionality as soon as possible. Hang on tight, this might take anywhere from a few minutes to several days!"

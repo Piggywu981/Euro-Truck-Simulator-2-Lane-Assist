@@ -4,6 +4,8 @@ from typing import Literal
 
 class Settings(ETS2LASettings):
     InternalVisualisation: bool = False
+    IntnernalVisualizationWindowScale: float = 1.0
+    InternalVisualizationPerformance: bool = False
     ComputeSteeringData: bool = True
     SectorSize: int = 300
     LoadDistance: int = 600
@@ -19,6 +21,7 @@ class Settings(ETS2LASettings):
     selected_data: str | None = None
     UseAutoOffsetData: bool = False
     TakeoverWhenUnreliable: bool = True
+    PauseWhenTakeover: bool = True
     traffic_side: Literal["Right Handed", "Left Handed"] = "Right Handed"
     AutoTolls: bool = False
 

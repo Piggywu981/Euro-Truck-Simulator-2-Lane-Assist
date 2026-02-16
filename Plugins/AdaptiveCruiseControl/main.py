@@ -87,7 +87,7 @@ class Plugin(ETS2LAPlugin):
         ),
         modules=["SDKController", "TruckSimAPI", "Traffic", "Semaphores"],
         tags=["Base", "Speed Control"],
-        fps_cap=15,
+        fps_cap=60,
     )
 
     author = Author(
@@ -111,7 +111,7 @@ class Plugin(ETS2LAPlugin):
     sign = 1  # 1 or -1
 
     speedlimit = 0  # m/s
-    acceleration = SmoothedValue("time", 0.2)  # m/s^2
+    acceleration = SmoothedValue("time", 0.0)  # m/s^2
     enabled = False
 
     api_data = None
@@ -122,6 +122,14 @@ class Plugin(ETS2LAPlugin):
     holding_up = False
     holding_down = False
     last_change = 0
+    
+    # Caching of the last vehicle and semaphores since object detection
+    # runs at 15 fps while the PID loop does 60.
+    last_object_update = 0
+    vehicle_in_front = None
+    traffic_light_ahead = None
+    gate_ahead = None
+    stop_in = None
 
     # ACC Parameters
     overwrite_speed = 30  # km/h
@@ -130,7 +138,7 @@ class Plugin(ETS2LAPlugin):
     base_emergency_decel = -6.0  # m/s^2
     base_time_gap_seconds = 2.0  # seconds
 
-    # These get adjusted
+    # These get adjusted by the settings
     max_accel = 3.0
     comfort_decel = -2.0
     emergency_decel = -6.0
@@ -139,7 +147,7 @@ class Plugin(ETS2LAPlugin):
     # PID gains
     kp_accel = 0.30  # Proportional gain
     ki_accel = 0.08  # Integral gain
-    kd_accel = 0.05  # Derivative gain
+    kd_accel = 0.01  # Derivative gain
 
     # PID state variables
     graph = PIDGraph(history=10)
@@ -149,7 +157,7 @@ class Plugin(ETS2LAPlugin):
     last_time = time.time()
 
     # Control smoothing
-    output_smoothing_factor = 0.6  # Lower value = smoother but slower response
+    output_smoothing_factor = 0.99  # Lower value = smoother but slower response
     pid_sample_time = 0.05  # 50ms for PID cycle
 
     max_speed = SmoothedValue("time", 0.5)
@@ -200,7 +208,10 @@ class Plugin(ETS2LAPlugin):
             speed_limit_accel *= 0.75
 
         if self.speed > self.speedlimit + 10 / 3.6:
-            speed_limit_accel *= 1.5
+            speed_limit_accel *= 0.75
+            
+        if self.speed > self.speedlimit + 20 / 3.6:
+            speed_limit_accel *= 3
 
         self.add_ar_text(f" - Filtered Accel: {speed_limit_accel:.2f} m/s²")
         return speed_limit_accel
@@ -237,6 +248,14 @@ class Plugin(ETS2LAPlugin):
 
         following_accel += 0.3 * in_front.acceleration
         following_accel = min(self.max_accel, following_accel)
+        
+        # Now we weight the deceleration based on the vehicle in front speed.
+        # at 80kph the weight is 0.3, at 0kph the weight is 1.0, and it scales linearly in between.
+        # This is because at higher speeds the braking force is "higher" causing more oscillations
+        # and overshooting otherwise.
+        if following_accel != self.max_accel:
+            speed_weight = max(0.3, 1.0 - (in_front.speed * 3.6 / 80))
+            following_accel *= speed_weight
 
         self.add_ar_text(f" - Following Accel: {following_accel:.2f} m/s²")
 
@@ -764,6 +783,75 @@ class Plugin(ETS2LAPlugin):
 
         return closest_light
 
+    def get_traffic_light_from_prefab(self, api_data: dict) -> ACCTrafficLight:
+        try:
+            points, traffic_light = self.get_next_prefab_traffic_light(
+                api_data
+            )
+
+            truck_x = self.api_data["truckPlacement"]["coordinateX"]
+            truck_z = self.api_data["truckPlacement"]["coordinateZ"]
+            point = points[0] if points else None
+            if point:
+                color = traffic_light.color()
+                vector = [point.x - truck_x, point.z - truck_z]
+                distance = math.sqrt(vector[0] ** 2 + vector[1] ** 2)
+                unit_vector = (
+                    [vector[0] / distance, vector[1] / distance]
+                    if distance != 0
+                    else [0, 0]
+                )
+
+                width = 2.5
+                height = 1
+
+                left_point = [
+                    point.x + unit_vector[0] * width - unit_vector[1] * width / 2,
+                    point.y,
+                    point.z + unit_vector[1] * width + unit_vector[0] * width / 2,
+                ]
+                right_point = [
+                    point.x + unit_vector[0] * width + unit_vector[1] * width / 2,
+                    point.y,
+                    point.z + unit_vector[1] * width - unit_vector[0] * width / 2,
+                ]
+                top_left = [left_point[0], left_point[1] + height, left_point[2]]
+                top_right = [
+                    right_point[0],
+                    right_point[1] + height,
+                    right_point[2],
+                ]
+
+                self.tags.light = {
+                    "distance": round(distance, 1),
+                    "state": traffic_light.state_text(),
+                }
+                self.tags.AR = [
+                    Polygon(
+                        [
+                            Coordinate(left_point[0], left_point[1], left_point[2]),
+                            Coordinate(
+                                right_point[0], right_point[1], right_point[2]
+                            ),
+                            Coordinate(top_right[0], top_right[1], top_right[2]),
+                            Coordinate(top_left[0], top_left[1], top_left[2]),
+                        ],
+                        closed=True,
+                        color=Color(*color, 70),
+                        fill=Color(*color, 30),
+                        fade=Fade(0, 0, 999, 999),
+                    )
+                ]
+                
+                return traffic_light
+
+        except Exception:
+            traffic_light = None
+            traceback.print_exc()
+            self.tags.light = {"distance": 0, "state": ""}
+            self.tags.AR = []
+            return traffic_light
+
     def get_next_prefab_traffic_light(
         self, api_data: dict
     ) -> tuple[list[Position], ACCTrafficLight]:
@@ -1024,6 +1112,9 @@ class Plugin(ETS2LAPlugin):
             target_accel = override
             target_accel = min(1, max(-1, target_accel))
             self.tags.acceleration = target_accel
+        
+        # if target_accel < 0 and target_accel > -0.05:
+        #     target_accel = 0.0 # coast instead of braking when close to 0
 
         if is_reversing:
             self.controller.drive = True
@@ -1039,7 +1130,7 @@ class Plugin(ETS2LAPlugin):
         elif self.state.text == "Detected reverse gear. Please shift to drive.":
             self.state.text = ""
 
-        if target_accel > 0:
+        if target_accel >= 0:
             if (
                 clutch < 0.1 or speed < 10 / 3.6
             ):  # ignore clutch when low speed (at traffic lights)
@@ -1066,6 +1157,14 @@ class Plugin(ETS2LAPlugin):
         self.add_ar_text("PID Control Debug:")
         current_time = time.time()
         dt = current_time - self.last_time
+        
+        # Don't apply PID if clutch is pressed. This blocks the integral term building up
+        # during gear shifts.
+        if self.api_data:
+            clutch = self.api_data["truckFloat"]["userClutch"]
+            if clutch > 0.1:
+                self.last_time = current_time
+                return self.last_control_output
 
         # Ensure dt is reasonable (first run or long gap between calls)
         if dt > 0.5 or dt <= 0:
@@ -1083,9 +1182,10 @@ class Plugin(ETS2LAPlugin):
             ):  # Don't add more integral if already going full throttle
                 self.accel_errors.append(accel_error * dt)
         else:
+            # Clear integral errors, but we don't add negative errors
+            # to the list to avoid "winding up" an overshoot of the target acceleration.
             if len(self.accel_errors) != 0 and self.accel_errors[0] > 0:
                 self.accel_errors = self.accel_errors[1:]
-            self.accel_errors.append(accel_error * dt)
 
         # Clear the integral term if we're speeding
         # (dynamically adjust the number to keep at the speedlimit)
@@ -1121,10 +1221,10 @@ class Plugin(ETS2LAPlugin):
 
         self.add_ar_text(f" - Raw Control Output: {raw_control:.2f}")
 
-        # Smoothing
-        control_output = (
-            1 - self.output_smoothing_factor
-        ) * self.last_control_output + self.output_smoothing_factor * raw_control
+        # Smoothing (dynamic 0 -> 0.5, 50 -> 1)
+        dynamic_smoothing_factor = min(max(self.speed * 3.6 / (50), 0.5), 1)
+        smoothing = self.output_smoothing_factor * dynamic_smoothing_factor
+        control_output = (1 - smoothing) * self.last_control_output + smoothing * raw_control
         control_output = max(min(control_output, 1.0), -1.0)
 
         self.last_accel_error = accel_error
@@ -1174,7 +1274,6 @@ class Plugin(ETS2LAPlugin):
             return
 
         self.api_data = self.api.run()
-
         if self.api_data["pause"]:
             self.reset()
             return
@@ -1182,8 +1281,8 @@ class Plugin(ETS2LAPlugin):
         if self.api_data["truckFloat"]["speedLimit"] == 0:
             self.api_data["truckFloat"]["speedLimit"] = self.overwrite_speed / 3.6
 
-        self.speedlimit = self.get_target_speed(self.api_data)
         self.speed = self.api_data["truckFloat"]["speed"]
+        self.speedlimit = self.get_target_speed(self.api_data)
 
         acceleration_x = self.api_data["truckVector"]["accelerationX"]
         acceleration_y = self.api_data["truckVector"]["accelerationY"]
@@ -1196,104 +1295,46 @@ class Plugin(ETS2LAPlugin):
 
         self.acceleration.smooth(total * self.sign)
 
-        try:
-            in_front = self.get_vehicle_in_front(self.api_data)
-        except Exception:
-            in_front = None
-
-        if not in_front:
-            self.tags.vehicle_in_front_distance = None
-            self.tags.vehicle_highlights = []
-
-        tl_mode = settings.traffic_light_mode
-
-        if tl_mode == "Legacy":
+        if self.last_object_update + 1/15 < time.perf_counter():
             try:
-                traffic_light = self.get_traffic_light_in_front(self.api_data)
+                self.vehicle_in_front = self.get_vehicle_in_front(self.api_data)
             except Exception:
-                traffic_light = None
+                self.vehicle_in_front = None
 
-        else:
+            if not self.vehicle_in_front:
+                self.tags.vehicle_in_front_distance = None
+                self.tags.vehicle_highlights = []
+
+            tl_mode = settings.traffic_light_mode
+
+            if tl_mode == "Legacy":
+                try:
+                    self.traffic_light_in_front = self.get_traffic_light_in_front(self.api_data)
+                except Exception:
+                    self.traffic_light_in_front = None
+
+            else:
+                try:
+                    self.traffic_light_in_front = self.get_traffic_light_from_prefab(self.api_data)
+                except Exception:
+                    self.traffic_light_in_front = None
+
             try:
-                points, traffic_light = self.get_next_prefab_traffic_light(
-                    self.api_data
-                )
-
-                truck_x = self.api_data["truckPlacement"]["coordinateX"]
-                truck_z = self.api_data["truckPlacement"]["coordinateZ"]
-                point = points[0] if points else None
-                if point:
-                    color = traffic_light.color()
-                    vector = [point.x - truck_x, point.z - truck_z]
-                    distance = math.sqrt(vector[0] ** 2 + vector[1] ** 2)
-                    unit_vector = (
-                        [vector[0] / distance, vector[1] / distance]
-                        if distance != 0
-                        else [0, 0]
-                    )
-
-                    width = 2.5
-                    height = 1
-
-                    left_point = [
-                        point.x + unit_vector[0] * width - unit_vector[1] * width / 2,
-                        point.y,
-                        point.z + unit_vector[1] * width + unit_vector[0] * width / 2,
-                    ]
-                    right_point = [
-                        point.x + unit_vector[0] * width + unit_vector[1] * width / 2,
-                        point.y,
-                        point.z + unit_vector[1] * width - unit_vector[0] * width / 2,
-                    ]
-                    top_left = [left_point[0], left_point[1] + height, left_point[2]]
-                    top_right = [
-                        right_point[0],
-                        right_point[1] + height,
-                        right_point[2],
-                    ]
-
-                    self.tags.light = {
-                        "distance": round(distance, 1),
-                        "state": traffic_light.state_text(),
-                    }
-                    self.tags.AR = [
-                        Polygon(
-                            [
-                                Coordinate(left_point[0], left_point[1], left_point[2]),
-                                Coordinate(
-                                    right_point[0], right_point[1], right_point[2]
-                                ),
-                                Coordinate(top_right[0], top_right[1], top_right[2]),
-                                Coordinate(top_left[0], top_left[1], top_left[2]),
-                            ],
-                            closed=True,
-                            color=Color(*color, 70),
-                            fill=Color(*color, 30),
-                            fade=Fade(0, 0, 999, 999),
-                        )
-                    ]
-
+                self.gate_in_front = self.get_gate_in_front(self.api_data)
             except Exception:
-                traffic_light = None
-                traceback.print_exc()
-                self.tags.light = {"distance": 0, "state": ""}
-                self.tags.AR = []
+                self.gate_in_front = None
 
-        try:
-            gate = self.get_gate_in_front(self.api_data)
-        except Exception:
-            logging.exception("Error in gate detection")
-            gate = None
-
-        stop_in_dict = self.tags.stop_in
-        stop_in = 999
-        if stop_in_dict:
-            for value in stop_in_dict.values():
-                if isinstance(value, (int, float)) and value > 0:
-                    stop_in = min(stop_in, value)
+            stop_in_dict = self.tags.stop_in
+            self.stop_in = 999
+            if stop_in_dict:
+                for value in stop_in_dict.values():
+                    if isinstance(value, (int, float)) and value > 0:
+                        self.stop_in = min(self.stop_in, value)
+                        
+            self.last_object_update = time.perf_counter()
 
         target_acceleration = self.calculate_target_acceleration(
-            in_front, traffic_light, gate, stop_in
+            self.vehicle_in_front, self.traffic_light_in_front, self.gate_in_front, self.stop_in
         )
         target_throttle = self.apply_pid(target_acceleration)
         self.set_accel_brake(target_throttle)
@@ -1302,7 +1343,6 @@ class Plugin(ETS2LAPlugin):
         self.tags.acc_target = target_acceleration
 
         # self.state.text = "Integral length: " + str(len(self.accel_errors)) + "\nValue: " + str(round(sum(self.accel_errors), 2))
-
         if settings.debug:
             self.tags.AR = self.ar_data
             self.ar_data = []

@@ -294,7 +294,7 @@ class Page(ETS2LAPage):
                         target = plugins.plugins[-2]
 
                     Text(
-                        target.description.name,
+                        target.description.name if hasattr(target, "description") else target.folder,
                         styles.Classname(
                             "text-xs text-muted-foreground absolute bottom-2"
                         ),
@@ -330,7 +330,7 @@ class Page(ETS2LAPage):
                         )
 
                     enabled_plugins = [
-                        plugin.description.name
+                        (plugin.description.name if hasattr(plugin, "description") else plugin.folder)
                         for plugin in plugins.plugins
                         if plugin.running
                     ]
@@ -441,7 +441,7 @@ class Page(ETS2LAPage):
                 if not hasattr(plugin, "description"):
                     continue
 
-                for tag in plugin.description.tags:
+                for tag in plugin.description.tags if "tags" in plugin.description.__dict__ else []:
                     if tag not in tags:
                         tags.append(tag)
                 if not isinstance(plugin.authors, list):
@@ -498,7 +498,7 @@ class Page(ETS2LAPage):
                 for plugin in plugins.plugins
                 if plugin.folder in self.enabling and plugin not in running_plugins
             ]
-            running_plugins.sort(key=lambda p: p.description.name.lower())
+            running_plugins.sort(key=lambda p: (p.description.name if hasattr(p, "description") else p.folder).lower())
 
             # filter out running plugins
             filtered_plugins = [
@@ -515,7 +515,7 @@ class Page(ETS2LAPage):
                 plugin
                 for plugin in filtered_plugins
                 if (
-                    self.search_term.lower() in plugin.description.name.lower()
+                    self.search_term.lower() in (plugin.description.name if hasattr(plugin, "description") else plugin.folder).lower()
                     if self.search_term
                     else True
                 )
@@ -526,7 +526,7 @@ class Page(ETS2LAPage):
                 for plugin in filtered_plugins
                 if (
                     not self.tags
-                    or any(tag in plugin.description.tags for tag in self.tags)
+                    or any(tag in (plugin.description.tags if hasattr(plugin, "description") else []) for tag in self.tags)
                 )
             ]
             # filter by authors
@@ -549,7 +549,7 @@ class Page(ETS2LAPage):
                 )
             ]
             # sort by name
-            filtered_plugins.sort(key=lambda p: p.description.name.lower())
+            filtered_plugins.sort(key=lambda p: (p.description.name if hasattr(p, "description") else p.folder).lower())
 
             # Render the lists
             with Container(

@@ -3,7 +3,13 @@ using ETS2LA.Shared;
 using ETS2LA.Telemetry;
 using ETS2LA.Backend.Events;
 using ETS2LA.Game.SDK;
-using ETS2LA.Game.Output;
+using ETS2LA.Overlay;
+using ETS2LA.Overlay.AR;
+using ETS2LA.Logging;
+
+using System.Numerics;
+using Hexa.NET.ImGui;
+using TruckLib;
 
 namespace ExampleConsumer;
 
@@ -17,6 +23,9 @@ public class MyConsumer : Plugin
         AuthorName = "Tumppi066",
     };
 
+    private TrafficData? _trafficData;
+    private ParkedVehicleData? _parkedVehicleData;
+
     public override void Init()
     {
         base.Init();
@@ -27,10 +36,103 @@ public class MyConsumer : Plugin
         base.OnEnable();
         Events.Current.Subscribe<float>("ExampleProvider.Time", OnTimeReceived);
         Events.Current.Subscribe<GameTelemetryData>(GameTelemetry.Current.EventString, OnGameTelemetryReceived);
-        Events.Current.Subscribe<CameraData>("ETS2LASDK.Camera", OnCameraReceived);
-        Events.Current.Subscribe<TrafficData>("ETS2LASDK.Traffic", OnTrafficReceived);
-        Events.Current.Subscribe<SemaphoreData>("ETS2LASDK.Semaphores", OnSemaphoreReceived);
-        Events.Current.Subscribe<NavigationData>("ETS2LASDK.Navigation", OnNavigationReceived);
+        Events.Current.Subscribe<CameraData>(CameraProvider.Current.EventString, OnCameraReceived);
+        Events.Current.Subscribe<TrafficData>(TrafficProvider.Current.EventString, OnTrafficReceived);
+        Events.Current.Subscribe<SemaphoreData>(SemaphoreProvider.Current.EventString, OnSemaphoreReceived);
+        Events.Current.Subscribe<NavigationData>(NavigationProvider.Current.EventString, OnNavigationReceived);
+        Events.Current.Subscribe<ParkedVehicleData>(ParkedVehiclesProvider.Current.EventString, OnParkedVehicleReceived);
+
+        OverlayHandler.Current.AR.RegisterRenderCallback(new ARRenderCallback
+        {
+            Definition = new ARRendererDefinition
+            {
+                Name = "Example AR Renderer"
+            },
+            Render3D = () =>
+            {
+                ARRenderer AR = OverlayHandler.Current.AR;
+                // Test lines
+                AR.Draw3DLine(new ARCoordinate(Vector3.Zero, ARCoordinateCenter.Truck), new ARCoordinate(new Vector3(0, 0, 1), ARCoordinateCenter.Truck), 0xFF0000FF);
+                AR.Draw3DLine(new ARCoordinate(Vector3.Zero, ARCoordinateCenter.Truck), new ARCoordinate(new Vector3(1, 0, 0), ARCoordinateCenter.Truck), 0x00FF00FF);
+                AR.Draw3DLine(new ARCoordinate(Vector3.Zero, ARCoordinateCenter.Truck), new ARCoordinate(new Vector3(0, 1, 0), ARCoordinateCenter.Truck), 0x0000FFFF);
+
+                // Test window
+                AR.BeginWindow("Example Window", forceHeight: 60, forceWidth: 270, flags: ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.AlwaysAutoResize, bgOpacity: 0.2f);
+                ImGui.Text($"Position: ({position.X:F0}, {position.Y:F0}, {position.Z:F0})");
+                ImGui.Text($"Speed: {speed*3.6:F1} km/h");
+
+                CameraData camera = CameraProvider.Current.GetCurrentData();
+                Quaternion invQuat = Quaternion.Conjugate(camera.truckRotation);
+                Vector3 euler = invQuat.ToEuler();
+                Quaternion filteredRot = Quaternion.CreateFromYawPitchRoll(-euler.Y + 2 * (float)Math.PI, euler.Z + (float)Math.PI, 0);
+
+                ARCoordinate offset = ARCoordinate.InDirection(filteredRot, 13, ARCoordinateCenter.Truck);
+                offset += new ARCoordinate(new Vector3(0, -1, 0), ARCoordinateCenter.Truck);
+                AR.EndWindow(offset, camera.truckRotation, 2, invertY: true);
+
+                if (_trafficData != null)
+                {
+                    foreach (var vehicle in _trafficData.vehicles)
+                    {
+                        var bottomCorners = vehicle.GetCornersOnGround();
+                        var topCorners = new List<Vector3>
+                        {
+                            bottomCorners[0] + new Vector3(0, vehicle.size.Y, 0),
+                            bottomCorners[1] + new Vector3(0, vehicle.size.Y, 0),
+                            bottomCorners[2] + new Vector3(0, vehicle.size.Y, 0),
+                            bottomCorners[3] + new Vector3(0, vehicle.size.Y, 0)
+                        };
+
+                        AR.Draw3DQuad(bottomCorners[0], bottomCorners[1], bottomCorners[2], bottomCorners[3], 0xFFFFFF);
+                        AR.Draw3DQuad(topCorners[0], topCorners[1], topCorners[2], topCorners[3], 0xFFFFFF);
+                        AR.Draw3DLine(bottomCorners[0], topCorners[0], 0xFFFFFF);
+                        AR.Draw3DLine(bottomCorners[1], topCorners[1], 0xFFFFFF);
+                        AR.Draw3DLine(bottomCorners[2], topCorners[2], 0xFFFFFF);
+                        AR.Draw3DLine(bottomCorners[3], topCorners[3], 0xFFFFFF);
+
+                        foreach (var trailer in vehicle.trailers)
+                        {
+                            bottomCorners = trailer.GetCornersOnGround();
+                            topCorners = new List<Vector3>
+                            {
+                                bottomCorners[0] + new Vector3(0, trailer.size.Y, 0),
+                                bottomCorners[1] + new Vector3(0, trailer.size.Y, 0),
+                                bottomCorners[2] + new Vector3(0, trailer.size.Y, 0),
+                                bottomCorners[3] + new Vector3(0, trailer.size.Y, 0)
+                            };
+
+                            AR.Draw3DQuad(bottomCorners[0], bottomCorners[1], bottomCorners[2], bottomCorners[3], 0xFFFFFF);
+                            AR.Draw3DQuad(topCorners[0], topCorners[1], topCorners[2], topCorners[3], 0xFFFFFF);
+                            AR.Draw3DLine(bottomCorners[0], topCorners[0], 0xFFFFFF);
+                            AR.Draw3DLine(bottomCorners[1], topCorners[1], 0xFFFFFF);
+                            AR.Draw3DLine(bottomCorners[2], topCorners[2], 0xFFFFFF);
+                            AR.Draw3DLine(bottomCorners[3], topCorners[3], 0xFFFFFF);
+                        }
+                    }
+                }
+                if (_parkedVehicleData != null)
+                {
+                    foreach (var vehicle in _parkedVehicleData.vehicles)
+                    {
+                        var bottomCorners = vehicle.GetCornersOnGround();
+                        var topCorners = new List<Vector3>
+                        {
+                            bottomCorners[0] + new Vector3(0, vehicle.size.Y, 0),
+                            bottomCorners[1] + new Vector3(0, vehicle.size.Y, 0),
+                            bottomCorners[2] + new Vector3(0, vehicle.size.Y, 0),
+                            bottomCorners[3] + new Vector3(0, vehicle.size.Y, 0)
+                        };
+
+                        AR.Draw3DQuad(bottomCorners[0], bottomCorners[1], bottomCorners[2], bottomCorners[3], 0xFFFFFF);
+                        AR.Draw3DQuad(topCorners[0], topCorners[1], topCorners[2], topCorners[3], 0xFFFFFF);
+                        AR.Draw3DLine(bottomCorners[0], topCorners[0], 0xFFFFFF);
+                        AR.Draw3DLine(bottomCorners[1], topCorners[1], 0xFFFFFF);
+                        AR.Draw3DLine(bottomCorners[2], topCorners[2], 0xFFFFFF);
+                        AR.Draw3DLine(bottomCorners[3], topCorners[3], 0xFFFFFF);
+                    }
+                }
+            }
+        });
     }
 
     public override void OnDisable()
@@ -38,11 +140,14 @@ public class MyConsumer : Plugin
         base.OnDisable();
         NotificationHandler.Current.CloseNotification("ExampleConsumer.Speed");
         NotificationHandler.Current.CloseNotification("ExampleConsumer.RPM");
+        OverlayHandler.Current.AR.UnregisterRenderCallback("Example AR Renderer");
     }
 
     private float output = 0;
     private float speed = 0;
     private float rpm = 0;
+    private Vector3 position;
+
     public override void Tick()
     {
         // sine wave output from -1 to 1
@@ -83,17 +188,17 @@ public class MyConsumer : Plugin
             CloseAfter = 0 
         });
 
-        Events.Current.Publish(GameOutput.Current.EventString, new ControlEvent
-        {
-            ChannelDefinition = new ControlChannelDefinition
-            {
-                Id = "ExampleConsumer.Steering",
-            },
-            Variables = new ControlVariables
-            {
-                steering = output
-            }
-        });
+        // Events.Current.Publish(GameOutput.Current.EventString, new ControlEvent
+        // {
+        //     ChannelDefinition = new ControlChannelDefinition
+        //     {
+        //         Id = "ExampleConsumer.Steering",
+        //     },
+        //     Variables = new ControlVariables
+        //     {
+        //         steering = output
+        //     }
+        // });
 
         // SDKControlEvent controlEvent = new SDKControlEvent
         // {
@@ -120,6 +225,7 @@ public class MyConsumer : Plugin
 
         speed = data.truckFloat.speed;
         rpm = data.truckFloat.engineRpm;
+        position = data.truckPlacement.coordinate.ToVector3();
     }
 
     private void OnCameraReceived(CameraData camera)
@@ -136,8 +242,15 @@ public class MyConsumer : Plugin
         if (!_IsRunning)
             return;
 
-        // Logger.Info($"MyConsumer received {traffic.vehicles.Length} traffic vehicles.");
-        // Logger.Info($"First vehicle position: ({traffic.vehicles[0].position.X}, {traffic.vehicles[0].position.Y}, {traffic.vehicles[0].position.Z}), has {traffic.vehicles[0].trailer_count} trailers.");
+        _trafficData = traffic;
+    }
+
+    private void OnParkedVehicleReceived(ParkedVehicleData data)
+    {
+        if (!_IsRunning)
+            return;
+
+        _parkedVehicleData = data;
     }
 
     private void OnSemaphoreReceived(SemaphoreData data)

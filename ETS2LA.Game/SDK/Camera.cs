@@ -1,6 +1,7 @@
 using ETS2LA.Shared;
 using ETS2LA.Logging;
 using ETS2LA.Backend.Events;
+using ETS2LA.Telemetry;
 
 using System.Numerics;
 using System.IO.MemoryMappedFiles;
@@ -20,9 +21,21 @@ public class CameraData
     ///  coordinates, add the sector's `cx` and `cy` offsets multiplied by 512.
     /// </summary>
     public Vector3 position = Vector3.Zero;
+    /// <summary>
+    ///  The world space position of the truck during the camera timestamp. <br/> Use
+    ///  this to sync anything you use the camera position to with the truck's position. <br/>
+    ///  Avoid using the telemetry truck position in this case, to avoid rendering jitter.
+    /// </summary>
+    public Vector3 truckPosition = Vector3.Zero;
     public Int16 cx;
     public Int16 cy;
     public Quaternion rotation = Quaternion.Identity;
+    /// <summary>
+    ///  The rotation of the truck during the camera timestamp. <br/> 
+    ///  Use this to sync anything you use the camera rotation to with the truck's rotation. <br/> 
+    ///  Avoid using the telemetry truck rotation in this case, to avoid rendering jitter.
+    /// </summary>
+    public Quaternion truckRotation = Quaternion.Identity;
     public Matrix4x4 projection;
 }
 
@@ -39,7 +52,7 @@ public class CameraProvider
 
     string mmapName = "Local\\ETS2LACameraProps";
     string mmapNameLinux = "/dev/shm/ETS2LACameraProps";
-    int mmapSize = 36;
+    int mmapSize = 128;
 
     public CameraProvider()
     {
@@ -50,6 +63,14 @@ public class CameraProvider
         updateThread.Start();
     }
 
+    public CameraData GetCurrentData()
+    {
+        if (_currentData == null)
+            _currentData = new CameraData();
+            
+        return _currentData;
+    }
+
     private void UpdateThread()
     {
         Stopwatch stopwatch = new Stopwatch();
@@ -58,9 +79,9 @@ public class CameraProvider
         while (true)
         {
             int timeLeft = (int)((UpdateRate * 1000) - stopwatch.Elapsed.TotalMilliseconds);
-            if (timeLeft > 0)
+            if (timeLeft > 1)
             {
-                Thread.Sleep(timeLeft);
+                Thread.Sleep(timeLeft - 1);
                 continue;
             }
 
@@ -131,12 +152,26 @@ public class CameraProvider
             _reader.ReadFloat(offset + 8),
             _reader.ReadFloat(offset + 12)
         ); offset += 16;
-        // _currentData.projection = new Matrix4x4(
-        //     _reader.ReadFloat(offset)     , _reader.ReadFloat(offset + 4) , _reader.ReadFloat(offset + 8) , _reader.ReadFloat(offset + 12),
-        //     _reader.ReadFloat(offset + 16), _reader.ReadFloat(offset + 20), _reader.ReadFloat(offset + 24), _reader.ReadFloat(offset + 28),
-        //     _reader.ReadFloat(offset + 32), _reader.ReadFloat(offset + 36), _reader.ReadFloat(offset + 40), _reader.ReadFloat(offset + 44),
-        //     _reader.ReadFloat(offset + 48), _reader.ReadFloat(offset + 52), _reader.ReadFloat(offset + 56), _reader.ReadFloat(offset + 60)
-        // );
+        
+        _currentData.projection = new Matrix4x4(
+            _reader.ReadFloat(offset)     , _reader.ReadFloat(offset + 4) , _reader.ReadFloat(offset + 8) , _reader.ReadFloat(offset + 12),
+            _reader.ReadFloat(offset + 16), _reader.ReadFloat(offset + 20), _reader.ReadFloat(offset + 24), _reader.ReadFloat(offset + 28),
+            _reader.ReadFloat(offset + 32), _reader.ReadFloat(offset + 36), _reader.ReadFloat(offset + 40), _reader.ReadFloat(offset + 44),
+            _reader.ReadFloat(offset + 48), _reader.ReadFloat(offset + 52), _reader.ReadFloat(offset + 56), _reader.ReadFloat(offset + 60)
+        ); offset += 64;
+
+        _currentData.truckPosition = new Vector3(
+            _reader.ReadFloat(offset),
+            _reader.ReadFloat(offset + 4),
+            _reader.ReadFloat(offset + 8)
+        ); offset += 12;
+
+        _currentData.truckRotation = new Quaternion(
+            _reader.ReadFloat(offset),
+            _reader.ReadFloat(offset + 4),
+            _reader.ReadFloat(offset + 8),
+            _reader.ReadFloat(offset + 12)
+        ); offset += 16;
 
         Events.Current.Publish<CameraData>(EventString, _currentData);
     }

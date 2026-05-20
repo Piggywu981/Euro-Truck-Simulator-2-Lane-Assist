@@ -17,6 +17,23 @@ public class NavigationEntry
 public class NavigationData
 {
     public NavigationEntry[] entries = Array.Empty<NavigationEntry>();
+
+    public bool Contains(ulong nodeUid)
+    {
+        return entries.Any(e => e.nodeUid == nodeUid);
+    }
+
+    public int IndexFor(ulong nodeUid)
+    {
+        for (int i = 0; i < entries.Length; i++)
+        {
+            if (entries[i].nodeUid == nodeUid)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
 }
 
 public class NavigationProvider

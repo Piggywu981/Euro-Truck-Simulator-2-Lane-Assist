@@ -435,6 +435,54 @@ public class ParsedRoad : IParsedItem
     }
 
     /// <summary>
+    ///  Interpolate the lane position at the t value (between 0 and 1) for a non-integer lane index by interpolating between the two closest lanes.
+    /// </summary>
+    /// <param name="t">The t value (between 0 and 1) for interpolation.</param>
+    /// <param name="side">The side of the road (Left or Right).</param>
+    /// <param name="laneIndexFloat">The floating-point lane index.</param>
+    /// <param name="additionalOffset">Additional offset to apply on top of the lane offset, in meters. Positive values go to the right, negative values go to the left.</param>
+    /// <returns>The interpolated oriented point.</returns>
+    public OrientedPoint InterpolateBetweenLanes(float t, Side side, float laneIndexFloat, float additionalOffset = 0)
+    {
+        int laneIndexFloor = (int)Math.Floor(laneIndexFloat);
+        int laneIndexCeil = (int)Math.Ceiling(laneIndexFloat);
+        if (laneIndexFloor == laneIndexCeil)
+            return InterpolateLane(t, side, laneIndexFloor, additionalOffset);
+
+        OrientedPoint floorPoint = InterpolateLane(t, side, laneIndexFloor, additionalOffset);
+        OrientedPoint ceilPoint = InterpolateLane(t, side, laneIndexCeil, additionalOffset);
+        float factor = laneIndexFloat - laneIndexFloor;
+
+        Vector3 position = Vector3.Lerp(floorPoint.Position, ceilPoint.Position, factor);
+        Quaternion rotation = Quaternion.Slerp(floorPoint.Rotation, ceilPoint.Rotation, factor);
+        return new OrientedPoint(position, rotation);
+    }
+
+    /// <summary>
+    ///  Interpolate the lane position at the distance along the road for a non-integer lane index by interpolating between the two closest lanes. Distance must be between 0 and road length.
+    /// </summary>
+    /// <param name="dist">The distance along the road (between 0 and road length) for interpolation.</param>
+    /// <param name="side">The side of the road (Left or Right).</param>
+    /// <param name="laneIndexFloat">The floating-point lane index.</param>
+    /// <param name="additionalOffset">Additional offset to apply on top of the lane offset, in meters. Positive values go to the right, negative values go to the left.</param>
+    /// <returns>The interpolated oriented point.</returns>
+    public OrientedPoint InterpolateBetweenLanesDist(float dist, Side side, float laneIndexFloat, float additionalOffset = 0)
+    {
+        int laneIndexFloor = (int)Math.Floor(laneIndexFloat);
+        int laneIndexCeil = (int)Math.Ceiling(laneIndexFloat);
+        if (laneIndexFloor == laneIndexCeil)
+            return InterpolateLaneDist(dist, side, laneIndexFloor, additionalOffset) ?? throw new Exception("Interpolation returned null");
+
+        OrientedPoint floorPoint = InterpolateLaneDist(dist, side, laneIndexFloor, additionalOffset) ?? throw new Exception("Interpolation returned null");
+        OrientedPoint ceilPoint = InterpolateLaneDist(dist, side, laneIndexCeil, additionalOffset) ?? throw new Exception("Interpolation returned null");
+        float factor = laneIndexFloat - laneIndexFloor;
+
+        Vector3 position = Vector3.Lerp(floorPoint.Position, ceilPoint.Position, factor);
+        Quaternion rotation = Quaternion.Slerp(floorPoint.Rotation, ceilPoint.Rotation, factor);
+        return new OrientedPoint(position, rotation);
+    }
+
+    /// <summary>
     ///  This method calculates the factor for a given point on the road.
     ///  Used when you need the equivalent location on a road, for whatever
     ///  starting point.
@@ -804,6 +852,7 @@ public class ParsedPrefab : IParsedItem
         bestPaths = bestPaths.OrderBy(p => p.Length).ToList();
         otherPaths = otherPaths.OrderBy(p => p.Length).ToList();
 
+        Logger.Info($"Total paths found: {paths.Count}, Best paths: {bestPaths.Count}, Other paths: {otherPaths.Count}");
         return (bestPaths, otherPaths);
     }
 

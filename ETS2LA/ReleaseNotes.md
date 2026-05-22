@@ -1,5 +1,6 @@
-### ETS2LA C# 3.2.2
+### ETS2LA C# 3.2.3
 * Fix TruckersMP detection in log files
+* Update TruckLib
 
 **WARNING:** ETS2LA C# on Linux requires Linux specific SDKs. These can be found on the closed beta Discord, as they aren't yet included in ETS2LA C#.
 

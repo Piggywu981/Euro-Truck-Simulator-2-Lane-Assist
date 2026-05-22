@@ -319,13 +319,13 @@ public static class DataUtils
             {
                 // Example line:
                 // 00:00:12.537 : game
-                if (line.Split(" : ")[1].Trim().Equals("game", StringComparison.OrdinalIgnoreCase))
+                if (line.Split(" : ")[1].Trim().StartsWith("game", StringComparison.OrdinalIgnoreCase))
                 {
                     isRunning = true;
                 }
                 // Example line:
                 // 00:00:12.537 : exit
-                if (line.Split(" : ")[1].Trim().Equals("exit", StringComparison.OrdinalIgnoreCase))
+                if (line.Split(" : ")[1].Trim().StartsWith("exit", StringComparison.OrdinalIgnoreCase))
                 {
                     isRunning = false;
                 }

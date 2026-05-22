@@ -86,7 +86,7 @@ public class ParkedVehiclesProvider
             try { Update(); }
             catch (Exception ex)
             {
-                Logger.Error(ex.ToString(), "Error in camera update loop.");
+                Logger.Error(ex.ToString(), "Error in parked vehicles update loop.");
             }
         }
     }

@@ -126,7 +126,7 @@ public class TrafficProvider
             try { Update(); }
             catch (Exception ex)
             {
-                Logger.Error(ex.ToString(), "Error in camera update loop.");
+                Logger.Error(ex.ToString(), "Error in traffic update loop.");
             }
         }
     }

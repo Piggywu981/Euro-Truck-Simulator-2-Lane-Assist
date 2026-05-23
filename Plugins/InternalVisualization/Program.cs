@@ -93,8 +93,8 @@ namespace InternalVisualization
             if(fs != null) SiiFileHandler.Current.SetFileSystem(fs);
             if(fs != null) PpdFileHandler.Current.SetFileSystem(fs);
 
-            _roads = _mapData.MapItems.Where(item => item is Road).Cast<Road>().ToArray();
-            _prefabs = _mapData.MapItems.Where(item => item is Prefab).Cast<Prefab>().ToArray();
+            _roads = _mapData.MapItems.Values.OfType<Road>().ToArray();
+            _prefabs = _mapData.MapItems.Values.OfType<Prefab>().ToArray();
 
             if (_telemetryData == null) return;
             Vector3Double center = _telemetryData.truckPlacement.coordinate;

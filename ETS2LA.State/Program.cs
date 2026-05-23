@@ -37,7 +37,7 @@ public class ApplicationState
 {
     private static readonly Lazy<ApplicationState> _instance = new(() => new ApplicationState());
     public static ApplicationState Current => _instance.Value;
-    private bool shutdown = false;
+    private volatile bool shutdown = false;
 
     public ApplicationState()
     {

@@ -59,6 +59,7 @@ public class RoadsRenderer : Renderer
             float resolution = RoadUtils.GetRoadResolution(road);
             float length = road.Length;
 
+            if (length <= 0) continue;
             float stepLength = 1 / length * resolution;
 
             Vector2 minScreenPos = new Vector2(float.MaxValue, float.MaxValue);

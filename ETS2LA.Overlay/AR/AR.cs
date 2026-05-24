@@ -22,6 +22,8 @@ public class ARRenderer
     private int thisFrameWidth = 0;
     private int thisFrameHeight = 0;
 
+    private OverlaySettings overlaySettings;
+
     // These are all variables that are needed for
     // rendering ImGui windows in 3D space.
     private GL gl;
@@ -53,7 +55,16 @@ public class ARRenderer
         cameraData = CameraProvider.Current.GetCurrentData();
         telemetryData = GameTelemetry.Current.GetCurrentData();
 
+        overlaySettings = OverlaySettingsHandler.Current.GetSettings();
+        OverlaySettingsHandler.Current.OnSettingsUpdated += OnOverlaySettingsUpdated;
+
         ImGui.SetCurrentContext(mainContext);
+
+    }
+
+    private void OnOverlaySettingsUpdated(OverlaySettings newSettings)
+    {
+        overlaySettings = newSettings;
     }
 
     /// <summary>
@@ -65,6 +76,7 @@ public class ARRenderer
     {
         thisFrameProjection = default;
         thisFrameView = default;
+        GetViewMatrix();
 
         thisFrameWidth = (int)OverlayHandler.Current.OverlayWidth;
         thisFrameHeight = (int)OverlayHandler.Current.OverlayHeight;
@@ -185,12 +197,11 @@ public class ARRenderer
     }
 
     /// <summary>
-    ///  This function will return the world space coordinates of the provided ARCoordinate
-    ///  while also taking into account the coordinate center. Truck positions are interpolated
-    ///  to avoid jitter.
+    ///  This function will return the camera space coordinates of the provided ARCoordinate
+    ///  while also taking into account the coordinate center.
     /// </summary>
     /// <param name="coord">ARCoordinate to convert.</param>
-    /// <returns>World space coordinates.</returns>
+    /// <returns>camera space coordinates.</returns>
     /// <exception cref="ArgumentException"></exception>
     public Vector3 ARCoordinateToVector3(ARCoordinate coord)
     {
@@ -226,6 +237,22 @@ public class ARRenderer
             ((rgba & 0x000000FF) << 24); 
     }
 
+    private bool AllPointsOutsideRenderDistance(ARCoordinate[] points)
+    {
+        float maxDistance = overlaySettings.MaxARDistance;
+        Vector3 cameraPos = cameraData.position;
+
+        foreach (var point in points)
+        {
+            Vector3 worldPos = ARCoordinateToVector3(point);
+            float distance = Vector3.Distance(worldPos, cameraPos);
+            if (distance <= maxDistance)
+                return false;
+        }
+
+        return true;
+    }
+
     /// <summary>
     ///  Draw a line in 3D space. The line will be transformed and projected
     ///  onto the AR overlay.
@@ -236,6 +263,9 @@ public class ARRenderer
     /// <param name="thickness">Thickness of the line in pixels.</param>
     public void Draw3DLine(ARCoordinate start, ARCoordinate end, UInt32 color, float thickness = 1.0f)
     {
+        if (AllPointsOutsideRenderDistance(new ARCoordinate[] { start, end }))
+            return;
+        
         Vector2? p1 = WorldToScreen(ARCoordinateToVector3(start), thisFrameWidth, thisFrameHeight);
         Vector2? p2 = WorldToScreen(ARCoordinateToVector3(end), thisFrameWidth, thisFrameHeight);
 
@@ -257,6 +287,9 @@ public class ARRenderer
     /// <param name="thickness">The thickness of the circle outline.</param>
     public void Draw3DCircle(ARCoordinate center, float radius, UInt32 color, bool filled = false, float thickness = 1)
     {
+        if (AllPointsOutsideRenderDistance(new ARCoordinate[] { center }))
+            return;
+
         Vector2? centerScreen = WorldToScreen(ARCoordinateToVector3(center), thisFrameWidth, thisFrameHeight);
         if (!centerScreen.HasValue) 
             return;
@@ -282,6 +315,9 @@ public class ARRenderer
     /// <param name="thickness">The thickness of the polygon outline.</param>
     public void Draw3DPolygon(ARCoordinate[] points, UInt32 color, bool filled = false, float thickness = 1)
     {
+        if (AllPointsOutsideRenderDistance(points))
+            return;
+
         if (points == null || points.Length < 3)
             return;
 
@@ -328,6 +364,9 @@ public class ARRenderer
     /// <param name="thickness">The thickness of a non filled quad.</param>
     public void Draw3DQuad(ARCoordinate p1, ARCoordinate p2, ARCoordinate p3, ARCoordinate p4, UInt32 color, bool filled = false, float thickness = 1)
     {
+        if (AllPointsOutsideRenderDistance(new ARCoordinate[] { p1, p2, p3, p4 }))
+            return;
+        
         Vector2? p1s = WorldToScreen(ARCoordinateToVector3(p1), thisFrameWidth, thisFrameHeight);
         Vector2? p2s = WorldToScreen(ARCoordinateToVector3(p2), thisFrameWidth, thisFrameHeight);
         Vector2? p3s = WorldToScreen(ARCoordinateToVector3(p3), thisFrameWidth, thisFrameHeight);
@@ -363,6 +402,9 @@ public class ARRenderer
     /// <param name="thickness">The thickness of a non filled triangle.</param>
     public void Draw3DTriangle(ARCoordinate p1, ARCoordinate p2, ARCoordinate p3, UInt32 color, bool filled = false, float thickness = 1)
     {
+        if (AllPointsOutsideRenderDistance(new ARCoordinate[] { p1, p2, p3 }))
+            return;
+
         Vector2? p1s = WorldToScreen(ARCoordinateToVector3(p1), thisFrameWidth, thisFrameHeight);
         Vector2? p2s = WorldToScreen(ARCoordinateToVector3(p2), thisFrameWidth, thisFrameHeight);
         Vector2? p3s = WorldToScreen(ARCoordinateToVector3(p3), thisFrameWidth, thisFrameHeight);
@@ -396,6 +438,9 @@ public class ARRenderer
     /// <param name="color"></param>
     public void Draw3DText(ARCoordinate position, string text, UInt32 color)
     {
+        if (AllPointsOutsideRenderDistance(new ARCoordinate[] { position }))
+            return;
+
         Vector2? screenPos = WorldToScreen(ARCoordinateToVector3(position), thisFrameWidth, thisFrameHeight);
         if (!screenPos.HasValue) return;
 
@@ -470,6 +515,12 @@ public class ARRenderer
         // Back to the main context, as we want to draw the texture
         // onto the main overlay background.
         ImGui.SetCurrentContext(oldContext);
+
+        if (AllPointsOutsideRenderDistance(new ARCoordinate[] { center }))
+        {
+            isWindowContextInitialized = false;
+            return;
+        }
 
         float windowAspectRatio = windowSize.Y / windowSize.X;
         float height = width * windowAspectRatio;

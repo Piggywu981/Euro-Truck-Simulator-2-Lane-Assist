@@ -22,13 +22,6 @@ public enum LongitudinalAssists
     AdaptiveCruiseControl
 }
 
-public enum Units
-{
-    Metric,
-    Imperial,
-    Scientific
-}
-
 /// <summary>
 ///  This state contains the most important ETS2LA variables. Most plugins
 ///  will use it to follow the user's preferences and read the game data.
@@ -50,6 +43,15 @@ public class ApplicationState
         ControlsBackend.Current.On(DefaultControls.Assist.Id, HandleAssist);
 
         assistanceSettings = AssistanceSettings.Current;
+
+        StateSettingsHandler.Current.OnSettingsChanged += HandleSettingsChanged;
+        HandleSettingsChanged(StateSettingsHandler.Current.GetSettings());
+    }
+
+    private void HandleSettingsChanged(StateSettings newStateSettings)
+    {
+        stateSettings = newStateSettings;
+        DisplayUnits = newStateSettings.DisplayUnits;
     }
 
     private void HandleTelemetryUpdate(GameTelemetryData data)
@@ -75,6 +77,7 @@ public class ApplicationState
         shutdown = true;
     }
     
+
 
     // MARK: Self-Driving Related
     // NOTE: This class is organized by *category* and not variable/function type.
@@ -121,37 +124,14 @@ public class ApplicationState
     ///  is automatically changed by ETS2LA, either when the user sets it in the settings, or when we
     ///  detect a change in the game's units. This unit should determine the units used everywhere, e.g.
     ///  the units used when increasing and decreasing the target speed. (+-1 mph/kph/ms) <br/><br/>
-    ///  **Use FromScientificUnits and ToScientificUnits to convert values to and from the current display units.**
+    ///  **Use UnitConversions.FromScientificUnits and UnitConversions.ToScientificUnits to convert values to and from the current display units.**
     /// </summary>
     public Units DisplayUnits { get; set; } = Units.Metric;
 
     // Internal value to keep track of the latest telemetry we received.
     private GameTelemetryData latestTelemetryData = new();
     private AssistanceSettings assistanceSettings;
-
-    public float FromScientificUnits(float speedInMps, Units? overrideDisplayUnits = null)
-    {
-        var units = overrideDisplayUnits ?? DisplayUnits;
-        return units switch
-        {
-            Units.Metric => speedInMps * 3.6f,       // m/s to km/h
-            Units.Imperial => speedInMps * 2.23693f, // m/s to mph
-            Units.Scientific => speedInMps,          // m/s
-            _ => speedInMps
-        };
-    }
-
-    public float ToScientificUnits(float speedInDisplayUnits, Units? overrideDisplayUnits = null)
-    {
-        var units = overrideDisplayUnits ?? DisplayUnits;
-        return units switch
-        {
-            Units.Metric => speedInDisplayUnits / 3.6f,       // km/h to m/s
-            Units.Imperial => speedInDisplayUnits / 2.23693f, // mph to m/s
-            Units.Scientific => speedInDisplayUnits,          // m/s
-            _ => speedInDisplayUnits
-        };
-    }
+    private StateSettings stateSettings;
 
     // The functions below are for handling control events.
     // If determining what they do is hard via code, then take a look at the 
@@ -193,10 +173,10 @@ public class ApplicationState
         switch (DisplayUnits)
         {
             case Units.Metric:
-                DesiredSpeed += ToScientificUnits(1.0f, Units.Metric); // 1 km/h in m/s
+                DesiredSpeed += UnitConversions.ToScientificUnits(UnitType.Speed, 1.0f, Units.Metric); // 1 km/h in m/s
                 break;
             case Units.Imperial:
-                DesiredSpeed += ToScientificUnits(1.0f, Units.Imperial); // 1 mph in m/s
+                DesiredSpeed += UnitConversions.ToScientificUnits(UnitType.Speed, 1.0f, Units.Imperial); // 1 mph in m/s
                 break;
             case Units.Scientific:
                 DesiredSpeed += 1f; // 1 m/s
@@ -219,10 +199,10 @@ public class ApplicationState
         switch (DisplayUnits)
         {
             case Units.Metric:
-                DesiredSpeed -= ToScientificUnits(1.0f, Units.Metric); // 1 km/h in m/s
+                DesiredSpeed -= UnitConversions.ToScientificUnits(UnitType.Speed, 1.0f, Units.Metric); // 1 km/h in m/s
                 break;
             case Units.Imperial:
-                DesiredSpeed -= ToScientificUnits(1.0f, Units.Imperial); // 1 mph in m/s
+                DesiredSpeed -= UnitConversions.ToScientificUnits(UnitType.Speed, 1.0f, Units.Imperial); // 1 mph in m/s
                 break;
             case Units.Scientific:
                 DesiredSpeed -= 1f; // 1 m/s

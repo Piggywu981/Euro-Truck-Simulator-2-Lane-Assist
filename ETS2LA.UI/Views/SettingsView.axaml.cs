@@ -10,7 +10,7 @@ namespace ETS2LA.UI.Views;
 public partial class SettingsView : UserControl
 {
 
-    private readonly WindowSettings _windowSettings = new();
+    private readonly DisplaySettings _displaySettings = new();
     private readonly AudioSettings _audioSettings = new();
     private readonly ThemeSettings _themeSettings = new();
     private readonly ControlSettings _controlSettings = new();
@@ -32,7 +32,7 @@ public partial class SettingsView : UserControl
             // Don't know why I have to find the controls, a direct reference
             // to them via x:Name doesn't work in this file for some reason.
             // TODO: Investigate later.
-            this.FindControl<Button>("WindowButton"),
+            this.FindControl<Button>("DisplayButton"),
             this.FindControl<Button>("AudioButton"),
             this.FindControl<Button>("ThemeButton"),
             this.FindControl<Button>("ControlsButton"),
@@ -54,10 +54,10 @@ public partial class SettingsView : UserControl
         this.FindControl<Button>(active)?.Classes.Add("Selected");
     }
 
-    private void OnWindowSettingsClick(object? sender, RoutedEventArgs e)
+    private void OnDisplaySettingsClick(object? sender, RoutedEventArgs e)
     {
-        _contentHost.Content = _windowSettings;
-        SetSelected("WindowButton");
+        _contentHost.Content = _displaySettings;
+        SetSelected("DisplayButton");
     }
 
     private void OnAudioSettingsClick(object? sender, RoutedEventArgs e)

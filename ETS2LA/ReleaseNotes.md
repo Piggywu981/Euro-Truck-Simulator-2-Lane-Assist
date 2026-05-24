@@ -1,9 +1,10 @@
-### ETS2LA C# 3.2.4
-* *Tumppi066* - Fix SDK communication issues caused by floating point errors when determining our current timestamp.
-* *Blzs* - Better thread safety in `ApplicationState`
-* *Blzs* - `MemoryReader` no longer appends junk bytes to the buffer when reading chars.
-* *Blzs* - Internal visualization no longer errors when a road has zero length.
-* *Blzs* - Fix `multiplayerTimeOffset` type in `GameTelemetryData` from `float` to `long` to match the game.
+### ETS2LA C# 3.2.5
+* Created a new toggle element for use in UI.
+* Implemented `Display` settings page in the UI.
+* Implemented overlay framerate limiting. By default the overlay will now limit itself to 30fps. This cuts ETS2LA's CPU usage by around 60-70% on an R7 5800x3d.
+* Added a setting for changing the maximum AR rendering distance, default is now 150m.
+* Added a setting to disable AR rendering entirely.
+* Implemented new `UnitConversion` class, as well as a setting to change default units. Once ETS2LA starts adding UI, all displayed values will follow this setting.
 
 **WARNING:** ETS2LA C# on Linux requires Linux specific SDKs. These can be found on the closed beta Discord, as they aren't yet included in ETS2LA C#.
 

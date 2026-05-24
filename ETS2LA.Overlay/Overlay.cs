@@ -36,6 +36,7 @@ public class OverlayHandler
     };
 
     public ARRenderer AR;
+    private OverlaySettings overlaySettings;
 
     private bool isInteracting = false;
     private float bgOpacityTarget = 0.0f;
@@ -60,6 +61,8 @@ public class OverlayHandler
     {
         ControlsBackend.Current.RegisterControl(Interact);
         ControlsBackend.Current.On(Interact.Id, HandleInput);
+        overlaySettings = OverlaySettingsHandler.Current.GetSettings();
+        OverlaySettingsHandler.Current.OnSettingsUpdated += OnOverlaySettingsUpdated;
 
         Task.Run(() => RenderLoop());
         
@@ -67,6 +70,11 @@ public class OverlayHandler
         windows.Add(new OverlayInfoWindow());
         windows.Add(new DemoWindow());
         windows.Add(new StateWindow());
+    }
+
+    private void OnOverlaySettingsUpdated(OverlaySettings newSettings)
+    {
+        overlaySettings = newSettings;
     }
 
     private void HandleInput(object sender, ControlChangeEventArgs e)
@@ -100,6 +108,11 @@ public class OverlayHandler
 
         while (GLFW.WindowShouldClose(glfwWindow) == 0 && !shutdown)
         {
+            if (overlaySettings.LimitFramerate)
+                interval = 1000.0 / overlaySettings.MaxFramerate;
+            else
+                interval = 1000.0 / targetFramerate;
+
             start = fs.Elapsed.TotalMilliseconds;
             next += interval;
 
@@ -150,8 +163,8 @@ public class OverlayHandler
             // all other calls are just setup.
             Stopwatch ARStopwatch = Stopwatch.StartNew();
             try { 
-                if (AR == null) { AR = new ARRenderer(gl); }
-                AR.Render(); 
+                if (AR == null) AR = new ARRenderer(gl);
+                if (overlaySettings.RenderAR) AR.Render(); 
             }
             catch (Exception ex) {
                 Logger.Error($"Error in AR rendering: {ex}");

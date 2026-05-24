@@ -29,10 +29,10 @@
 
             <TextBlock Text="General" Margin="14 12 0 6" FontSize="12" Classes="Description" />
 
-            <Button x:Name="WindowButton" Classes="sidebar" Theme="{StaticResource OutlineButtonTheme}" Click="OnWindowSettingsClick">
+            <Button x:Name="DisplayButton" Classes="sidebar" Theme="{StaticResource OutlineButtonTheme}" Click="OnDisplaySettingsClick">
                 <Grid ColumnDefinitions="14,*,Auto" VerticalAlignment="Center" ColumnSpacing="8">
                     <i:Icon Grid.Column="0" Value="fa-display" FontSize="14" />
-                    <TextBlock Grid.Column="1" Text="Window" FontSize="14" Margin="0 0 0 0" FontWeight="500" TextWrapping="NoWrap" />
+                    <TextBlock Grid.Column="1" Text="Display" FontSize="14" Margin="0 0 0 0" FontWeight="500" TextWrapping="NoWrap" />
                 </Grid>
             </Button>
 

@@ -71,5 +71,6 @@
     <ProjectReference Include="..\ETS2LA.Audio\ETS2LA.Audio.csproj" />
     <ProjectReference Include="..\ETS2LA.Notifications\ETS2LA.Notifications.csproj" />
     <ProjectReference Include="..\ETS2LA.Game\ETS2LA.Game.csproj" />
+    <ProjectReference Include="..\ETS2LA.Overlay\ETS2LA.Overlay.csproj" />
   </ItemGroup>
 </Project>

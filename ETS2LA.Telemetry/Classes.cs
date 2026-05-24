@@ -380,7 +380,7 @@ namespace ETS2LA.Telemetry
         public ulong time;
         public ulong simulatedTime;
         public ulong renderTime;
-        public int multiplayerTimeOffset;
+        public long multiplayerTimeOffset;
 
         // Other categories
         public SCSValues scsValues;

@@ -3,6 +3,7 @@
 * *Blzs* - Better thread safety in `ApplicationState`
 * *Blzs* - `MemoryReader` no longer appends junk bytes to the buffer when reading chars.
 * *Blzs* - Internal visualization no longer errors when a road has zero length.
+* *Blzs* - Fix `multiplayerTimeOffset` type in `GameTelemetryData` from `float` to `long` to match the game.
 
 **WARNING:** ETS2LA C# on Linux requires Linux specific SDKs. These can be found on the closed beta Discord, as they aren't yet included in ETS2LA C#.
 

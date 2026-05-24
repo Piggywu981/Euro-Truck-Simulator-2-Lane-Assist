@@ -181,7 +181,7 @@ public class GameTelemetry
         _currentData.time = _reader.ReadLongLong(offset); offset += 8;
         _currentData.simulatedTime = _reader.ReadLongLong(offset); offset += 8;
         _currentData.renderTime = _reader.ReadLongLong(offset); offset += 8;
-        _currentData.multiplayerTimeOffset = _reader.ReadLongLong(offset); offset += 8;
+        _currentData.multiplayerTimeOffset = _reader.ReadInt(offset); offset += 8;
 
         // SCSValues
         _currentData.scsValues.telemetryPluginRevision = _reader.ReadInt(offset); offset += 4;

@@ -274,7 +274,7 @@ public class GameOutput
                 ProcessChannel(channel);
             }
 
-            double time = DateTimeOffset.Now.ToUnixTimeMilliseconds() / 1000f;
+            double time = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
             foreach (var kvp in curFrameFloats)
             {
                 string propName = kvp.Key;

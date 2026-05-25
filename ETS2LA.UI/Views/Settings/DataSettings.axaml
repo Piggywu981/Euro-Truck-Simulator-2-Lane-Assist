@@ -26,6 +26,23 @@
                 <StackPanel Spacing="3" IsVisible="{Binding ShowRamWarning}">
                     <TextBlock Text="You cannot use some data fidelity options due to insufficient RAM. High requires 16GB, Extreme requires 20GB." FontSize="12" Classes="Warning" />
                 </StackPanel>
+
+                <StackPanel Spacing="3" IsVisible="{Binding ShowLowInfo}">
+                    <TextBlock Text="This setting only loads roads and intersections visible on the in game map. It discards all other information." FontSize="12" />
+                </StackPanel>
+
+                <StackPanel Spacing="3" IsVisible="{Binding ShowMediumInfo}">
+                    <TextBlock Text="This setting drops redundant information while maintaining most detail objects (such as signs). Doesn't include any roads / intersections not shown in the in game map." FontSize="12" />
+                </StackPanel>
+
+                <StackPanel Spacing="3" IsVisible="{Binding ShowHighInfo}">
+                    <TextBlock Text="This setting drops redundant information while maintaining most detail objects (such as signs). Includes all hidden and AI only roads." FontSize="12" />
+                </StackPanel>
+
+                <StackPanel Spacing="3" IsVisible="{Binding ShowExtremeInfo}">
+                    <TextBlock Text="This setting includes all available data, most of which is redundant." FontSize="12" />
+                </StackPanel>
+
                 <StackPanel Spacing="3" IsVisible="{Binding ShowExtremeWarning}">
                     <TextBlock Text="Warning: Extreme uses significant amounts of RAM, expect over 10GB of usage." FontSize="12" Classes="Warning" />
                 </StackPanel>

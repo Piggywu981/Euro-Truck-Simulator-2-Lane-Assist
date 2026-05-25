@@ -4,6 +4,7 @@ using Avalonia.Markup.Xaml;
 using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
 using ETS2LA.Game.Data;
+using System.Collections;
 
 namespace ETS2LA.UI.Views.Settings;
 
@@ -16,6 +17,11 @@ public partial class DataSettingsPage : UserControl, INotifyPropertyChanged
     public int SelectedCurveQualityOption { get; set; }
     public bool ShowRamWarning { get; set; } = false;
     public bool ShowExtremeWarning { get; set; } = false;
+
+    public bool ShowLowInfo { get; set; } = false;
+    public bool ShowMediumInfo { get; set; } = false;
+    public bool ShowHighInfo { get; set; } = false;
+    public bool ShowExtremeInfo { get; set; } = false;
 
     private float ramAmount;
 
@@ -82,6 +88,39 @@ public partial class DataSettingsPage : UserControl, INotifyPropertyChanged
                 ShowExtremeWarning = false;
                 OnPropertyChanged(nameof(ShowExtremeWarning));
             }
+
+            switch ((DataFidelity)SelectedDataFidelityOption)
+            {
+                case DataFidelity.Low:
+                    ShowLowInfo = true;
+                    ShowMediumInfo = false;
+                    ShowHighInfo = false;
+                    ShowExtremeInfo = false;
+                    break;
+                case DataFidelity.Medium:
+                    ShowLowInfo = false;
+                    ShowMediumInfo = true;
+                    ShowHighInfo = false;
+                    ShowExtremeInfo = false;
+                    break;
+                case DataFidelity.High:
+                    ShowLowInfo = false;
+                    ShowMediumInfo = false;
+                    ShowHighInfo = true;
+                    ShowExtremeInfo = false;
+                    break;
+                case DataFidelity.Extreme:
+                    ShowLowInfo = false;
+                    ShowMediumInfo = false;
+                    ShowHighInfo = false;
+                    ShowExtremeInfo = true;
+                    break;
+            }
+            
+            OnPropertyChanged(nameof(ShowLowInfo));
+            OnPropertyChanged(nameof(ShowMediumInfo));
+            OnPropertyChanged(nameof(ShowHighInfo));
+            OnPropertyChanged(nameof(ShowExtremeInfo));
 
             DataSettings.Current.DataFidelity = (DataFidelity)SelectedDataFidelityOption;
             DataSettings.Current.Save();

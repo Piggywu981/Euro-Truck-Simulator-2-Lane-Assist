@@ -30,7 +30,7 @@ class StateWindow : InternalWindow
         Definition = new WindowDefinition
         {
             Title = "State Info",
-            Flags = ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoSavedSettings,
+            Flags = ImGuiWindowFlags.AlwaysAutoResize,
         };
 
         Render = () =>

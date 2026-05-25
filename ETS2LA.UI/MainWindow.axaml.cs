@@ -37,12 +37,6 @@ public partial class MainWindow : AppWindow
     private readonly ManagerView managerView;
     private readonly SettingsView settingsView;
     public static event EventHandler? WindowOpened;
-
-    # if WINDOWS
-    private readonly VisualizationView? visualizationView;
-    # else
-    private readonly UserControl? visualizationView = null;
-    # endif
     
 
     public MainWindow()
@@ -54,10 +48,6 @@ public partial class MainWindow : AppWindow
         VersionText.Text = $"v{System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version?.ToString(3)}";
 
         UINotificationHandler.Current.SetWindow(this);
-
-        # if WINDOWS
-        visualizationView = new VisualizationView();
-        # endif
 
         pluginService = new PluginManagerService();
         managerView = new ManagerView(pluginService);
@@ -198,7 +188,7 @@ public partial class MainWindow : AppWindow
         {
             PageKind.Dashboard => dashboardView,
             PageKind.Manager => managerView,
-            PageKind.Visualization => visualizationView ?? CreatePlaceholder("Sorry", "This page is only available on Windows. You can still use the visualization and map by going to https://visualization.ets2la.com (or https://map.ets2la.com)."),
+            PageKind.Visualization => CreatePlaceholder("Sorry", "This page is being remade and isn't available in this version. It will return in a future update post open beta release."),
             PageKind.Catalogue => CreatePlaceholder("Catalogue", "This page will contain 3rd party plugins. Those aren't supported yet, you can copy them manually to the plugins folder and restart."),
             PageKind.Performance => CreatePlaceholder("Performance", "This page hasn't been implemented yet, you can monitor performance using external tools."),
             PageKind.Wiki => CreatePlaceholder("Wiki", "Please take a look at https://docs.ets2la.com for documentation. This page will link there once we have more content."),

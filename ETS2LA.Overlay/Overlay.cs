@@ -21,6 +21,14 @@ using System.Diagnostics;
 
 namespace ETS2LA.Overlay;
 
+public enum FontStyle
+{
+    Regular,
+    Medium,
+    SemiBold,
+    Bold
+}
+
 public class OverlayHandler
 {
     private static readonly Lazy<OverlayHandler> _instance = new(() => new OverlayHandler());
@@ -44,6 +52,7 @@ public class OverlayHandler
     private List<float> frameTimes = new List<float>();
     
     private List<InternalWindow> windows = new();
+    public Dictionary<FontStyle, ImFontPtr> Fonts = new Dictionary<FontStyle, ImFontPtr>();
 
     public bool IsOverlayFocused => isInteracting;
     public float AverageFrameTime => frameTimes.Count > 0 ? frameTimes.Average() : 0f;
@@ -278,18 +287,24 @@ public class OverlayHandler
                 continue;
             }
 
-            ImGui.SetNextWindowSize(new Vector2(
-                window.Definition.Width.GetValueOrDefault(480), 
-                window.Definition.Height.GetValueOrDefault(320)
-            ), ImGuiCond.Once);
-            
-            ImGui.SetNextWindowBgAlpha(window.Definition.Alpha.GetValueOrDefault(1f));
+            if (window.Definition.Width.HasValue || window.Definition.Height.HasValue)
+            {
+                ImGui.SetNextWindowSize(new Vector2(
+                    window.Definition.Width.GetValueOrDefault(480),
+                    window.Definition.Height.GetValueOrDefault(320)
+                ), ImGuiCond.Once);
+            }
+
+            ImGui.SetNextWindowBgAlpha(window.Definition.Alpha.GetValueOrDefault(0.9f));
             ImGui.Begin(window.Definition.Title, window.Definition.Flags.GetValueOrDefault(ImGuiWindowFlags.None));
             
-            ImGui.SetWindowPos(new Vector2(
-                (int)window.Definition.X.GetValueOrDefault(OverlayWidth / 2), 
-                (int)window.Definition.Y.GetValueOrDefault(OverlayHeight / 2)
-            ), ImGuiCond.Once);
+            if (window.Definition.X.HasValue || window.Definition.Y.HasValue)
+            {
+                ImGui.SetWindowPos(new Vector2(
+                    (int)window.Definition.X.GetValueOrDefault(OverlayWidth / 2), 
+                    (int)window.Definition.Y.GetValueOrDefault(OverlayHeight / 2)
+                ), ImGuiCond.Once);
+            }
 
             var isCollapsed = ImGui.IsWindowCollapsed();
             if (isCollapsed) {
@@ -339,39 +354,45 @@ public class OverlayHandler
         io.ConfigFlags |= ImGuiConfigFlags.NavEnableKeyboard;     // Enable Keyboard Controls
         io.ConfigFlags |= ImGuiConfigFlags.NavEnableGamepad;      // Enable Gamepad Controls
         io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;         // Enable Docking
-        // TODO: This is disabled for now as it causes submenus to appear below main windows.
-        //io.ConfigFlags |= ImGuiConfigFlags.ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
+        io.ConfigFlags |= ImGuiConfigFlags.ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
 
-        var mon = GLFW.GetPrimaryMonitor();
-        float mainScale = ImGuiImplGLFW.GetContentScaleForMonitor(Unsafe.BitCast<Hexa.NET.GLFW.GLFWmonitorPtr, Hexa.NET.ImGui.Backends.GLFW.GLFWmonitorPtr>(mon));
-
+        // Tweak our styling just a little
         ImGui.StyleColorsDark();
         var style = ImGui.GetStyle();
-        // style.ScaleAllSizes(1.5f);
+        style.WindowRounding = 3.0f;
+        style.Colors[(int)ImGuiCol.TitleBgActive] = new Vector4(0.1f, 0.1f, 0.1f, 1f);
+
+        // And then we scale by the monitor DPI
+        var mon = GLFW.GetPrimaryMonitor();
+        float mainScale = ImGuiImplGLFW.GetContentScaleForMonitor(Unsafe.BitCast<Hexa.NET.GLFW.GLFWmonitorPtr, Hexa.NET.ImGui.Backends.GLFW.GLFWmonitorPtr>(mon));
 
         style.ScaleAllSizes(mainScale);
         style.FontScaleDpi = mainScale;
         io.ConfigDpiScaleFonts = true;
         io.ConfigDpiScaleViewports = true;
 
-        if ((io.ConfigFlags & ImGuiConfigFlags.ViewportsEnable) != 0)
+        List<Tuple<FontStyle, string>> fonts = new List<Tuple<FontStyle, string>>()
         {
-            style.WindowRounding = 0.0f;
-        }
+            new Tuple<FontStyle, string>(FontStyle.Medium, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Fonts", "Geist-Medium.ttf")),
+            new Tuple<FontStyle, string>(FontStyle.Regular, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Fonts", "Geist-Regular.ttf")),
+            new Tuple<FontStyle, string>(FontStyle.SemiBold, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Fonts", "Geist-SemiBold.ttf")),
+            new Tuple<FontStyle, string>(FontStyle.Bold, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Fonts", "Geist-Bold.ttf")),
+        };
 
         // Set fonts
         unsafe
         {
-            string fontPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Fonts", "Geist-Medium.ttf");
-            if (!File.Exists(fontPath))
+            for (int i = 0; i < fonts.Count; i++)
             {
-                Logger.Error($"Font file not found at {fontPath}");
-                // style.FontSizeBase = 18f;
-            }
-            else
-            {
-                io.Fonts.AddFontFromFileTTF(fontPath);
-                style.FontSizeBase = 18f;
+                string fontPath = fonts[i].Item2;
+                if (!File.Exists(fontPath))
+                {
+                    Logger.Error($"Font file not found at {fontPath}");
+                    continue;
+                }
+                ImFont* font = io.Fonts.AddFontFromFileTTF(fontPath, 18f);
+                ImFontPtr fontPtr = new ImFontPtr(font);
+                Fonts[fonts[i].Item1] = fontPtr;
             }
         }
 

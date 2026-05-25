@@ -23,6 +23,9 @@
                         </DataTemplate>
                     </TabStrip.ItemTemplate>
                 </TabStrip>
+                <StackPanel Spacing="3" IsVisible="{Binding ShowRamWarning}">
+                    <TextBlock Text="You cannot use some data fidelity options due to insufficient RAM. High requires 16GB, Extreme requires 20GB." FontSize="12" Classes="Warning" />
+                </StackPanel>
             </StackPanel>
 
             <Separator />

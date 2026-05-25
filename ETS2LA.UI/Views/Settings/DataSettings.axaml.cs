@@ -1,7 +1,6 @@
 using System.ComponentModel;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using ETS2LA.Settings.Global;
 using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
 using ETS2LA.Game.Data;
@@ -15,11 +14,16 @@ public partial class DataSettingsPage : UserControl, INotifyPropertyChanged
 
     public int SelectedDataFidelityOption { get; set; }
     public int SelectedCurveQualityOption { get; set; }
+    public bool ShowRamWarning { get; set; } = false;
+
+    private float ramAmount;
 
     public DataSettingsPage()
     {
         LoadDataFidelityOptions();
         LoadCurveQualityOptions();
+
+        ramAmount = GC.GetGCMemoryInfo().TotalAvailableMemoryBytes / (1024f * 1024f * 1024f);
 
         AvaloniaXamlLoader.Load(this);
         DataContext = this;
@@ -47,6 +51,26 @@ public partial class DataSettingsPage : UserControl, INotifyPropertyChanged
     {
         if (SelectedDataFidelityOption >= 0)
         {
+            if (SelectedDataFidelityOption == (int)DataFidelity.High
+                && ramAmount < 15)
+            {
+                ShowRamWarning = true;
+                SelectedDataFidelityOption = (int)DataFidelity.Medium;
+                OnPropertyChanged(nameof(SelectedDataFidelityOption));
+                OnPropertyChanged(nameof(ShowRamWarning));
+                return;
+            }
+
+            if (SelectedDataFidelityOption == (int)DataFidelity.Extreme
+                && ramAmount < 19)
+            {
+                ShowRamWarning = true;
+                SelectedDataFidelityOption = (int)DataFidelity.High;
+                OnPropertyChanged(nameof(SelectedDataFidelityOption));
+                OnPropertyChanged(nameof(ShowRamWarning));
+                return;
+            }
+
             DataSettings.Current.DataFidelity = (DataFidelity)SelectedDataFidelityOption;
             DataSettings.Current.Save();
         }

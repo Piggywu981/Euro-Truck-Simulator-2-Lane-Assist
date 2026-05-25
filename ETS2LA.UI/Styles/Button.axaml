@@ -19,12 +19,16 @@
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
         <Setter Property="Margin" Value="4 0 0 0"/>
     </Style>
-    <Style Selector="Button.sidebar.Selected Grid i|Icon">
+    <Style Selector="Button.sidebar:pressed">
+        <Setter Property="Background" Value="#20232A"/>
+    </Style>
+    <!--<Style Selector="Button.sidebar.Selected Grid i|Icon">
         <Setter Property="Foreground" Value="{StaticResource AccentForeground}"/>
     </Style>
     <Style Selector="Button.sidebar.Selected Grid TextBlock">
         <Setter Property="Foreground" Value="{StaticResource AccentForeground}"/>
     </Style>
+    -->
 
     <!-- Titlebar Buttons -->
     <Style Selector="Button.titlebar">

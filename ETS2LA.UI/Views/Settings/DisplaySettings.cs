@@ -19,6 +19,8 @@ public partial class DisplaySettings : UserControl, INotifyPropertyChanged
     public ObservableCollection<TabStripItemHandler> DisplayUnitOptions { get; } = new();
     public int SelectedDisplayUnitOption { get; set; }
 
+    public bool IsUsingScientificUnits => StateSettingsHandler.Current.GetSettings().DisplayUnits == Units.Scientific;
+
     public bool LimitOverlayFramerate
     {
         get => OverlaySettingsHandler.Current.GetSettings().LimitFramerate;
@@ -110,6 +112,7 @@ public partial class DisplaySettings : UserControl, INotifyPropertyChanged
             StateSettingsHandler.Current.GetSettings().DisplayUnits = (Units)SelectedDisplayUnitOption;
             StateSettingsHandler.Current.Save();
             OnPropertyChanged(nameof(ARDistanceDisplay));
+            OnPropertyChanged(nameof(IsUsingScientificUnits));
         }
     }
 

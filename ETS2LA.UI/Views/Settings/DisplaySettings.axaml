@@ -24,6 +24,9 @@
                         </DataTemplate>
                     </TabStrip.ItemTemplate>
                 </TabStrip>
+                <StackPanel IsVisible="{Binding IsUsingScientificUnits}" Spacing="3">
+                    <TextBlock Text="Has only slight differences to metric units, for example instead of 'bar' (Atmospheres), scientific units use 'Pa' (Pascals)." FontSize="12" />
+                </StackPanel>
             </StackPanel>
 
             <Separator />

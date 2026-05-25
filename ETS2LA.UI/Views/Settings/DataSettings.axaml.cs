@@ -15,6 +15,7 @@ public partial class DataSettingsPage : UserControl, INotifyPropertyChanged
     public int SelectedDataFidelityOption { get; set; }
     public int SelectedCurveQualityOption { get; set; }
     public bool ShowRamWarning { get; set; } = false;
+    public bool ShowExtremeWarning { get; set; } = false;
 
     private float ramAmount;
 
@@ -69,6 +70,17 @@ public partial class DataSettingsPage : UserControl, INotifyPropertyChanged
                 OnPropertyChanged(nameof(SelectedDataFidelityOption));
                 OnPropertyChanged(nameof(ShowRamWarning));
                 return;
+            }
+
+            if (SelectedDataFidelityOption == (int)DataFidelity.Extreme)
+            {
+                ShowExtremeWarning = true;
+                OnPropertyChanged(nameof(ShowExtremeWarning));
+            }
+            else
+            {
+                ShowExtremeWarning = false;
+                OnPropertyChanged(nameof(ShowExtremeWarning));
             }
 
             DataSettings.Current.DataFidelity = (DataFidelity)SelectedDataFidelityOption;

@@ -36,7 +36,7 @@
                 <TextBlock Text="In most situations, over half of ETS2LA's CPU use will be for the overlay. You can lower it's framerate to reduce CPU and GPU usage." FontSize="12" Classes="Description" />
             </StackPanel>
 
-            <StackPanel Spacing="12">
+            <StackPanel Spacing="12" IsVisible="{Binding LimitOverlayFramerate}">
                 <StackPanel Orientation="Horizontal" Spacing="6">
                     <TextBlock Text="Max Overlay Framerate" />
                     <TextBlock Text="{Binding ElementName=MaxFramerateSlider, Path=Value, StringFormat='{}{0:0} FPS'}" />
@@ -54,12 +54,16 @@
                 <TextBlock Text="We can render elements in the game world using our overlay. This will use additional CPU and GPU resources." FontSize="12" Classes="Description" />
             </StackPanel>
 
-            <StackPanel Spacing="12">
+            <StackPanel Spacing="12" IsVisible="{Binding RenderAR}">
                 <StackPanel Orientation="Horizontal" Spacing="6">
                     <TextBlock Text="Max AR Rendering Distance" />
                     <TextBlock Text="{Binding ARDistanceDisplay}" />
                 </StackPanel>
                 <Slider Name="MaxARDistanceSlider" Minimum="50" Maximum="300" Value="{Binding MaxARDistance}" />
+            </StackPanel>
+
+            <StackPanel Spacing="12" IsVisible="{Binding !RenderAR}">
+                <TextBlock Text="Warning: ETS2LA relies heavily on AR elements, only disable if you really need performance." FontSize="12" Classes="Warning" />
             </StackPanel>
 
         </StackPanel>

@@ -28,6 +28,7 @@ public sealed class PluginManagerService
 
     public void ReloadPlugins()
     {
+        backend.pluginHandler?.UnloadPlugins();
         backend.pluginHandler?.LoadPlugins();
     }
 

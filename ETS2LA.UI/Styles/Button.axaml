@@ -10,7 +10,7 @@
 
     <!-- Sidebar Buttons -->
     <Style Selector="Button.sidebar">
-        <Setter Property="Background" Value="#22222200"/>
+        <Setter Property="Background" Value="#00000000"/>
         <Setter Property="Foreground" Value="{StaticResource SolidColor}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="CornerRadius" Value="6"/>

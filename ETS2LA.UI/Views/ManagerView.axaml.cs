@@ -21,12 +21,13 @@ public partial class ManagerView : UserControl, INotifyPropertyChanged
 
     public ManagerView(PluginManagerService service)
     {
+        _pluginService = service;
+
         if (!service.backend.IsLoaded) service.backend.OnBackendLoaded += (s, e) => UpdatePluginList();
         else UpdatePluginList();
-        
+
         InitializeComponent();
         DataContext = this;
-        _pluginService = service;
     }
 
     private void TogglePluginClick(object? sender, RoutedEventArgs e)

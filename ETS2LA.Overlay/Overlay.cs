@@ -354,7 +354,8 @@ public class OverlayHandler
         io.ConfigFlags |= ImGuiConfigFlags.NavEnableKeyboard;     // Enable Keyboard Controls
         io.ConfigFlags |= ImGuiConfigFlags.NavEnableGamepad;      // Enable Gamepad Controls
         io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;         // Enable Docking
-        io.ConfigFlags |= ImGuiConfigFlags.ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
+        if (OverlaySettingsHandler.Current.GetSettings().SupportMultipleViewports)
+            io.ConfigFlags |= ImGuiConfigFlags.ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
 
         // Tweak our styling just a little
         ImGui.StyleColorsDark();

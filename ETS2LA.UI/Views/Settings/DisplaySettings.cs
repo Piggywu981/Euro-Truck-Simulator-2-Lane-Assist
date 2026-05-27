@@ -21,6 +21,23 @@ public partial class DisplaySettings : UserControl, INotifyPropertyChanged
 
     public bool IsUsingScientificUnits => StateSettingsHandler.Current.GetSettings().DisplayUnits == Units.Scientific;
 
+    public bool ChangedSupportMultipleViewports { get; private set; } = false;
+    public bool SupportMultipleViewports
+    {
+        get => OverlaySettingsHandler.Current.GetSettings().SupportMultipleViewports;
+        set
+        {
+            if (OverlaySettingsHandler.Current.GetSettings().SupportMultipleViewports != value)
+            {
+                OverlaySettingsHandler.Current.GetSettings().SupportMultipleViewports = value;
+                ChangedSupportMultipleViewports = true;
+                OverlaySettingsHandler.Current.Save();
+            }
+            OnPropertyChanged(nameof(ChangedSupportMultipleViewports));
+            OnPropertyChanged(nameof(SupportMultipleViewports));
+        }
+    }
+
     public bool LimitOverlayFramerate
     {
         get => OverlaySettingsHandler.Current.GetSettings().LimitFramerate;

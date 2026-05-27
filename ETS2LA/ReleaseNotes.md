@@ -1,8 +1,5 @@
-### ETS2LA C# 3.2.7
-* Upgrade to Avalonia 12.
-* Move from `Projektanker.Icons` to `Optris.Icons`.
-* Transition update notes to `Huskui.Avalonia.Markdown`. Pending additional style changes.
-* Add additional explainers and warnings to the settings UIs.
+### ETS2LA C# 3.2.8
+* Added option to disable multiple viewports for the ETS2LA overlay.
 
 **WARNING:** ETS2LA C# on Linux requires Linux specific SDKs. These can be found on the closed beta Discord, as they aren't yet included in ETS2LA C#.
 

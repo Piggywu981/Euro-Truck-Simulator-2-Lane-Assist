@@ -33,6 +33,15 @@
 
             <StackPanel Spacing="10">
                 <Grid ColumnDefinitions="*, Auto">
+                    <TextBlock Text="Support Multiple Viewports" VerticalAlignment="Center" />
+                    <ToggleSwitch Grid.Column="1" IsChecked="{Binding SupportMultipleViewports}" Classes="primary-toggle" />
+                </Grid>
+                <TextBlock Text="This allows ETS2LA to render in multiple viewports, meaning you can move overlay windows to any monitor." FontSize="12" Classes="Description" />
+                <TextBlock Text="You need to restart ETS2LA for this option to apply." FontSize="12" Classes="Warning" IsVisible="{Binding ChangedSupportMultipleViewports}" />
+            </StackPanel>
+
+            <StackPanel Spacing="10">
+                <Grid ColumnDefinitions="*, Auto">
                     <TextBlock Text="Limit Overlay Framerate" VerticalAlignment="Center" />
                     <ToggleSwitch Grid.Column="1" IsChecked="{Binding LimitOverlayFramerate}" Classes="primary-toggle" />
                 </Grid>

@@ -7,6 +7,7 @@ public class OverlaySettings
 {
     public bool LimitFramerate = true;
     public int MaxFramerate = 30;
+    public bool SupportMultipleViewports = true;
 
     // AR
     public bool RenderAR = true;

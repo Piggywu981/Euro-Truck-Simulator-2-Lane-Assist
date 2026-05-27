@@ -3,6 +3,7 @@ using ETS2LA.Shared;
 using ETS2LA.Backend.Events;
 using ETS2LA.Settings;
 using ETS2LA.Logging;
+using ETS2LA.Tutorials;
 
 namespace ExampleProvider
 {
@@ -34,6 +35,19 @@ namespace ExampleProvider
             _settingsHandler = new SettingsHandler();
             _settings = _settingsHandler.Load<MySettings>(_settingsFilename);
             _settingsHandler.RegisterListener<MySettings>(_settingsFilename, OnSettingsChanged);
+
+            var testTutorial = new Tutorial("Test Tutorial", "This is a test tutorial.", "ExampleProvider", new List<TutorialSection>
+            {
+                new TutorialSection("Introduction", new List<TutorialAction>
+                {
+                    new TutorialAction(TutorialActionType.ShowMessageWaitNext, "Welcome to the test tutorial!", null, null, null, null, null, null),
+                    new TutorialAction(TutorialActionType.ShowMessage, "This is the second message.", null, null, null, null, null, null),
+                    new TutorialAction(TutorialActionType.ShowMessageWaitNext, "This is the third message.", null, null, null, null, null, null)
+                })
+            });
+
+            TutorialHandler.Current.RegisterTutorial(testTutorial);
+            TutorialHandler.Current.StartTutorial("Test Tutorial");
         }
 
         private void OnSettingsChanged(MySettings data)

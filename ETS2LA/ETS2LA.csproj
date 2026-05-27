@@ -20,6 +20,7 @@
     <ProjectReference Include="..\ETS2LA.Overlay\ETS2LA.Overlay.csproj" />
     <ProjectReference Include="..\ETS2LA.Backend\ETS2LA.Backend.csproj" />
     <ProjectReference Include="..\ETS2LA.Telemetry\ETS2LA.Telemetry.csproj" />
+    <ProjectReference Include="..\ETS2LA.Tutorials\ETS2LA.Tutorials.csproj" />
     <ProjectReference Include="..\ETS2LA.State\ETS2LA.State.csproj" />
   </ItemGroup>
 

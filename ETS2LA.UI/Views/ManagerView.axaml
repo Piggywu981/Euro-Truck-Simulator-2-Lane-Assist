@@ -13,7 +13,7 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
         <StackPanel>
             <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center" Margin="10">
-                <Button Content="Open Plugin Folder" Click="OnOpenFolderButtonClick" IsEnabled="{Binding HasPlugins}"/>
+                <Button Content="Open Plugins Folder" Click="OnOpenFolderButtonClick"/>
                 <Separator Height="20" Width="1" />
                 <Button Content="Unload" Click="OnUnloadButtonClick" IsEnabled="{Binding HasPlugins}"/>
                 <Button Content="Reload" Click="OnReloadButtonClick" IsEnabled="{Binding !HasPlugins}"/>

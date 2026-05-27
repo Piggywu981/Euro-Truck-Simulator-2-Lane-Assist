@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Linq;
+using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
@@ -9,6 +9,7 @@ using Avalonia.Input;
 using Avalonia.Media;
 using ETS2LA.UI.Services;
 using ETS2LA.Shared;
+using ETS2LA.Logging;
 
 namespace ETS2LA.UI.Views;
 
@@ -86,6 +87,19 @@ public partial class ManagerView : UserControl, INotifyPropertyChanged
     {
         _pluginService.ReloadPlugins();
         UpdatePluginList();
+    }
+
+    private void OnOpenFolderButtonClick(object? sender, RoutedEventArgs e)
+    {
+        string location = Directory.GetCurrentDirectory() + "/Plugins";
+        # if WINDOWS
+        location = location.Replace("/", "\\");
+        Process.Start("explorer.exe", location);
+        # elif LINUX
+        Process.Start("xdg-open", location);
+        # else
+        Process.Start("open", location);
+        #endif
     }
 
     private void InitializeComponent()

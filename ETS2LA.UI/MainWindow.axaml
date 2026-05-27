@@ -8,7 +8,7 @@
                 Icon="avares://ETS2LA.UI/Assets/logo.ico"
                 Width="1280" Height="720"
                 MinWidth="600" MinHeight="300"
-                SystemDecorations="Full"
+                WindowDecorations="BorderOnly"
                 TransparencyLevelHint="Transparent">
 
     <Border>
@@ -35,11 +35,12 @@
                         </Button>
                         <husk:Divider Orientation="Vertical" Margin="0 0 6 0" Name="TitlebarDividerRight" />
 
-                        <TextBlock Text="ETS2LA" FontSize="13" FontWeight="500" VerticalAlignment="Center" Margin="0 0 0 0"/>
-                        <TextBlock Name="VersionText" Text="Unknown Version" Classes="Description" FontSize="10" VerticalAlignment="Center" Margin="0 0 0 0" />
+                        <TextBlock Text="ETS2LA" FontSize="13" FontWeight="500" VerticalAlignment="Center" Margin="0 0 0 0" IsHitTestVisible="False"/>
+                        <TextBlock Name="VersionText" Text="Unknown Version" Classes="Description" FontSize="10" VerticalAlignment="Center" Margin="0 0 0 0" IsHitTestVisible="False" />
                     </StackPanel>
 
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="5" VerticalAlignment="Center" Margin="0 0 0 0" HorizontalAlignment="Right">
+                    <Border Grid.Column="1" Background="Transparent" />
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="5" VerticalAlignment="Center" Margin="0 0 0 0" HorizontalAlignment="Right">
                         <Button Classes="titlebar" Click="OnTransparencyClick" Padding="6" Margin="0" ToolTip.Tip="Toggle Transparency">
                             <i:Icon Value="fa-circle" Name="TransparencyIcon"/>
                         </Button>

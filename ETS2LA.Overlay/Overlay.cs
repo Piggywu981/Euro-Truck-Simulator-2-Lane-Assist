@@ -280,55 +280,76 @@ public class OverlayHandler
 
         foreach (InternalWindow window in windows)
         {
-            if (!window.IsWindowOpen) { continue; }
-            if (window.Definition.NoWindow.GetValueOrDefault(false))
-            {
-                window.Render();
-                continue;
-            }
-
-            if (window.Definition.Width.HasValue || window.Definition.Height.HasValue)
-            {
-                ImGui.SetNextWindowSize(new Vector2(
-                    window.Definition.Width.GetValueOrDefault(480),
-                    window.Definition.Height.GetValueOrDefault(320)
-                ), ImGuiCond.Once);
-            }
-
-            ImGui.SetNextWindowBgAlpha(window.Definition.Alpha.GetValueOrDefault(0.9f));
-            ImGui.Begin(window.Definition.Title, window.Definition.Flags.GetValueOrDefault(ImGuiWindowFlags.None));
-            
-            if (window.Definition.X.HasValue || window.Definition.Y.HasValue)
-            {
-                ImGui.SetWindowPos(new Vector2(
-                    (int)window.Definition.X.GetValueOrDefault(OverlayWidth / 2), 
-                    (int)window.Definition.Y.GetValueOrDefault(OverlayHeight / 2)
-                ), ImGuiCond.Once);
-            }
-
-            var isCollapsed = ImGui.IsWindowCollapsed();
-            if (isCollapsed) {
-                ImGui.End(); 
-                continue; 
-            }
-
             try
             {
-                RenderWindowContextMenu(window);
-            } catch (Exception ex)
-            {
-                Logger.Error($"Error rendering context menu for window {window.Definition.Title}: {ex}");
-            }
+                if (!window.IsWindowOpen) { continue; }
+                if (window.Definition.NoWindow.GetValueOrDefault(false))
+                {
+                    window.Render();
+                    continue;
+                }
 
-            try
-            {
-                window.Render();
-            } catch (Exception ex)
+                if (window.Definition.Width.HasValue || window.Definition.Height.HasValue)
+                {
+                    var width = window.Definition.Width.GetValueOrDefault(480);
+                    var height = window.Definition.Height.GetValueOrDefault(320);
+                    if (width > 0 && height > 0)
+                        ImGui.SetNextWindowSize(new Vector2(width, height), ImGuiCond.Once);
+                }
+
+                if (window.Definition.SizingFunction.HasValue && window.Definition.SizingFunction.Value != null)
+                {
+                    var (width, height) = window.Definition.SizingFunction.Value();
+                    ImGui.SetNextWindowSize(new Vector2(width, height), ImGuiCond.Always);
+                }
+
+                ImGui.SetNextWindowBgAlpha(window.Definition.Alpha.GetValueOrDefault(0.9f));
+                ImGui.Begin(window.Definition.Title, window.Definition.Flags.GetValueOrDefault(ImGuiWindowFlags.None));
+                
+                if (window.Definition.X.HasValue || window.Definition.Y.HasValue)
+                {
+                    int x = (int)window.Definition.X.GetValueOrDefault(OverlayWidth / 2);
+                    int y = (int)window.Definition.Y.GetValueOrDefault(OverlayHeight / 2);
+                    if (x >= 0 && y >= 0)
+                    {
+                        ImGui.SetWindowPos(new Vector2(x, y), ImGuiCond.Once);
+                    }
+                }
+
+                if (window.Definition.LocationFunction.HasValue && window.Definition.LocationFunction.Value != null)
+                {
+                    var (x, y) = window.Definition.LocationFunction.Value();
+                    ImGui.SetWindowPos(new Vector2(x, y), ImGuiCond.Always);
+                }
+
+                var isCollapsed = ImGui.IsWindowCollapsed();
+                if (isCollapsed) {
+                    ImGui.End(); 
+                    continue; 
+                }
+
+                try
+                {
+                    RenderWindowContextMenu(window);
+                } catch (Exception ex)
+                {
+                    Logger.Error($"Error rendering context menu for window {window.Definition.Title}: {ex}");
+                }
+
+                try
+                {
+                    window.Render();
+                } catch (Exception ex)
+                {
+                    Logger.Error($"Error rendering window {window.Definition.Title}: {ex}");
+                }
+
+                ImGui.End();
+            }
+            catch (Exception ex)
             {
                 Logger.Error($"Error rendering window {window.Definition.Title}: {ex}");
             }
-
-            ImGui.End();
         }
     }
 

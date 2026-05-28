@@ -38,16 +38,40 @@ namespace ExampleProvider
 
             var testTutorial = new Tutorial("Test Tutorial", "This is a test tutorial.", "ExampleProvider", new List<TutorialSection>
             {
-                new TutorialSection("Introduction", new List<TutorialAction>
+                new TutorialSection
                 {
-                    new TutorialAction(TutorialActionType.ShowMessageWaitNext, "Welcome to the test tutorial!", null, null, null, null, null, null),
-                    new TutorialAction(TutorialActionType.ShowMessage, "This is the second message.", null, null, null, null, null, null),
-                    new TutorialAction(TutorialActionType.ShowMessageWaitNext, "This is the third message.", null, null, null, null, null, null)
-                })
+                    Title = "Introduction",
+                    Actions = new List<TutorialAction>
+                    {
+                        new TutorialAction
+                        {
+                            ActionType = TutorialActionType.ShowMessageWaitNext,
+                            Message = "Welcome to ETS2LA!",
+                            ScreenPositionCallback = LocationFunction
+                        },
+                        new TutorialAction
+                        {
+                            ActionType = TutorialActionType.ShowMessage,
+                            Message = "This is the second message."
+                        },
+                        new TutorialAction
+                        {
+                            ActionType = TutorialActionType.ShowMessageWaitNext,
+                            Message = "This is the third message."
+                        }
+                    }
+                }
             });
 
             TutorialHandler.Current.RegisterTutorial(testTutorial);
             TutorialHandler.Current.StartTutorial("Test Tutorial");
+        }
+
+        private (int, int) LocationFunction()
+        {
+            float i = DateTime.Now.Millisecond / 1000f % 2;
+            int j = (int)(i * 300);
+            return (j, 200);
         }
 
         private void OnSettingsChanged(MySettings data)

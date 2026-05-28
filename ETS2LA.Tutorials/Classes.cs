@@ -1,6 +1,8 @@
 using Hexa.NET.ImGui;
 using ETS2LA.Overlay;
 using ETS2LA.Audio;
+using Avalonia.Data;
+using ETS2LA.Overlay.AR;
 
 namespace ETS2LA.Tutorials;
 
@@ -24,45 +26,27 @@ public enum TutorialActionType
     WaitForEvent
 }
 
-public class TutorialAction
+public struct TutorialAction
 {
-    public TutorialActionType ActionType { get; set; }
-    public string? Message { get; set; }
-    public string? SoundFile { get; set; }
-    public (float x, float y)? ScreenPosition { get; set; }
-    public Delegate? ScreenPositionCallback { get; set; }
-    public (float x, float y)? Size { get; set; }
-    public Delegate? SizeCallback { get; set; }
-    public (float x, float y)? Coordinate { get; set; }
-    public Delegate? CoordinateCallback { get; set; }
-    public string? ControlEventId { get; set; }
-    public string? WaitEventId { get; set; }
-    public Delegate? ImGuiCallback { get; set; }
-    public WindowDefinition ImGuiWindowDefinition { get; set; }
-
-    public TutorialAction(TutorialActionType type, string? message, string? soundFile, (float x, float y)? screenPosition, (float x, float y)? coordinate, string? controlEventId, string? waitEventId, Delegate? imguiCallback)
-    {
-        ActionType = type;
-        Message = message;
-        SoundFile = soundFile;
-        ScreenPosition = screenPosition;
-        Coordinate = coordinate;
-        ControlEventId = controlEventId;
-        WaitEventId = waitEventId;
-        ImGuiCallback = imguiCallback;
-    }
+    public TutorialActionType ActionType;
+    public string? Message;
+    public string? SoundFile;
+    public (float x, float y)? ScreenPosition;
+    public Func<(int, int)>? ScreenPositionCallback;
+    public (float x, float y)? Size;
+    public Func<(int, int)>? SizeCallback;
+    public (float x, float y)? Coordinate;
+    public Func<ARCoordinate>? CoordinateCallback;
+    public string? ControlEventId;
+    public string? WaitEventId;
+    public Delegate? ImGuiCallback;
+    public WindowDefinition ImGuiWindowDefinition;
 }
 
-public class TutorialSection
+public struct TutorialSection
 {
-    public string Title { get; private set; }
-    public List<TutorialAction> Actions { get; private set; }
-
-    public TutorialSection(string title, List<TutorialAction> actions)
-    {
-        Title = title;
-        Actions = actions;
-    }
+    public string Title;
+    public List<TutorialAction> Actions;
 }
 
 public class Tutorial
@@ -124,6 +108,9 @@ public class TutorialExecutor
                 {
                     Title = $"ShowMessage {sectionIndex} - {actionIndex}",
                     Flags = ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.AlwaysAutoResize,
+                    X = action.ScreenPosition.HasValue ? (int)action.ScreenPosition.Value.x : -1,
+                    Y = action.ScreenPosition.HasValue ? (int)action.ScreenPosition.Value.y : -1,
+                    LocationFunction = action.ScreenPositionCallback != null ? action.ScreenPositionCallback : null
                 }, () =>
                 {
                     ImGui.Text(action.Message);
@@ -134,6 +121,9 @@ public class TutorialExecutor
                 {
                     Title = $"ShowMessageWaitNext {sectionIndex} - {actionIndex}",
                     Flags = ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.AlwaysAutoResize,
+                    X = action.ScreenPosition.HasValue ? (int)action.ScreenPosition.Value.x : -1,
+                    Y = action.ScreenPosition.HasValue ? (int)action.ScreenPosition.Value.y : -1,
+                    LocationFunction = action.ScreenPositionCallback != null ? action.ScreenPositionCallback : null
                 }, () =>
                 {
                     ImGui.Text(action.Message);

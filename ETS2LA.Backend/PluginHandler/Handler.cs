@@ -1,6 +1,6 @@
 using ETS2LA.Shared;
 using ETS2LA.Logging;
-using Huskui.Avalonia.Controls;
+using ETS2LA.Backend.Events;
 using System.Runtime.Loader;
 
 namespace ETS2LA.Backend
@@ -237,6 +237,8 @@ namespace ETS2LA.Backend
                 plugin.OnEnable();
                 Logger.Info($"Enabled plugin: [bold]{plugin.Info.Name}[/]");
                 PluginEnabled?.Invoke(plugin);
+                Events.Events.Current.Publish<string>($"ETS2LA.Backend.Enabled", plugin.Info.Name);
+                Events.Events.Current.Publish($"ETS2LA.Backend.Enabled.{plugin.Info.Name}", EventArgs.Empty);
                 return true;
             }
             catch (Exception ex)
@@ -278,6 +280,8 @@ namespace ETS2LA.Backend
                 plugin.OnDisable();
                 Logger.Info($"Disabled plugin: [bold]{plugin.Info.Name}[/]");
                 PluginDisabled?.Invoke(plugin);
+                Events.Events.Current.Publish<string>($"ETS2LA.Backend.Disabled", plugin.Info.Name);
+                Events.Events.Current.Publish($"ETS2LA.Backend.Disabled.{plugin.Info.Name}", EventArgs.Empty);
                 return true;
             }
             catch (Exception ex)

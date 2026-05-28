@@ -253,22 +253,28 @@ public class OverlayHandler
             ImGui.TextColored(new Vector4(0.5f, 0.5f, 0.5f, 1f), "Interaction Mode");
 
             ImGui.Spacing();
-            foreach (var window in windows) {
-                bool isOpen = window.IsWindowOpen;
-                Vector4 color = isOpen ? new Vector4(0.5f, 0.6f, 0.5f, 1f) : new Vector4(0.6f, 0.5f, 0.5f, 1f);
+            try
+            {
+                foreach (var window in windows) {
+                    bool isOpen = window.IsWindowOpen;
+                    Vector4 color = isOpen ? new Vector4(0.5f, 0.6f, 0.5f, 1f) : new Vector4(0.6f, 0.5f, 0.5f, 1f);
 
-                ImGui.TextColored(color, isOpen ? "[X]" : "[   ]");
-                ImGui.SameLine();
-                ImGui.TextColored(color, window.Definition.Title);
-    
-                if (ImGui.IsItemHovered())
-                {
-                    ImGui.SetTooltip("Click to " + (isOpen ? "hide" : "show") + " this window");
+                    ImGui.TextColored(color, isOpen ? "[X]" : "[   ]");
+                    ImGui.SameLine();
+                    ImGui.TextColored(color, window.Definition.Title);
+        
+                    if (ImGui.IsItemHovered())
+                    {
+                        ImGui.SetTooltip("Click to " + (isOpen ? "hide" : "show") + " this window");
+                    }
+                    if (ImGui.IsItemClicked())
+                    {
+                        window.IsWindowOpen = !window.IsWindowOpen;
+                    }
                 }
-                if (ImGui.IsItemClicked())
-                {
-                    window.IsWindowOpen = !window.IsWindowOpen;
-                }
+            } catch (Exception ex)
+            {
+                Logger.Error($"Error rendering interaction mode window controls: {ex}");
             }
             ImGui.End();
         }
@@ -289,6 +295,8 @@ public class OverlayHandler
                     continue;
                 }
 
+                // Plugin developer has set the width and height, these get applied
+                // once each startup. Use ImGuiWindowFlags to disallow movement.
                 if (window.Definition.Width.HasValue || window.Definition.Height.HasValue)
                 {
                     var width = window.Definition.Width.GetValueOrDefault(480);
@@ -297,6 +305,8 @@ public class OverlayHandler
                         ImGui.SetNextWindowSize(new Vector2(width, height), ImGuiCond.Once);
                 }
 
+                // Plugin developer has set a sizing function, this is continuous
+                // throughout the lifecycle of the window.
                 if (window.Definition.SizingFunction.HasValue && window.Definition.SizingFunction.Value != null)
                 {
                     var (width, height) = window.Definition.SizingFunction.Value();
@@ -306,6 +316,8 @@ public class OverlayHandler
                 ImGui.SetNextWindowBgAlpha(window.Definition.Alpha.GetValueOrDefault(0.9f));
                 ImGui.Begin(window.Definition.Title, window.Definition.Flags.GetValueOrDefault(ImGuiWindowFlags.None));
                 
+                // Plugin developer has set X and Y values, these are applied
+                // once each startup. Use ImGuiWindowFlags to disallow resizing.
                 if (window.Definition.X.HasValue || window.Definition.Y.HasValue)
                 {
                     int x = (int)window.Definition.X.GetValueOrDefault(OverlayWidth / 2);
@@ -314,8 +326,21 @@ public class OverlayHandler
                     {
                         ImGui.SetWindowPos(new Vector2(x, y), ImGuiCond.Once);
                     }
+                } 
+                // If no X and Y are set, then for the first time we'll open this window
+                // at the center of the screen.
+                else
+                {
+                    int x = (int)OverlayWidth / 2;
+                    int y = (int)OverlayHeight / 2;
+                    if (x >= 0 && y >= 0)
+                    {
+                        ImGui.SetWindowPos(new Vector2(x, y), ImGuiCond.FirstUseEver);
+                    }
                 }
 
+                // Plugin developer has set a location function, this is continuous
+                // throughout the lifecycle of the window.
                 if (window.Definition.LocationFunction.HasValue && window.Definition.LocationFunction.Value != null)
                 {
                     var (x, y) = window.Definition.LocationFunction.Value();
@@ -348,6 +373,8 @@ public class OverlayHandler
             }
             catch (Exception ex)
             {
+                try { ImGui.End(); }
+                catch { }
                 Logger.Error($"Error rendering window {window.Definition.Title}: {ex}");
             }
         }

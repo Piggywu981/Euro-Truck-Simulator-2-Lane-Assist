@@ -14,6 +14,8 @@ class OverlayInfoWindow : InternalWindow
             Flags = ImGuiWindowFlags.AlwaysAutoResize,
         };
 
+        IsWindowOpen = false;
+
         Render = () =>
         {
             ImGui.Text("*Shock* there's a new window here O_O");

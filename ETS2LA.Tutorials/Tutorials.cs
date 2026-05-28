@@ -1,4 +1,14 @@
-﻿namespace ETS2LA.Tutorials;
+﻿using ETS2LA.Backend.Events;
+using ETS2LA.Settings;
+using ETS2LA.Tutorials.DefaultTutorials;
+
+namespace ETS2LA.Tutorials;
+
+[Serializable]
+class TutorialSettings
+{
+    public List<string> CompletedTutorials = new();
+}
 
 public class TutorialHandler
 {
@@ -8,10 +18,25 @@ public class TutorialHandler
     public List<Tutorial> Tutorials { get; private set; }
     public List<TutorialExecutor> Executors { get; private set; }
 
+    private TutorialSettings settings;
+    private SettingsHandler settingsHandler;
+
     private TutorialHandler()
     {
         Tutorials = new List<Tutorial>();
         Executors = new List<TutorialExecutor>();
+
+        settingsHandler = new();
+        settings = settingsHandler.Load<TutorialSettings>("TutorialSettings.json");
+        
+        if (!settings.CompletedTutorials.Contains("Onboarding"))
+        {
+            Events.Current.Subscribe<EventArgs>("ETS2LA.UI.WindowOpened", (e) =>
+            {
+                RegisterTutorial(new Onboarding().Create()); 
+                StartTutorial("Onboarding"); 
+            });
+        }
     }
 
     public void RegisterTutorial(Tutorial tutorial)
@@ -24,12 +49,19 @@ public class TutorialHandler
         Tutorials.Remove(tutorial);
     }
 
+    private void CompleteTutorial(object sender, string tutorialTitle)
+    {
+        settings.CompletedTutorials.Add(tutorialTitle);
+        settingsHandler.Save("TutorialSettings.json", settings);
+    }
+
     public void StartTutorial(string tutorialTitle)
     {
         var tutorial = Tutorials.FirstOrDefault(t => t.Title == tutorialTitle);
         if (tutorial != null)
         {
             var executor = new TutorialExecutor(tutorial);
+            executor.OnTutorialComplete += CompleteTutorial;
             Executors.Add(executor);
         }
     }

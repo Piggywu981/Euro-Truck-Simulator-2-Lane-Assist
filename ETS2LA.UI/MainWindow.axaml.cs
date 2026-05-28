@@ -3,7 +3,7 @@ using Avalonia.Input;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 
-using ETS2LA.Shared;
+using ETS2LA.Backend.Events;
 using ETS2LA.UI.Views;
 using ETS2LA.UI.Services;
 using ETS2LA.UI.Notifications;
@@ -67,6 +67,7 @@ public partial class MainWindow : AppWindow
         Height = settings.WindowHeight;
         Position = new Avalonia.PixelPoint(settings.WindowX, settings.WindowY);
 
+        Opened += (s, e) => Events.Current.Publish("ETS2LA.UI.WindowOpened", e);
         Opened += (s, e) => WindowOpened?.Invoke(this, e);
     }
 
@@ -184,6 +185,8 @@ public partial class MainWindow : AppWindow
 
     private void ShowPage(PageKind page)
     {
+        Events.Current.Publish<string>("ETS2LA.UI.SwitchedPage", page.ToString());
+        Events.Current.Publish<EventArgs>($"ETS2LA.UI.SwitchedPage.{page.ToString()}", EventArgs.Empty);
         ContentHost.Content = page switch
         {
             PageKind.Dashboard => dashboardView,

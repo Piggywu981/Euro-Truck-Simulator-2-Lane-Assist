@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using ETS2LA.Backend.Events;
 using ETS2LA.UI.Views.Settings;
 
 namespace ETS2LA.UI.Views;
@@ -52,6 +53,9 @@ public partial class SettingsView : UserControl
             button.Classes.Remove("Selected");
         }
         this.FindControl<Button>(active)?.Classes.Add("Selected");
+        string pageName = active.Replace("Button", "");
+        Events.Current.Publish<string>("ETS2LA.UI.SwitchedPage", "Settings." + pageName);
+        Events.Current.Publish<EventArgs>($"ETS2LA.UI.SwitchedPage.Settings.{pageName}", EventArgs.Empty);
     }
 
     private void OnDisplaySettingsClick(object? sender, RoutedEventArgs e)

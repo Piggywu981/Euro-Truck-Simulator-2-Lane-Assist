@@ -118,6 +118,10 @@ namespace ETS2LA.Shared
                 {
                     Console.WriteLine($"Error in plugin {Info.Name} Tick: {ex}");
                 }
+
+                if (next < sw.Elapsed.TotalMilliseconds)
+                    next = sw.Elapsed.TotalMilliseconds;
+                
                 double remaining = next - sw.Elapsed.TotalMilliseconds;
 
                 // Use Thread.Sleep for the bigger part of the sleep.

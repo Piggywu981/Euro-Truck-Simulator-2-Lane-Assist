@@ -179,6 +179,13 @@ public class Onboarding
         AlignForWidth(ImGui.CalcTextSize("You can continue by holding down the overlay interaction key.").X);
         ImGui.Text("You can continue by holding down the overlay interaction key.");
 
+        # if LINUX
+        AlignForWidth(ImGui.CalcTextSize("Note: You're on Linux, make sure you are allowing X11 global hotkeys on keys you need.").X);
+        ImGui.TextColored(new Vector4(0.6f, 0.6f, 0.6f, 1f), "Note: You're on Linux, make sure you are allowing X11 global hotkeys on keys you need.");
+        ImGui.Spacing();
+        ImGui.Spacing();
+        # endif
+
         var controls = ControlsBackend.Current.GetRegisteredControls();        
         var interactKey = controls.FirstOrDefault(c => c.Definition.Id == OverlayHandler.Current.Interact.Id);
         var text = interactKey != null ? interactKey.ControlId.ToString() : "UNBOUND";

@@ -212,7 +212,10 @@ public class TutorialExecutor
             ExecuteSection();
             sectionIndex++;
         }
-        Logger.Success($"Finished executing tutorial {tutorial.Title}");
-        OnTutorialComplete?.Invoke(this, tutorial.Title);
+        if (!shutdown)
+        {
+            Logger.Success($"Finished executing tutorial {tutorial.Title}");
+            OnTutorialComplete?.Invoke(this, tutorial.Title);
+        }
     }
 }

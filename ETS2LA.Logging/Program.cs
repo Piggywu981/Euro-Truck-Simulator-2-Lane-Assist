@@ -172,7 +172,7 @@ namespace ETS2LA.Logging
                 return;
             }
 
-            WriteLogLine("FTL", message, "bold red", filePath, lineNumber);
+            WriteLogLine("FTL", message, "bold red", filePath, lineNumber, ex);
             lastLine = message;
             repeatCount = 0;
         }

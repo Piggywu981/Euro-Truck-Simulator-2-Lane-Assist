@@ -33,13 +33,16 @@ namespace ETS2LA.Backend.Events
         {
             if (_subscribers.ContainsKey(topic))
             {
-                foreach (var handler in _subscribers[topic])
+                try
                 {
-                    if (handler is Action<T> action)
+                    foreach (var handler in _subscribers[topic])
                     {
-                        action.Invoke(data);
+                        if (handler is Action<T> action)
+                        {
+                            action.Invoke(data);
+                        }
                     }
-                }
+                } catch { }
             }
         }
     }

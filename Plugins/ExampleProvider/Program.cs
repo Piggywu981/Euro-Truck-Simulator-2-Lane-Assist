@@ -3,6 +3,11 @@ using ETS2LA.Shared;
 using ETS2LA.Backend.Events;
 using ETS2LA.Settings;
 using ETS2LA.Logging;
+using ETS2LA.Tutorials;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using Hexa.NET.ImGui;
+using ETS2LA.Overlay;
 
 namespace ExampleProvider
 {

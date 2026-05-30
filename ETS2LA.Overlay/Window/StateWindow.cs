@@ -33,6 +33,8 @@ class StateWindow : InternalWindow
             Flags = ImGuiWindowFlags.AlwaysAutoResize,
         };
 
+        IsWindowOpen = false;
+
         Render = () =>
         {
             DescriptionText("Desired Steering Level: "); ImGui.SameLine(); Text(ApplicationState.Current.DesiredSteeringLevel.ToString());

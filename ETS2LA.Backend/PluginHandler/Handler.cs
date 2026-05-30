@@ -1,6 +1,6 @@
 using ETS2LA.Shared;
 using ETS2LA.Logging;
-using Huskui.Avalonia.Controls;
+using ETS2LA.Backend.Events;
 using System.Runtime.Loader;
 
 namespace ETS2LA.Backend
@@ -237,11 +237,31 @@ namespace ETS2LA.Backend
                 plugin.OnEnable();
                 Logger.Info($"Enabled plugin: [bold]{plugin.Info.Name}[/]");
                 PluginEnabled?.Invoke(plugin);
+                Events.Events.Current.Publish<string>($"ETS2LA.Backend.Enabled", plugin.Info.Name);
+                Events.Events.Current.Publish($"ETS2LA.Backend.Enabled.{plugin.Info.Name}", EventArgs.Empty);
                 return true;
             }
             catch (Exception ex)
             {
-                Logger.Error($"Failed to enable {plugin.GetType().FullName}: {ex.Message}");
+                // stacktrace + inner exceptions
+                // (basically we get the full exception info, inside the assembly context)
+                if (ex is System.Reflection.ReflectionTypeLoadException rtle)
+                {
+                    Logger.Error($"Failed enable {plugin.GetType().FullName}: {rtle}");
+                    foreach (var le in rtle.LoaderExceptions)
+                    {
+                        Logger.Error(le?.ToString() ?? "LoaderException: null");
+                    }
+                }
+                else if (ex is System.Reflection.TargetInvocationException tie && tie.InnerException != null)
+                {
+                    Logger.Error($"Failed enable {plugin.GetType().FullName}: {tie.InnerException}");
+                    Logger.Error(tie.InnerException.ToString());
+                }
+                else
+                {
+                    Logger.Error($"Failed enable {plugin.GetType().FullName}: {ex}");
+                }
                 return false;
             }
         }
@@ -260,6 +280,8 @@ namespace ETS2LA.Backend
                 plugin.OnDisable();
                 Logger.Info($"Disabled plugin: [bold]{plugin.Info.Name}[/]");
                 PluginDisabled?.Invoke(plugin);
+                Events.Events.Current.Publish<string>($"ETS2LA.Backend.Disabled", plugin.Info.Name);
+                Events.Events.Current.Publish($"ETS2LA.Backend.Disabled.{plugin.Info.Name}", EventArgs.Empty);
                 return true;
             }
             catch (Exception ex)

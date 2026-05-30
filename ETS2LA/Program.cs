@@ -1,7 +1,7 @@
 ﻿using Velopack;
 using Velopack.Locators;
 
-using ETS2LA.UI;
+using ETS2LA.Tutorials;
 using ETS2LA.Overlay;
 using ETS2LA.Backend;
 using ETS2LA.Telemetry;
@@ -38,6 +38,7 @@ internal static class Program
             var backend = PluginBackend.Current;
             var telemetry = GameTelemetry.Current;
             var state = ApplicationState.Current;
+            var tutorials = TutorialHandler.Current;
         });
 
         # if LINUX
@@ -58,5 +59,6 @@ internal static class Program
         OverlayHandler.Current.Shutdown();
         GameTelemetry.Current.Shutdown();
         ApplicationState.Current.Shutdown();
+        TutorialHandler.Current.Shutdown();
     }
 }

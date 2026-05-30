@@ -35,6 +35,9 @@
     <ProjectReference Include="..\..\TruckLib\TruckLib\TruckLib.csproj">
       <Private>false</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\ETS2LA.Tutorials\ETS2LA.Tutorials.csproj">
+      <Private>false</Private>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>

@@ -138,6 +138,19 @@ public class UINotificationHandler
 
     private void UpdateNotification(UINotification notification)
     {
+        Logger.Info($"Updating notification: {notification.Title} - {notification.Content}");
+
+        if (_window == null || !_window.IsLoaded) {
+            Logger.Warn("Attempted to update notification before MainWindow was loaded.");
+            return;
+        }
+
+        if (ActiveNotifications.All(x => x.Id != notification.Id))
+        {
+            Dispatcher.UIThread.Post(() => SendNotification(notification));
+            return;
+        }
+
         if (!Dispatcher.UIThread.CheckAccess())
         {
             Dispatcher.UIThread.Post(() => UpdateNotification(notification));
@@ -171,6 +184,7 @@ public class UINotificationHandler
 
     private async void SendNotification(UINotification notification)
     {
+        Logger.Info($"Sending notification: {notification.Title} - {notification.Content}");
         if (_window == null || !_window.IsLoaded) {
             Logger.Warn("Attempted to send notification before MainWindow was loaded.");
             return;
@@ -190,7 +204,10 @@ public class UINotificationHandler
                 }
 
                 GrowlHost? growlHost = _window.GetLogicalChildren().OfType<GrowlHost>().FirstOrDefault();
-                if (growlHost == null) return;
+                if (growlHost == null) {
+                    Logger.Error("Failed to find GrowlHost in MainWindow. Cannot display notification.");
+                    return;
+                }
 
                 GrowlItem item = new GrowlItem
                 {
@@ -215,6 +232,7 @@ public class UINotificationHandler
 
     private void CloseNotification(string id)
     {
+        Logger.Info($"Closing notification: {id}");
         if (!Dispatcher.UIThread.CheckAccess())
         {
             Dispatcher.UIThread.Post(() => CloseNotification(id));

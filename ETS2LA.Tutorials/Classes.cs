@@ -4,6 +4,7 @@ using ETS2LA.Controls;
 using ETS2LA.Backend.Events;
 using ETS2LA.Logging;
 using ETS2LA.Notifications;
+using ETS2LA.Audio;
 
 namespace ETS2LA.Tutorials;
 
@@ -157,7 +158,8 @@ public class TutorialExecutor
                 // Point at a specific coordinate
                 break;
             case TutorialActionType.PlaySound:
-                // Play a sound
+                PlaySoundAction playSound = (PlaySoundAction)action;
+                AudioHandler.Current.Queue(playSound.SoundFilePath);
                 break;
             case TutorialActionType.WaitForInput:
                 WaitForInputAction waitForInput = (WaitForInputAction)action;

@@ -5,7 +5,6 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using System.Numerics;
 using ETS2LA.Backend.Events;
-using ETS2LA.Logging;
 
 namespace ETS2LA.Tutorials.DefaultTutorials;
 
@@ -79,7 +78,7 @@ public class Onboarding
                         {
                             var position = ETS2LAWindowLocation();
                             var size = ETS2LAWindowSize();
-                            return (position.Item1 + 10, position.Item2 + 202);
+                            return (position.Item1 + 15, position.Item2 + 202);
                         }
                     },
                     new WaitForEventAction
@@ -93,7 +92,7 @@ public class Onboarding
                         {
                             var position = ETS2LAWindowLocation();
                             var size = ETS2LAWindowSize();
-                            return (position.Item1 + 400, position.Item2 + 20);
+                            return (position.Item1 + 230, position.Item2 + 1);
                         }
                     },
                     new WaitForEventAction
@@ -107,7 +106,7 @@ public class Onboarding
                         {
                             var position = ETS2LAWindowLocation();
                             var size = ETS2LAWindowSize();
-                            return (position.Item1 + 220, position.Item2 + 610);
+                            return (position.Item1 + 220, position.Item2 + 585);
                         }
                     },
                     new WaitForEventAction
@@ -135,7 +134,7 @@ public class Onboarding
                         {
                             var position = ETS2LAWindowLocation();
                             var size = ETS2LAWindowSize();
-                            return (position.Item1 + 430, position.Item2 - 20);
+                            return (position.Item1 + 442, position.Item2 + 3);
                         }
                     },
                     new SendNotificationAction

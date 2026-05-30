@@ -1,4 +1,5 @@
 using ETS2LA.Notifications;
+using ETS2LA.Audio;
 using Hexa.NET.ImGui;
 
 namespace ETS2LA.Tutorials;
@@ -72,6 +73,12 @@ public struct SendNotificationAction : TutorialAction
         Title = title;
         Message = message;
     }
+}
+
+public struct PlaySoundAction : TutorialAction
+{
+    public TutorialActionType ActionType => TutorialActionType.PlaySound;
+    public string SoundFilePath { get; set; }
 }
 
 public struct PointAtScreenAction : TutorialAction

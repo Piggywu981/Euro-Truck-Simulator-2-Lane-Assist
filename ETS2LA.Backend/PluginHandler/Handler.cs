@@ -1,6 +1,7 @@
 using ETS2LA.Shared;
 using ETS2LA.Logging;
 using ETS2LA.Backend.Events;
+using ETS2LA.Notifications;
 using System.Runtime.Loader;
 
 namespace ETS2LA.Backend
@@ -63,6 +64,7 @@ namespace ETS2LA.Backend
             Logger.Info($"Discovered {pluginFiles.Length} .dll files in Plugin folder.");
             foreach (string filename in pluginFiles)
             {
+
                 Thread.Sleep(100); // Slight delay to avoid overwhelming the system
                                    // and to allow other processes / logging to run smoothly.
                 try
@@ -124,6 +126,15 @@ namespace ETS2LA.Backend
                     }
                 }
             }
+
+            NotificationHandler.Current.SendNotification(new Notification
+            {
+                Id = "Backend.PluginHandler.Loading",
+                Title = $"Finished loading plugins",
+                Content = $"Loaded {LoadedPlugins.Count} plugins from the Plugins folder.",
+                CloseAfter = 3,
+                Level = NotificationLevel.Success
+            });
             loading = false;
         }
 
@@ -235,11 +246,52 @@ namespace ETS2LA.Backend
                 return false;
             }
 
+            var dependencies = plugin.Info.Dependencies;
+            foreach (var dependencyId in dependencies)
+            {
+                var dependency = GetPluginById(dependencyId);
+                if (dependency == null) {
+                    NotificationHandler.Current.SendNotification(new Notification
+                    {
+                        Id = $"Backend.PluginHandler.MissingDependency.{plugin.Info.Id}",
+                        Title = $"{plugin.Info.Name}",
+                        Content = $"Missing dependency: {dependencyId}",
+                        Level = NotificationLevel.Danger
+                    });
+                    Logger.Warn($"Cannot enable plugin {plugin.Info.Name} because dependency {dependencyId} was not found.");
+                    return false;
+                }
+                if (!dependency._IsRunning)
+                {                    
+                    var success = EnablePlugin(dependency);
+                    if (!success)                    {
+                        NotificationHandler.Current.SendNotification(new Notification
+                        {
+                            Id = $"Backend.PluginHandler.FailedDependency.{dependency.Info.Id}",
+                            Title = $"{plugin.Info.Name}",
+                            Content = $"Failed to enable dependency: {dependency.Info.Name}",
+                            Level = NotificationLevel.Danger
+                        });
+                        Logger.Warn($"Cannot enable plugin {plugin.Info.Name} because dependency {dependency.Info.Name} failed to enable.");
+                        return false;
+                    }
+                }
+            }
+
             try
             {
                 plugin.OnEnable();
-                Logger.Info($"Enabled plugin: [bold]{plugin.Info.Name}[/]");
+
+                Logger.Info($"Enabled plugin: [bold]{plugin.Info.Id}[/]");
                 PluginEnabled?.Invoke(plugin);
+                NotificationHandler.Current.SendNotification(new Notification
+                {
+                    Id = $"Backend.PluginHandler.PluginEnabled.{plugin.Info.Id}",
+                    Title = $"{plugin.Info.Name}",
+                    Content = $"The plugin was enabled successfully.",
+                    Level = NotificationLevel.Success,
+                    CloseAfter = 3
+                });
                 Events.Events.Current.Publish<string>($"ETS2LA.Backend.Enabled", plugin.Info.Name);
                 Events.Events.Current.Publish($"ETS2LA.Backend.Enabled.{plugin.Info.Name}", EventArgs.Empty);
                 return true;

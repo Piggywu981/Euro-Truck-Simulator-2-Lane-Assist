@@ -217,6 +217,7 @@ namespace ForceFeedback
             Id = "ForceFeedback",
             Name = "Force Feedback",
             Description = "Provides force feedback effects for compatible steering wheels (Moza, Logitech, Thrustmaster, Fanatec, etc.).",
+            Version = "1.0.0",
             AuthorName = "Zkhan4509",
         };
 

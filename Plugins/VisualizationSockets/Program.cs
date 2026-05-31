@@ -48,7 +48,9 @@ namespace VisualizationSockets
             Id = "VisualizationSockets",
             Name = "Visualization Sockets",
             Description = "This plugin provides socket-based data for visualizations outside of ETS2LA.",
+            Version = "1.0.0",
             AuthorName = "Tumppi066",
+            AuthorWebsite = "https://tumppi066.fi",
         };
 
         HttpListener? _listener;

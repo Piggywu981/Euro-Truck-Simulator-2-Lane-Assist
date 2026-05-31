@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AsyncImageLoader.Avalonia" Version="3.8.0" />
     <PackageReference Include="Avalonia" Version="12.0.2">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

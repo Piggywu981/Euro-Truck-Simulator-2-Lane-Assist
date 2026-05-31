@@ -11,6 +11,7 @@ namespace OverlayPong {
             Id = "OverlayPong",
             Name = "Overlay Pong",
             Description = "A plugin to add a game of pong to the overlay",
+            Version = "1.0.0",
             AuthorName = "DylanBPY",
         };
         public override float TickRate => 30f;

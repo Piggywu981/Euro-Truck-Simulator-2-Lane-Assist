@@ -19,6 +19,7 @@ public partial class ManagerView : UserControl, INotifyPropertyChanged
     public ObservableCollection<PluginItem> Plugins { get; } = new();
     private readonly PluginManagerService _pluginService;
     public bool HasPlugins => Plugins.Count > 0;
+    public int PluginColumns => Bounds.Width < 800 ? 1 : 2;
 
     public ManagerView(PluginManagerService service)
     {
@@ -29,6 +30,8 @@ public partial class ManagerView : UserControl, INotifyPropertyChanged
 
         InitializeComponent();
         DataContext = this;
+        
+        SizeChanged += (_, _) => OnPropertyChanged(nameof(PluginColumns));
     }
 
     private void TogglePluginClick(object? sender, RoutedEventArgs e)
@@ -123,7 +126,13 @@ public class PluginItem : INotifyPropertyChanged
     public string Id => _instance.Info.Id;
     public string Name => _instance.Info.Name;
     public string Description => _instance.Info.Description;
+    public string Version => _instance.Info.Version;
+    public string IconUrl => _instance.Info.Icon;
+    public string SupportedVersion => _instance.Info.SupportedETS2LA;
     public string Author => _instance.Info.AuthorName;
+    public string AuthorLink => _instance.Info.AuthorWebsite;
+    public string DependenciesCount => _instance.Info.Dependencies.Count.ToString();
+    public string DependenciesTooltip => _instance.Info.Dependencies.Count == 0 ? "No dependencies" : "Dependencies:\n" + string.Join("\n", _instance.Info.Dependencies);
     public string Initials => BuildInitials(Name);
 
     public bool IsEnabled

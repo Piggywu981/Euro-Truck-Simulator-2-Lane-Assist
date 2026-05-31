@@ -158,19 +158,44 @@ namespace ETS2LA.Shared
         public required string Name { get; set; }
         public required string Description { get; set; }
 
-        // Optional
+        public required string Version { get; set; }
+        
+        /// <summary>
+        ///  This string supports simple wildcard patterns to indicate which version of ETS2LA you support.
+        ///  For example <br/>
+        ///  "*" -> any <br/>
+        ///  "1.*" -> any 1.x version <br/>
+        ///  "<=1.2.3" -> any version up to and including 1.2.3 <br/>
+        /// </summary>
+        public string SupportedETS2LA { get; set; } = "*";
+        
+        /// <summary>
+        ///  This is a URL to an icon. It's displayed as square thumbnails.
+        /// </summary>
+        public string Icon { get; set; } = "";
+        
+        /// <summary>
+        ///  Select the plugins this one depends on. The backend will ensure these plugins are loaded and
+        ///  enabled before enabling this plugin. <br/>If any of the required plugins are not found, this plugin will
+        ///  not be loaded at all. Use another plugin's Id to reference it.
+        /// </summary>
+        public List<string> Dependencies { get; set; } = new List<string>();
+
         /// <summary>
         ///  Use commas to separate multiple authors.
         /// </summary>
         public string AuthorName { get; set; } = "";
+
         /// <summary>
         ///  Use commas to separate multiple author websites.
         /// </summary>
         public string AuthorWebsite { get; set; } = "";
+
         /// <summary>
         ///  Use commas to separate multiple author icons.
         /// </summary>
         public string AuthorIcon { get; set; } = "";
+
         public string[] Tags { get; set; } = Array.Empty<string>();
     }
 

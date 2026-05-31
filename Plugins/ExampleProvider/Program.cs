@@ -25,7 +25,9 @@ namespace ExampleProvider
             Id = "ExampleProvider",
             Name = "Example Provider",
             Description = "An example data provider plugin.",
+            Version = "1.0.0",
             AuthorName = "Tumppi066",
+            AuthorWebsite = "https://tumppi066.fi",
         };
 
         public override float TickRate => 1.0f;

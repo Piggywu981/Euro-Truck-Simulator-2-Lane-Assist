@@ -23,7 +23,10 @@ namespace InternalVisualization
             Id = "InternalVisualization",
             Name = "Internal Visualization",
             Description = "This plugin draws your surroundings onto an overlay window.",
+            Version = "1.0.0",
+            Icon = "https://avatars.githubusercontent.com/u/162675991?s=128",
             AuthorName = "Tumppi066",
+            AuthorWebsite = "https://tumppi066.fi",
         };
 
         private WindowDefinition _windowDefinition = new WindowDefinition

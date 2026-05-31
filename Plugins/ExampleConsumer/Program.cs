@@ -21,7 +21,13 @@ public class MyConsumer : Plugin
         Id = "ExampleConsumer",
         Name = "Example Consumer",
         Description = "An example data consumer plugin.",
+        Version = "1.0.0",
         AuthorName = "Tumppi066",
+        AuthorWebsite = "https://tumppi066.fi",
+        Dependencies = new List<string>
+        {
+            "ExampleProvider"
+        }
     };
 
     private TrafficData? _trafficData;

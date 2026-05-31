@@ -1,9 +1,10 @@
-### ETS2LA C# 3.2.9
-* Implemented `ETS2LA.Tutorials`.
-* Added initial onboarding process. Will get triggered on the first launch of ETS2LA.
-* Add button for opening the plugin folder to the manager page.
-* Add resizing and positioning functions to ImGui windows.
-* Known issue: Notifications broken since Avalonia 12 update, will be fixed in future release.
+### ETS2LA C# 3.2.10
+* Fix notifications not showing up in UI.
+* Better Linux styling.
+* Removed `Avalonia.Diagnostics` as it no longer works on Avalonia 12.
+* `ETS2LA.Backend` now uses Ids for plugins. These are necessary to keep internal references consistent even when in the future the plugin names might change.
+* Added `Version`, `SupportedETS2LA`, `Icon` and `Dependencies` fields to plugin info. 
+* Redesigned the plugin manager. This will continue to get updates in the future.
 
 **WARNING:** ETS2LA C# on Linux requires Linux specific SDKs. These can be found on the closed beta Discord, as they aren't yet included in ETS2LA C#.
 

@@ -297,9 +297,9 @@ public static class DataUtils
             // Example line:
             // 00:00:12.537 : [fs] device C:/Users/Tumppi066/Documents/Euro Truck Simulator 2/mod/5.projectjapan-158-map.scs mounted.
             if (line.Contains("mod", StringComparison.OrdinalIgnoreCase) &&
-                line.Contains(".scs mounted.", StringComparison.OrdinalIgnoreCase))
+                line.Contains(".scs mounted", StringComparison.OrdinalIgnoreCase))
             {
-                foundMods.Add(line.Split("[fs] device ")[1].Split(" mounted.")[0]);
+                foundMods.Add(line.Split("[fs] device ")[1].Split(" mounted")[0]);
             }
         }
         return foundMods;

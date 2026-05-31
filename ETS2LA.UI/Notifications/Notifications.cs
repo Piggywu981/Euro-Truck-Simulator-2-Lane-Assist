@@ -6,6 +6,7 @@ using Avalonia.Threading;
 using Huskui.Avalonia.Controls;
 using Avalonia.LogicalTree;
 using Huskui.Avalonia.Models;
+using Avalonia.Controls.Templates;
 
 namespace ETS2LA.UI.Notifications;
 
@@ -203,7 +204,8 @@ public class UINotificationHandler
                     return;
                 }
 
-                GrowlHost? growlHost = _window.GetLogicalChildren().OfType<GrowlHost>().FirstOrDefault();
+                AppSurface? appSurface = _window.GetTemplateDescendants().OfType<AppSurface>().FirstOrDefault();
+                GrowlHost? growlHost = appSurface?.GetTemplateDescendants().OfType<GrowlHost>().FirstOrDefault();
                 if (growlHost == null) {
                     Logger.Error("Failed to find GrowlHost in MainWindow. Cannot display notification.");
                     return;

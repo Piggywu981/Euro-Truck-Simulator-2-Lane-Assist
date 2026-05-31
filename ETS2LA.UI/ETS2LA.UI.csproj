@@ -17,7 +17,7 @@
     <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.2">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Avalonia.Diagnostics" Version="11.3.16" Condition="'$(Configuration)'=='Debug'">
+    <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.1" Condition="'$(Configuration)'=='Debug'">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Avalonia.ReactiveUI" Version="11.3.9">

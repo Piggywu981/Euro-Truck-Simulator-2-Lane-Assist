@@ -8,7 +8,8 @@ using System.Numerics;
 namespace OverlayPong {
     public class OverlayPong : Plugin {
         public override PluginInformation Info => new PluginInformation {
-            Name = "OverlayPong",
+            Id = "OverlayPong",
+            Name = "Overlay Pong",
             Description = "A plugin to add a game of pong to the overlay",
             AuthorName = "DylanBPY",
         };

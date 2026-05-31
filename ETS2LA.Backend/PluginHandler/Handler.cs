@@ -25,6 +25,7 @@ namespace ETS2LA.Backend
         // This also applies to shadow directories. Using shadow copies also means that it's
         // possible to detect .dll changes automatically in the future, meaning hot reloading
         // of plugins without requiring a direct reload action from the user.
+        // TODO: Implement hot reloading of plugins.
         private readonly Dictionary<AssemblyLoadContext, string> _contextShadowDirectories = new();
         
         public Action<IPlugin>? PluginEnabled;
@@ -178,6 +179,8 @@ namespace ETS2LA.Backend
 
             foreach (var loadContext in loadContexts)
             {
+                // TODO: This doesn't work on Windows...
+                // The files get cleaned up on restart, but it does throw warnings in the logs.
                 CleanupShadowDirectory(loadContext);
             }
 
@@ -218,17 +221,17 @@ namespace ETS2LA.Backend
             }
         }
 
-        private IPlugin? GetPluginByName(string pluginName)
+        private IPlugin? GetPluginById(string pluginId)
         {
-            return LoadedPlugins.FirstOrDefault(p => p.GetType().FullName == pluginName);
+            return LoadedPlugins.FirstOrDefault(p => p.Info.Id == pluginId);
         }
 
-        public bool EnablePlugin(IPlugin? plugin = null, string? pluginName = null)
+        public bool EnablePlugin(IPlugin? plugin = null, string? pluginId = null)
         {
-            plugin ??= GetPluginByName(pluginName!);
+            plugin ??= GetPluginById(pluginId!);
             if (plugin == null)
             {
-                Logger.Warn($"Tried to enable {pluginName}, but it was not found among loaded plugins.");
+                Logger.Warn($"Tried to enable {pluginId}, but it was not found among loaded plugins.");
                 return false;
             }
 
@@ -266,12 +269,12 @@ namespace ETS2LA.Backend
             }
         }
 
-        public bool DisablePlugin(IPlugin? plugin = null, string? pluginName = null)
+        public bool DisablePlugin(IPlugin? plugin = null, string? pluginId = null)
         {
-            plugin ??= GetPluginByName(pluginName!);
+            plugin ??= GetPluginById(pluginId!);
             if (plugin == null)
             {
-                Logger.Warn($"Tried to disable {pluginName}, but it was not found among loaded plugins.");
+                Logger.Warn($"Tried to disable {pluginId}, but it was not found among loaded plugins.");
                 return false;
             }
 

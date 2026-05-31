@@ -45,7 +45,8 @@ namespace VisualizationSockets
     {
         public override PluginInformation Info => new PluginInformation
         {
-            Name = "VisualizationSockets",
+            Id = "VisualizationSockets",
+            Name = "Visualization Sockets",
             Description = "This plugin provides socket-based data for visualizations outside of ETS2LA.",
             AuthorName = "Tumppi066",
         };

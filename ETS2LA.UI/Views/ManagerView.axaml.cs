@@ -59,7 +59,7 @@ public partial class ManagerView : UserControl, INotifyPropertyChanged
             {
                 if (enabledPlugin == plugin)
                 {
-                    var item = Plugins.FirstOrDefault(pi => pi.Name == plugin.Info.Name);
+                    var item = Plugins.FirstOrDefault(pi => pi.Id == plugin.Info.Id);
                     item?.Update();
                 }
             };
@@ -67,7 +67,7 @@ public partial class ManagerView : UserControl, INotifyPropertyChanged
             {
                 if (disabledPlugin == plugin)
                 {
-                    var item = Plugins.FirstOrDefault(pi => pi.Name == plugin.Info.Name);
+                    var item = Plugins.FirstOrDefault(pi => pi.Id == plugin.Info.Id);
                     item?.Update();
                 }
             };
@@ -120,6 +120,7 @@ public class PluginItem : INotifyPropertyChanged
     private readonly IPlugin _instance;
     private bool _isEnabled;
 
+    public string Id => _instance.Info.Id;
     public string Name => _instance.Info.Name;
     public string Description => _instance.Info.Description;
     public string Author => _instance.Info.AuthorName;

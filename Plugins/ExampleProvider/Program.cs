@@ -22,6 +22,7 @@ namespace ExampleProvider
     {
         public override PluginInformation Info => new PluginInformation
         {
+            Id = "ExampleProvider",
             Name = "Example Provider",
             Description = "An example data provider plugin.",
             AuthorName = "Tumppi066",

@@ -20,9 +20,10 @@ namespace InternalVisualization
     {
         public override PluginInformation Info => new PluginInformation
         {
-            Name = "InternalVisualization",
-            Description = "Consectetur mollit ipsum velit Lorem fugiat aliqua officia exercitation exercitation.",
-            AuthorName = "Developer",
+            Id = "InternalVisualization",
+            Name = "Internal Visualization",
+            Description = "This plugin draws your surroundings onto an overlay window.",
+            AuthorName = "Tumppi066",
         };
 
         private WindowDefinition _windowDefinition = new WindowDefinition

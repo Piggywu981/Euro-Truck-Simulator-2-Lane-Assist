@@ -97,7 +97,7 @@ public class Onboarding
                     },
                     new WaitForEventAction
                     {
-                        EventId = "ETS2LA.Backend.Enabled.Lane Assist"
+                        EventId = "ETS2LA.Backend.Enabled.LaneAssist"
                     },
                     new ShowMessageAction
                     {

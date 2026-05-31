@@ -214,7 +214,8 @@ namespace ForceFeedback
         public override float TickRate => 60f;
         public override PluginInformation Info => new PluginInformation
         {
-            Name = "Enhanced Force Feedback",
+            Id = "ForceFeedback",
+            Name = "Force Feedback",
             Description = "Provides force feedback effects for compatible steering wheels (Moza, Logitech, Thrustmaster, Fanatec, etc.).",
             AuthorName = "Zkhan4509",
         };

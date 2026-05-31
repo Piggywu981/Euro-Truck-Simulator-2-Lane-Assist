@@ -18,6 +18,7 @@ public class MyConsumer : Plugin
     public override float TickRate => 60f;
     public override PluginInformation Info => new PluginInformation
     {
+        Id = "ExampleConsumer",
         Name = "Example Consumer",
         Description = "An example data consumer plugin.",
         AuthorName = "Tumppi066",

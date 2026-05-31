@@ -45,8 +45,14 @@ public partial class MainWindow : AppWindow
         ExtendClientAreaToDecorationsHint = true;
         InitializeComponent();
 
-        VersionText.Text = $"v{System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version?.ToString(3)}";
+        // Linux distros don't add their own window borders. To match windows' appearance
+        // we need to add those ourselves.
+        # if LINUX
+            MainBorder.BorderThickness = new Avalonia.Thickness(1);
+            MainBorder.CornerRadius = new Avalonia.CornerRadius(4);
+        # endif
 
+        VersionText.Text = $"v{System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version?.ToString(3)}";
         UINotificationHandler.Current.SetWindow(this);
 
         pluginService = new PluginManagerService();
@@ -172,6 +178,7 @@ public partial class MainWindow : AppWindow
     {
         MainSplitView.IsPaneOpen = !MainSplitView.IsPaneOpen;
         ContentBorder.CornerRadius = MainSplitView.IsPaneOpen ? new Avalonia.CornerRadius(12, 0, 0, 0) : new Avalonia.CornerRadius(0);
+        ContentBorder.BorderThickness = MainSplitView.IsPaneOpen ? new Avalonia.Thickness(1,1,0,0) : new Avalonia.Thickness(0,1,0,0);
         UpdateTitlebarButtonVisibility();
     }
 
@@ -179,6 +186,7 @@ public partial class MainWindow : AppWindow
     {
         MainSplitView.IsPaneOpen = false;
         ContentBorder.CornerRadius = new Avalonia.CornerRadius(0);
+        ContentBorder.BorderThickness = new Avalonia.Thickness(0,1,0,0);
         UpdateTitlebarButtonVisibility();
         return page;
     }

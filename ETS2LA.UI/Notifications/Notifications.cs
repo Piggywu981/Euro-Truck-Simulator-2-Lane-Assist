@@ -139,8 +139,6 @@ public class UINotificationHandler
 
     private void UpdateNotification(UINotification notification)
     {
-        Logger.Info($"Updating notification: {notification.Title} - {notification.Content}");
-
         if (_window == null || !_window.IsLoaded) {
             Logger.Warn("Attempted to update notification before MainWindow was loaded.");
             return;
@@ -185,7 +183,6 @@ public class UINotificationHandler
 
     private async void SendNotification(UINotification notification)
     {
-        Logger.Info($"Sending notification: {notification.Title} - {notification.Content}");
         if (_window == null || !_window.IsLoaded) {
             Logger.Warn("Attempted to send notification before MainWindow was loaded.");
             return;

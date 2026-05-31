@@ -11,7 +11,10 @@
                 WindowDecorations="BorderOnly"
                 TransparencyLevelHint="Transparent">
 
-    <Border>
+    <Border Name="MainBorder"
+            BorderThickness="0"
+            BorderBrush="{DynamicResource Gray6Color}"
+            CornerRadius="0">
         <DockPanel>
             <!-- Title bar -->
             <Border Padding="4"
@@ -155,7 +158,7 @@
 
                 <!-- Content -->
                 <husk:Card CornerRadius="12 0 0 0"
-                           BorderThickness="1"
+                           BorderThickness="1 1 0 0"
                            Padding="0"
                            Name="ContentBorder">
                     <ScrollViewer VerticalScrollBarVisibility="Hidden">

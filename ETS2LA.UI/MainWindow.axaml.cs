@@ -50,6 +50,7 @@ public partial class MainWindow : AppWindow
         # if LINUX
             MainBorder.BorderThickness = new Avalonia.Thickness(1);
             MainBorder.CornerRadius = new Avalonia.CornerRadius(4);
+            MainBorder.ClipToBounds = true;
         # endif
 
         VersionText.Text = $"v{System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version?.ToString(3)}";

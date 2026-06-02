@@ -1,3 +1,4 @@
+using ETS2LA.Logging;
 using ETS2LA.Shared;
 
 namespace ETS2LA.Backend.Events
@@ -37,12 +38,12 @@ namespace ETS2LA.Backend.Events
                 {
                     foreach (var handler in _subscribers[topic])
                     {
-                        if (handler is Action<T> action)
-                        {
-                            action.Invoke(data);
-                        }
+                        handler.DynamicInvoke(data);
                     }
-                } catch { }
+                } catch (Exception ex)
+                {
+                    Logger.Error($"Error while publishing event on topic '{topic}': {ex}");
+                }
             }
         }
     }

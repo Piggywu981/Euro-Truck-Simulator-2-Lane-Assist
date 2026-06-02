@@ -15,28 +15,28 @@ public sealed class PluginManagerService
 
     public List<IPlugin> GetPlugins()
     {
-        if (backend.pluginHandler == null)
+        if (backend.PluginHandler == null)
             return new List<IPlugin>();
         
-        return backend.pluginHandler.LoadedPlugins;
+        return backend.PluginHandler.LoadedPlugins;
     }
 
     public void UnloadPlugins()
     {
-        backend.pluginHandler?.UnloadPlugins();
+        backend.PluginHandler?.UnloadPlugins();
     }
 
     public void ReloadPlugins()
     {
-        backend.pluginHandler?.UnloadPlugins();
-        backend.pluginHandler?.LoadPlugins();
+        backend.PluginHandler?.UnloadPlugins();
+        backend.PluginHandler?.LoadPlugins();
     }
 
     public bool SetEnabled(IPlugin plugin, bool enable)
     {
         var ok = enable
-            ? backend.pluginHandler!.EnablePlugin(plugin)
-            : backend.pluginHandler!.DisablePlugin(plugin);
+            ? backend.PluginHandler!.EnablePlugin(plugin)
+            : backend.PluginHandler!.DisablePlugin(plugin);
 
         return ok;
     }

@@ -58,7 +58,7 @@ public partial class ManagerView : UserControl, INotifyPropertyChanged
         foreach (var plugin in plugins)
         {
             Plugins.Add(new PluginItem(plugin, _pluginService));
-            _pluginService.backend.pluginHandler?.PluginEnabled += (enabledPlugin) =>
+            _pluginService.backend.PluginHandler?.PluginEnabled += (enabledPlugin) =>
             {
                 if (enabledPlugin == plugin)
                 {
@@ -66,7 +66,7 @@ public partial class ManagerView : UserControl, INotifyPropertyChanged
                     item?.Update();
                 }
             };
-            _pluginService.backend.pluginHandler?.PluginDisabled += (disabledPlugin) =>
+            _pluginService.backend.PluginHandler?.PluginDisabled += (disabledPlugin) =>
             {
                 if (disabledPlugin == plugin)
                 {

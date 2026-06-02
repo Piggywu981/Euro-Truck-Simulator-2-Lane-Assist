@@ -149,6 +149,22 @@ namespace ETS2LA.Shared
     }
 
     /// <summary>
+    ///  The base interface for all ETS2LA library plugins.
+    /// </summary>
+    public interface ILibraryPlugin
+    {
+        PluginInformation Info { get; }
+    }
+
+    /// <summary>
+    ///  The base class for all ETS2LA library plugins. This is just a convenience class that implements the ILibraryPlugin interface.
+    /// </summary>
+    public abstract class LibraryPlugin : ILibraryPlugin
+    {
+        public abstract PluginInformation Info { get; }
+    }
+
+    /// <summary>
     ///  Represents the basic information about a plugin.
     /// </summary>
     public class PluginInformation

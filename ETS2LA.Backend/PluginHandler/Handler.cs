@@ -3,9 +3,11 @@ using ETS2LA.Logging;
 using ETS2LA.Backend.Events;
 using ETS2LA.Notifications;
 using System.Runtime.Loader;
+using System.Reflection;
 
 namespace ETS2LA.Backend
 {
+    // The class instance for this lives in PluginBackend
     public class PluginHandler
     {
         // These are files in the plugins folder that the backend will
@@ -19,6 +21,7 @@ namespace ETS2LA.Backend
         };
 
         public readonly List<IPlugin> LoadedPlugins = new();
+        public readonly List<ILibraryPlugin> LoadedLibraryPlugins = new();
 
         // Check PluginLoadContext.cs for why we need to keep track of them here.
         // TLDR: To be able to reload assemblies without restarting ETS2LA.
@@ -32,12 +35,12 @@ namespace ETS2LA.Backend
         public Action<IPlugin>? PluginEnabled;
         public Action<IPlugin>? PluginDisabled;
         public bool loading = false;
-
-        public string[] DiscoverPlugins()
+        
+        public string[] DiscoverDlls(string path)
         {
             try
             {
-                var pluginFiles = Directory.GetFiles("Plugins", "*.dll");
+                var pluginFiles = Directory.GetFiles(path, "*.dll");
 
                 // Exclude anything in _exclusions.
                 pluginFiles = pluginFiles.Where(file =>
@@ -52,15 +55,41 @@ namespace ETS2LA.Backend
                 return pluginFiles;
             } catch (Exception ex)
             {
-                Logger.Error($"Failed to discover plugins: {ex.Message}");
+                Logger.Error($"Failed to discover Dlls: {ex.Message}");
                 return Array.Empty<string>();
+            }
+        }
+
+        public void LoadLibraries()
+        {
+            string[] libraryFiles = DiscoverDlls("Libraries");
+            Logger.Info($"Discovered {libraryFiles.Length} .dll files in Libraries folder.");
+            foreach (string filename in libraryFiles)
+            {
+                try
+                {
+                    var assembly = Assembly.LoadFrom(filename);
+                    var libraryTypes = assembly.GetTypes()
+                        .Where(t => typeof(ILibraryPlugin).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
+
+                    foreach (var type in libraryTypes)
+                    {
+                        var libraryPlugin = (ILibraryPlugin)Activator.CreateInstance(type)!;
+                        LoadedLibraryPlugins.Add(libraryPlugin);
+                        Logger.Info($"Loaded library plugin: [gray]{type.FullName}[/] from [gray]{filename}[/].");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error($"Failed to load library plugin from [gray]{filename}[/]: {ex}");
+                }
             }
         }
 
         public void LoadPlugins()
         {
             loading = true;
-            string[] pluginFiles = DiscoverPlugins();
+            string[] pluginFiles = DiscoverDlls("Plugins");
             Logger.Info($"Discovered {pluginFiles.Length} .dll files in Plugin folder.");
             foreach (string filename in pluginFiles)
             {
@@ -237,6 +266,11 @@ namespace ETS2LA.Backend
             return LoadedPlugins.FirstOrDefault(p => p.Info.Id == pluginId);
         }
 
+        private ILibraryPlugin? GetLibraryPluginById(string pluginId)
+        {
+            return LoadedLibraryPlugins.FirstOrDefault(p => p.Info.Id == pluginId);
+        }
+
         public bool EnablePlugin(IPlugin? plugin = null, string? pluginId = null)
         {
             plugin ??= GetPluginById(pluginId!);
@@ -251,17 +285,20 @@ namespace ETS2LA.Backend
             {
                 var dependency = GetPluginById(dependencyId);
                 if (dependency == null) {
-                    NotificationHandler.Current.SendNotification(new Notification
+                    if (GetLibraryPluginById(dependencyId) == null)
                     {
-                        Id = $"Backend.PluginHandler.MissingDependency.{plugin.Info.Id}",
-                        Title = $"{plugin.Info.Name}",
-                        Content = $"Missing dependency: {dependencyId}",
-                        Level = NotificationLevel.Danger
-                    });
-                    Logger.Warn($"Cannot enable plugin {plugin.Info.Name} because dependency {dependencyId} was not found.");
-                    return false;
+                        NotificationHandler.Current.SendNotification(new Notification
+                        {
+                            Id = $"Backend.PluginHandler.MissingDependency.{plugin.Info.Id}",
+                            Title = $"{plugin.Info.Name}",
+                            Content = $"Missing dependency: {dependencyId}",
+                            Level = NotificationLevel.Danger
+                        });
+                        Logger.Warn($"Cannot enable plugin {plugin.Info.Name} because dependency {dependencyId} was not found.");
+                        return false;
+                    }
                 }
-                if (!dependency._IsRunning)
+                if (dependency != null && !dependency._IsRunning)
                 {                    
                     var success = EnablePlugin(dependency);
                     if (!success)                    {

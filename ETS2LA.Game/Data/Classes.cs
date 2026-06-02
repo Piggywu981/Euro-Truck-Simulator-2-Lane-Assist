@@ -262,7 +262,7 @@ public class ParsedRoad : IParsedItem
         float closestFactor = GetFactorForPoint(Position);
         if (inverted) closestFactor = 1 - closestFactor;
 
-        int closestLane = 0;
+        int closestLane = -1;
         float closestLaneDistance = float.MaxValue;
         for (int i = 0; i < GetLaneCount(Side.Left); i++)
         {
@@ -335,9 +335,9 @@ public class ParsedRoad : IParsedItem
     {
         if (t < 0 || t > 1) throw new ArgumentOutOfRangeException(nameof(t), "t must be between 0 and 1");
         if (side == Side.Left && (laneIndex < 0 || laneIndex >= LeftLaneOffsetsEnd.Length)) 
-            throw new ArgumentOutOfRangeException(nameof(laneIndex), $"laneIndex must be between 0 and {LeftLaneOffsetsEnd.Length - 1} for left side");
+            throw new ArgumentOutOfRangeException(nameof(laneIndex), $"laneIndex ({laneIndex}) must be between 0 and {LeftLaneOffsetsEnd.Length - 1} for left side");
         if (side == Side.Right && (laneIndex < 0 || laneIndex >= RightLaneOffsetsEnd.Length)) 
-            throw new ArgumentOutOfRangeException(nameof(laneIndex), $"laneIndex must be between 0 and {RightLaneOffsetsEnd.Length - 1} for right side");
+            throw new ArgumentOutOfRangeException(nameof(laneIndex), $"laneIndex ({laneIndex}) must be between 0 and {RightLaneOffsetsEnd.Length - 1} for right side");
 
         float offset = side == Side.Left ? LeftLaneOffsetsEnd[laneIndex] : RightLaneOffsetsEnd[laneIndex];
         float lastOffset = side == Side.Left ? (LeftLaneOffsetsStart != null ? LeftLaneOffsetsStart[laneIndex] : offset) 
@@ -460,12 +460,61 @@ public class ParsedRoad : IParsedItem
     /// <returns>Factor from 0-1 along the road.</returns>
     public float GetFactorForPoint(Vector3 point)
     {
-        Vector3 ab = Road.Node.Position - Road.ForwardNode.Position;
-        float lengthSquared = Vector3.Dot(ab, ab);
-        if (lengthSquared == 0) return 0;
+        // The road is split into N segments, then we find the best segment and do
+        // a projection to that. After that there's a slight refining step to avoid twiching
+        // when going from segment to segment.
 
-        float t = Vector3.Dot(point - Road.ForwardNode.Position, ab) / lengthSquared;
-        return Math.Clamp(t, 0, 1);
+        // The reason we can't project across the start / end points, is that on curved roads that will
+        // result in incorrect projections. Imagine a 180 degree curve, if we project across the start / end
+        // you'll result in a half circle, where the start and end move "faster" than the middle.
+
+        const int SEGMENTS = 8;
+        const float POINT_DIST = 1f / SEGMENTS;
+        
+        float bestT = 0;
+        float minDistanceSq = float.MaxValue;
+    
+        Vector3 prevPoint = Interpolate(0).Position; 
+        for (int i = 0; i < SEGMENTS; i++)
+        {
+            Vector3 nextPoint = Interpolate((i + 1) * POINT_DIST).Position;
+            Vector3 v = nextPoint - prevPoint;
+            float lenSq = Vector3.Dot(v, v);
+            
+            if (lenSq > 0)
+            {
+                float tLocal = Math.Clamp(Vector3.Dot(point - prevPoint, v) / lenSq, 0, 1);
+                Vector3 projected = prevPoint + tLocal * v;
+                float distSq = Vector3.DistanceSquared(point, projected);
+    
+                if (distSq < minDistanceSq)
+                {
+                    minDistanceSq = distSq;
+                    bestT = (i + tLocal) * POINT_DIST;
+                }
+            }
+            prevPoint = nextPoint;
+        }
+    
+        // Four iterations around bestT
+        float searchRange = POINT_DIST; 
+        for (int r = 0; r < 4; r++)
+        {
+            float step = searchRange * 0.25f;
+            float t1 = Math.Clamp(bestT - step, 0, 1);
+            float t2 = Math.Clamp(bestT + step, 0, 1);
+    
+            float d1 = Vector3.DistanceSquared(point, Interpolate(t1).Position);
+            float dMid = Vector3.DistanceSquared(point, Interpolate(bestT).Position);
+            float d2 = Vector3.DistanceSquared(point, Interpolate(t2).Position);
+    
+            if (d1 < dMid && d1 < d2) { bestT = t1; }
+            else if (d2 < dMid) { bestT = t2; }
+            
+            searchRange *= 0.5f;
+        }
+    
+        return bestT;
     }
 
     /// <summary>
@@ -596,11 +645,28 @@ public class ParsedRoadList : IParsedItem
         float accumulatedLength = 0;
         foreach (var road in Roads)
         {
-            if (accumulatedLength + road.Road.Length >= distance)
+            if (accumulatedLength + road.Road.Length >= distance - 1f)
                 return road;
             accumulatedLength += road.Road.Length;
         }
         return Roads[Roads.Count - 1];
+    }
+
+    public float FactorToRoadFactor(float factor, ParsedRoad road)
+    {
+        float distance = factor * TotalLength;
+        float accumulatedLength = 0;
+        foreach (var r in Roads)
+        {
+            if (accumulatedLength + r.Road.Length >= distance - 1f)
+            {
+                float localDistance = distance - accumulatedLength;
+                float localFactor = localDistance / r.Road.Length;
+                return localFactor;
+            }
+            accumulatedLength += r.Road.Length;
+        }
+        return 1f; // Return 1f if no road is found (should not happen)
     }
 
     /// <summary>
@@ -695,6 +761,7 @@ public class ParsedRoadList : IParsedItem
             throw new ArgumentOutOfRangeException(nameof(laneIndex), $"laneIndex must be between 0 and {GetLaneCount(Side.Right) - 1} for right side");
 
         ParsedRoad closestRoad = GetParsedRoadForFactor(t);
+        t = FactorToRoadFactor(t, closestRoad);
 
         float offset = side == Side.Left ? closestRoad.LeftLaneOffsetsEnd[laneIndex] : closestRoad.RightLaneOffsetsEnd[laneIndex];
         float lastOffset = side == Side.Left ? (closestRoad.LeftLaneOffsetsStart != null ? closestRoad.LeftLaneOffsetsStart[laneIndex] : offset) 
@@ -1037,6 +1104,16 @@ public class ParsedPrefab : IParsedItem
                 return (Node)node;
         }
         throw new ArgumentException("No common node between the two prefabs");
+    }
+
+    public Node GetNodeInCommon(ParsedRoadList roadList)
+    {
+        foreach (var node in Prefab.Nodes)
+        {
+            if (node.Uid == roadList.StartNode.Uid || node.Uid == roadList.EndNode.Uid)
+                return (Node)node;
+        }
+        throw new ArgumentException("No common node between the prefab and the road list");
     }
 
     public Node GetNodeInCommon(ParsedRoad road)

@@ -80,6 +80,20 @@ public partial class DisplaySettings : UserControl, INotifyPropertyChanged
         }
     }
 
+    public bool DontRenderWhenPaused
+    {
+        get => OverlaySettingsHandler.Current.GetSettings().DontRenderWhenPaused;
+        set
+        {
+            if (OverlaySettingsHandler.Current.GetSettings().DontRenderWhenPaused != value)
+            {
+                OverlaySettingsHandler.Current.GetSettings().DontRenderWhenPaused = value;
+                OverlaySettingsHandler.Current.Save();
+            }
+            OnPropertyChanged(nameof(DontRenderWhenPaused));
+        }
+    }
+
     public int MaxARDistance
     {
         get => (int)OverlaySettingsHandler.Current.GetSettings().MaxARDistance;

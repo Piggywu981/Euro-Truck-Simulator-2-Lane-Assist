@@ -66,6 +66,14 @@
                 <TextBlock Text="We can render elements in the game world using our overlay. This will use additional CPU and GPU resources." FontSize="12" Classes="Description" />
             </StackPanel>
 
+            <StackPanel Spacing="10" IsVisible="{Binding RenderAR}">
+                <Grid ColumnDefinitions="*, Auto">
+                    <TextBlock Text="Stop Rendering When Game is Paused" VerticalAlignment="Center" />
+                    <ToggleSwitch Grid.Column="1" IsChecked="{Binding DontRenderWhenPaused}" Classes="primary-toggle" />
+                </Grid>
+                <TextBlock Text="When the game reports itself being paused, ETS2LA won't render AR elements." FontSize="12" Classes="Description" />
+            </StackPanel>
+
             <StackPanel Spacing="12" IsVisible="{Binding RenderAR}">
                 <StackPanel Orientation="Horizontal" Spacing="6">
                     <TextBlock Text="Max AR Rendering Distance" />

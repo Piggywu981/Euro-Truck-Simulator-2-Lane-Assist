@@ -18,6 +18,7 @@ using ETS2LA.Controls;
 using ETS2LA.Overlay.Window;
 using ETS2LA.Overlay.AR;
 using System.Diagnostics;
+using ETS2LA.Telemetry;
 
 namespace ETS2LA.Overlay;
 
@@ -173,7 +174,8 @@ public class OverlayHandler
             Stopwatch ARStopwatch = Stopwatch.StartNew();
             try { 
                 if (AR == null) AR = new ARRenderer(gl);
-                if (overlaySettings.RenderAR) AR.Render(); 
+                bool paused = GameTelemetry.Current.GetCurrentData().paused;
+                if (overlaySettings.RenderAR && (!overlaySettings.DontRenderWhenPaused || !paused)) AR.Render(); 
             }
             catch (Exception ex) {
                 Logger.Error($"Error in AR rendering: {ex}");

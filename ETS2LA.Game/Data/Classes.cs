@@ -366,7 +366,7 @@ public class ParsedRoad : IParsedItem
     {
         int leftLaneCount = LeftLaneOffsetsEnd.Length;
         if (laneIndex < 0 || laneIndex >= leftLaneCount + RightLaneOffsetsEnd.Length) 
-            throw new ArgumentOutOfRangeException(nameof(laneIndex), $"laneIndex must be between 0 and {leftLaneCount + RightLaneOffsetsEnd.Length - 1}");
+            throw new ArgumentOutOfRangeException(nameof(laneIndex), $"laneIndex ({laneIndex}) must be between 0 and {leftLaneCount + RightLaneOffsetsEnd.Length - 1}");
         
         if (laneIndex < leftLaneCount)
             return InterpolateLane(t, Side.Left, laneIndex, additionalOffset);
@@ -405,7 +405,7 @@ public class ParsedRoad : IParsedItem
     {
         int leftLaneCount = LeftLaneOffsetsEnd.Length;
         if (laneIndex < 0 || laneIndex >= leftLaneCount + RightLaneOffsetsEnd.Length) 
-            throw new ArgumentOutOfRangeException(nameof(laneIndex), $"laneIndex must be between 0 and {leftLaneCount + RightLaneOffsetsEnd.Length - 1}");
+            throw new ArgumentOutOfRangeException(nameof(laneIndex), $"laneIndex ({laneIndex}) must be between 0 and {leftLaneCount + RightLaneOffsetsEnd.Length - 1}");
         
         if (laneIndex < leftLaneCount)
             return InterpolateLaneDist(dist, Side.Left, laneIndex, additionalOffset);
@@ -756,9 +756,9 @@ public class ParsedRoadList : IParsedItem
     {
         if (t < 0 || t > 1) throw new ArgumentOutOfRangeException(nameof(t), "t must be between 0 and 1");
         if (side == Side.Left && (laneIndex < 0 || laneIndex >= GetLaneCount(Side.Left))) 
-            throw new ArgumentOutOfRangeException(nameof(laneIndex), $"laneIndex must be between 0 and {GetLaneCount(Side.Left) - 1} for left side");
+            throw new ArgumentOutOfRangeException(nameof(laneIndex), $"laneIndex ({laneIndex}) must be between 0 and {GetLaneCount(Side.Left) - 1} for left side");
         if (side == Side.Right && (laneIndex < 0 || laneIndex >= GetLaneCount(Side.Right))) 
-            throw new ArgumentOutOfRangeException(nameof(laneIndex), $"laneIndex must be between 0 and {GetLaneCount(Side.Right) - 1} for right side");
+            throw new ArgumentOutOfRangeException(nameof(laneIndex), $"laneIndex ({laneIndex}) must be between 0 and {GetLaneCount(Side.Right) - 1} for right side");
 
         ParsedRoad closestRoad = GetParsedRoadForFactor(t);
         t = FactorToRoadFactor(t, closestRoad);
@@ -790,7 +790,7 @@ public class ParsedRoadList : IParsedItem
     {
         int leftLaneCount = GetLaneCount(Side.Left);
         if (laneIndex < 0 || laneIndex >= leftLaneCount + GetLaneCount(Side.Right)) 
-            throw new ArgumentOutOfRangeException(nameof(laneIndex), $"laneIndex must be between 0 and {leftLaneCount + GetLaneCount(Side.Right) - 1}");
+            throw new ArgumentOutOfRangeException(nameof(laneIndex), $"laneIndex ({laneIndex}) must be between 0 and {leftLaneCount + GetLaneCount(Side.Right) - 1}");
         
         if (laneIndex < leftLaneCount)
             return InterpolateLane(t, Side.Left, laneIndex, additionalOffset);
@@ -829,7 +829,7 @@ public class ParsedRoadList : IParsedItem
     {
         int leftLaneCount = GetLaneCount(Side.Left);
         if (laneIndex < 0 || laneIndex >= leftLaneCount + GetLaneCount(Side.Right)) 
-            throw new ArgumentOutOfRangeException(nameof(laneIndex), $"laneIndex must be between 0 and {leftLaneCount + GetLaneCount(Side.Right) - 1}");
+            throw new ArgumentOutOfRangeException(nameof(laneIndex), $"laneIndex ({laneIndex}) must be between 0 and {leftLaneCount + GetLaneCount(Side.Right) - 1}");
         
         if (laneIndex < leftLaneCount)
             return InterpolateLaneDist(dist, Side.Left, laneIndex, additionalOffset);

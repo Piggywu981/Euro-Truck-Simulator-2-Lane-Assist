@@ -137,6 +137,22 @@ public class ApplicationState
     // If determining what they do is hard via code, then take a look at the 
     // example at https://docs.ets2la.com/docs/Rewrite/UserInput#how-to-listen-to-registered-controls
 
+    private void RoundToNearestUnit()
+    {
+        switch (DisplayUnits)
+        {
+            case Units.Metric:
+                DesiredSpeed = (float)(Math.Round(DesiredSpeed * 3.6) / 3.6); // Round to nearest km/h
+                break;
+            case Units.Imperial:
+                DesiredSpeed = (float)(Math.Round(DesiredSpeed * 2.237) / 2.237); // Round to nearest mph
+                break;
+            case Units.Scientific:
+                DesiredSpeed = (float)Math.Round(DesiredSpeed); // Round to nearest m/s
+                break;
+        }
+    }
+
     private void HandleSet(object sender, ControlChangeEventArgs e)
     {
         bool b = (bool)e.NewValue;
@@ -149,6 +165,8 @@ public class ApplicationState
                 DesiredSpeed = latestTelemetryData.truckFloat.speed;
             else if (assistanceSettings.SetSpeedBehaviourOption == SetSpeedBehaviour.SpeedLimit)
                 DesiredSpeed = latestTelemetryData.truckFloat.speedLimit;
+
+            RoundToNearestUnit();
         }
         else
         {
@@ -182,6 +200,8 @@ public class ApplicationState
                 DesiredSpeed += 1f; // 1 m/s
                 break;
         }
+
+        RoundToNearestUnit();
     }
 
     private void HandleDecrease(object sender, ControlChangeEventArgs e)
@@ -208,6 +228,8 @@ public class ApplicationState
                 DesiredSpeed -= 1f; // 1 m/s
                 break;
         }
+
+        RoundToNearestUnit();
     }
 
     private void HandleAssist(object sender, ControlChangeEventArgs e)

@@ -64,25 +64,25 @@ public class TrafficChannel : IWebsocketChannel
                 {
                     position = new
                     {
-                        x = v.position.X,
-                        y = v.position.Y,
-                        z = v.position.Z,
+                        x = v.Position.X,
+                        y = v.Position.Y,
+                        z = v.Position.Z,
                     },
                     rotation = new
                     {
-                        x = v.rotation.X,
-                        y = v.rotation.Y,
-                        z = v.rotation.Z,
-                        w = v.rotation.W,
-                        yaw = v.rotation.ToEulerDeg().Y,
-                        pitch = v.rotation.ToEulerDeg().X,
-                        roll = v.rotation.ToEulerDeg().Z,
+                        x = v.Rotation.X,
+                        y = v.Rotation.Y,
+                        z = v.Rotation.Z,
+                        w = v.Rotation.W,
+                        yaw = v.Rotation.ToEulerDeg().Y,
+                        pitch = v.Rotation.ToEulerDeg().X,
+                        roll = v.Rotation.ToEulerDeg().Z,
                     },
                     size = new
                     {
-                        width = v.size.X,
-                        height = v.size.Y,
-                        length = v.size.Z,
+                        width = v.Size.X,
+                        height = v.Size.Y,
+                        length = v.Size.Z,
                     },
                     speed = v.speed,
                     acceleration = v.acceleration,
@@ -92,25 +92,25 @@ public class TrafficChannel : IWebsocketChannel
                     {
                         position = new
                         {
-                            x = t.position.X,
-                            y = t.position.Y,
-                            z = t.position.Z,
+                            x = t.Position.X,
+                            y = t.Position.Y,
+                            z = t.Position.Z,
                         },
                         rotation = new
                         {
-                            x = t.rotation.X,
-                            y = t.rotation.Y,
-                            z = t.rotation.Z,
-                            w = t.rotation.W,
-                            yaw = t.rotation.ToEulerDeg().Y,
-                            pitch = t.rotation.ToEulerDeg().X,
-                            roll = t.rotation.ToEulerDeg().Z,
+                            x = t.Rotation.X,
+                            y = t.Rotation.Y,
+                            z = t.Rotation.Z,
+                            w = t.Rotation.W,
+                            yaw = t.Rotation.ToEulerDeg().Y,
+                            pitch = t.Rotation.ToEulerDeg().X,
+                            roll = t.Rotation.ToEulerDeg().Z,
                         },
                         size = new
                         {
-                            width = t.size.X,
-                            height = t.size.Y,
-                            length = t.size.Z,
+                            width = t.Size.X,
+                            height = t.Size.Y,
+                            length = t.Size.Z,
                         },
                     }).ToArray(),
                     is_tmp = v.isTMP,

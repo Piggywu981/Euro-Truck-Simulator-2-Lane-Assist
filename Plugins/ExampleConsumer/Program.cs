@@ -84,10 +84,10 @@ public class MyConsumer : Plugin
                         var bottomCorners = vehicle.GetCornersOnGround();
                         var topCorners = new List<Vector3>
                         {
-                            bottomCorners[0] + new Vector3(0, vehicle.size.Y, 0),
-                            bottomCorners[1] + new Vector3(0, vehicle.size.Y, 0),
-                            bottomCorners[2] + new Vector3(0, vehicle.size.Y, 0),
-                            bottomCorners[3] + new Vector3(0, vehicle.size.Y, 0)
+                            bottomCorners[0] + new Vector3(0, vehicle.Size.Y, 0),
+                            bottomCorners[1] + new Vector3(0, vehicle.Size.Y, 0),
+                            bottomCorners[2] + new Vector3(0, vehicle.Size.Y, 0),
+                            bottomCorners[3] + new Vector3(0, vehicle.Size.Y, 0)
                         };
 
                         AR.Draw3DQuad(bottomCorners[0], bottomCorners[1], bottomCorners[2], bottomCorners[3], 0xFFFFFF);
@@ -102,10 +102,10 @@ public class MyConsumer : Plugin
                             bottomCorners = trailer.GetCornersOnGround();
                             topCorners = new List<Vector3>
                             {
-                                bottomCorners[0] + new Vector3(0, trailer.size.Y, 0),
-                                bottomCorners[1] + new Vector3(0, trailer.size.Y, 0),
-                                bottomCorners[2] + new Vector3(0, trailer.size.Y, 0),
-                                bottomCorners[3] + new Vector3(0, trailer.size.Y, 0)
+                                bottomCorners[0] + new Vector3(0, trailer.Size.Y, 0),
+                                bottomCorners[1] + new Vector3(0, trailer.Size.Y, 0),
+                                bottomCorners[2] + new Vector3(0, trailer.Size.Y, 0),
+                                bottomCorners[3] + new Vector3(0, trailer.Size.Y, 0)
                             };
 
                             AR.Draw3DQuad(bottomCorners[0], bottomCorners[1], bottomCorners[2], bottomCorners[3], 0xFFFFFF);
@@ -124,10 +124,10 @@ public class MyConsumer : Plugin
                         var bottomCorners = vehicle.GetCornersOnGround();
                         var topCorners = new List<Vector3>
                         {
-                            bottomCorners[0] + new Vector3(0, vehicle.size.Y, 0),
-                            bottomCorners[1] + new Vector3(0, vehicle.size.Y, 0),
-                            bottomCorners[2] + new Vector3(0, vehicle.size.Y, 0),
-                            bottomCorners[3] + new Vector3(0, vehicle.size.Y, 0)
+                            bottomCorners[0] + new Vector3(0, vehicle.Size.Y, 0),
+                            bottomCorners[1] + new Vector3(0, vehicle.Size.Y, 0),
+                            bottomCorners[2] + new Vector3(0, vehicle.Size.Y, 0),
+                            bottomCorners[3] + new Vector3(0, vehicle.Size.Y, 0)
                         };
 
                         AR.Draw3DQuad(bottomCorners[0], bottomCorners[1], bottomCorners[2], bottomCorners[3], 0xFFFFFF);

@@ -3,6 +3,7 @@
 
 using Hexa.NET.GLFW;
 using Hexa.NET.ImGui;
+using Hexa.NET.ImPlot;
 using Hexa.NET.ImGui.Backends.GLFW;
 using Hexa.NET.ImGui.Backends.OpenGL3;
 using Hexa.NET.OpenGL;
@@ -64,6 +65,7 @@ public class OverlayHandler
     private string glslVersion = "#version 150";
     private GLFWwindowPtr glfwWindow;
     private ImGuiContextPtr imGuiContext;
+    private ImPlotContextPtr ImPlotContext;
     private ImGuiIOPtr io;
     private GL gl;
 
@@ -399,6 +401,10 @@ public class OverlayHandler
     {
         imGuiContext = ImGui.CreateContext();
         ImGui.SetCurrentContext(imGuiContext);
+        
+        ImPlot.SetImGuiContext(imGuiContext);
+        ImPlotContext = ImPlot.CreateContext();
+        ImPlot.SetCurrentContext(ImPlotContext);
 
         io = ImGui.GetIO();
         io.ConfigFlags |= ImGuiConfigFlags.NavEnableKeyboard;     // Enable Keyboard Controls

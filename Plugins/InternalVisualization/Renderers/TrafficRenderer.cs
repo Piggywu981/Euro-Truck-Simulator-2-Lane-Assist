@@ -65,14 +65,14 @@ public class TrafficRenderer : Renderer
     {
         foreach (var parkedVehicle in _parkedVehicleData?.vehicles ?? new List<ParkedVehicle>())
         {
-            Vector3 center = parkedVehicle.position;
+            Vector3 center = parkedVehicle.Position;
             Vector2 screenPos = Utils.WorldToScreen(center, telemetryData.truckPlacement.coordinate.ToVector3(), windowSize) + windowPos;
 
-            Quaternion rotation = parkedVehicle.rotation;
+            Quaternion rotation = parkedVehicle.Rotation;
             float angle = rotation.ToEulerDeg().Y + 90f;
 
-            float width = parkedVehicle.size.X;
-            float length = parkedVehicle.size.Z;
+            float width = parkedVehicle.Size.X;
+            float length = parkedVehicle.Size.Z;
 
             DrawRectangle(drawList, screenPos, width, length, angle);
             if (ImGui.IsMouseHoveringRect(screenPos - new Vector2(length, width) * InternalVisualizationConstants.Scale, screenPos + new Vector2(length, width) * InternalVisualizationConstants.Scale))
@@ -97,14 +97,14 @@ public class TrafficRenderer : Renderer
 
         foreach (var vehicle in _trafficData?.vehicles ?? Array.Empty<TrafficVehicle>())
         {
-            Vector3 center = vehicle.position;
+            Vector3 center = vehicle.Position;
             Vector2 screenPos = Utils.WorldToScreen(center, telemetryData.truckPlacement.coordinate.ToVector3(), windowSize) + windowPos;
 
-            Quaternion rotation = vehicle.rotation;
+            Quaternion rotation = vehicle.Rotation;
             float angle = rotation.ToEulerDeg().Y + 90f;
 
-            float width = vehicle.size.X;
-            float length = vehicle.size.Z;
+            float width = vehicle.Size.X;
+            float length = vehicle.Size.Z;
 
             DrawRectangle(drawList, screenPos, width, length, angle);
             if (ImGui.IsMouseHoveringRect(screenPos - new Vector2(length, width) * InternalVisualizationConstants.Scale, screenPos + new Vector2(length, width) * InternalVisualizationConstants.Scale))
@@ -136,14 +136,14 @@ public class TrafficRenderer : Renderer
             {
                 var trailer = vehicle.trailers[i];
 
-                Vector3 trailerCenter = trailer.position;
+                Vector3 trailerCenter = trailer.Position;
                 Vector2 trailerScreenPos = Utils.WorldToScreen(trailerCenter, telemetryData.truckPlacement.coordinate.ToVector3(), windowSize) + windowPos;
 
-                Quaternion trailerRotation = trailer.rotation;
+                Quaternion trailerRotation = trailer.Rotation;
                 float trailerAngle = trailerRotation.ToEulerDeg().Y + 90f;
 
-                float trailerWidth = trailer.size.X;
-                float trailerLength = trailer.size.Z;
+                float trailerWidth = trailer.Size.X;
+                float trailerLength = trailer.Size.Z;
 
                 DrawRectangle(drawList, trailerScreenPos, trailerWidth, trailerLength, trailerAngle);
 

@@ -5,38 +5,13 @@ using ETS2LA.Backend.Events;
 using System.Numerics;
 using System.Diagnostics;
 using System.IO.MemoryMappedFiles;
-using TruckLib;
 
 namespace ETS2LA.Game.SDK;
 
-public class ParkedVehicle
+public class ParkedVehicle : BaseVehicle
 {
-    public Vector3 position;
-    public Quaternion rotation;
-    public Vector3 size;
     public int id;
     public bool isTrailer;
-
-    public List<Vector3> GetCornersOnGround()
-    {
-        List<Vector3> corners = new List<Vector3>();
-        Vector3 halfSize = size / 2;
-
-        corners.Add(position + new Vector3(-halfSize.X, -halfSize.Y, -halfSize.Z));
-        corners.Add(position + new Vector3(halfSize.X, -halfSize.Y, -halfSize.Z));
-        corners.Add(position + new Vector3(halfSize.X, -halfSize.Y, halfSize.Z));
-        corners.Add(position + new Vector3(-halfSize.X, -halfSize.Y, halfSize.Z));
-
-        Quaternion invQuat = Quaternion.Conjugate(rotation);
-        Vector3 euler = invQuat.ToEuler();
-        Quaternion filteredRot = Quaternion.CreateFromYawPitchRoll(-euler.Y + (float)Math.PI, -euler.Z + (float)Math.PI, -euler.X);
-        for (int i = 0; i < corners.Count; i++)
-        {
-            corners[i] = Vector3.Transform(corners[i] - position, filteredRot) + position;
-        }
-
-        return corners;
-    }
 }
 
 public class ParkedVehicleData
@@ -66,6 +41,11 @@ public class ParkedVehiclesProvider
             IsBackground = true
         };
         updateThread.Start();
+    }
+
+    public ParkedVehicleData? GetCurrentParkedVehicleData()
+    {
+        return _currentData;
     }
 
     private void UpdateThread()
@@ -138,18 +118,18 @@ public class ParkedVehiclesProvider
         for (int i = 0; i < 40; i++)
         {
             ParkedVehicle vehicle = new ParkedVehicle();
-            vehicle.position = new Vector3(
+            vehicle.Position = new Vector3(
                 _reader.ReadFloat(offset),
                 _reader.ReadFloat(offset + 4),
                 _reader.ReadFloat(offset + 8)
             ); offset += 12;
-            vehicle.rotation = new Quaternion(
+            vehicle.Rotation = new Quaternion(
                 _reader.ReadFloat(offset),
                 _reader.ReadFloat(offset + 4),
                 _reader.ReadFloat(offset + 8),
                 _reader.ReadFloat(offset + 12)
             ); offset += 16;
-            vehicle.size = new Vector3(
+            vehicle.Size = new Vector3(
                 _reader.ReadFloat(offset),
                 _reader.ReadFloat(offset + 4),
                 _reader.ReadFloat(offset + 8)

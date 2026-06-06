@@ -9,42 +9,41 @@ using TruckLib;
 
 namespace ETS2LA.Game.SDK;
 
-public class TrafficTrailer
+public class BaseVehicle
 {
-    public Vector3 position = Vector3.Zero;
-    public System.Numerics.Quaternion rotation = System.Numerics.Quaternion.Identity;
-    public Vector3 size = Vector3.Zero;
+    public Vector3 Position { get; set; }
+    public Quaternion Rotation { get; set; }
+    public Vector3 Size { get; set; }
 
     public List<Vector3> GetCornersOnGround()
     {
         List<Vector3> corners = new List<Vector3>();
-        Vector3 halfSize = size / 2;
+        Vector3 halfSize = Size / 2;
 
-        corners.Add(position + new Vector3(-halfSize.X, -halfSize.Y, -halfSize.Z));
-        corners.Add(position + new Vector3(halfSize.X, -halfSize.Y, -halfSize.Z));
-        corners.Add(position + new Vector3(halfSize.X, -halfSize.Y, halfSize.Z));
-        corners.Add(position + new Vector3(-halfSize.X, -halfSize.Y, halfSize.Z));
+        corners.Add(Position + new Vector3(-halfSize.X, -halfSize.Y, -halfSize.Z));
+        corners.Add(Position + new Vector3(halfSize.X, -halfSize.Y, -halfSize.Z));
+        corners.Add(Position + new Vector3(halfSize.X, -halfSize.Y, halfSize.Z));
+        corners.Add(Position + new Vector3(-halfSize.X, -halfSize.Y, halfSize.Z));
 
-        Quaternion invQuat = Quaternion.Conjugate(rotation);
+        Quaternion invQuat = Quaternion.Conjugate(Rotation);
         Vector3 euler = invQuat.ToEuler();
         Quaternion filteredRot = Quaternion.CreateFromYawPitchRoll(-euler.Y + (float)Math.PI, -euler.Z + (float)Math.PI, -euler.X);
         for (int i = 0; i < corners.Count; i++)
         {
-            corners[i] = Vector3.Transform(corners[i] - position, filteredRot) + position;
+            corners[i] = Vector3.Transform(corners[i] - Position, filteredRot) + Position;
         }
 
         return corners;
     }
 }
 
-public class TrafficVehicle
+public class TrafficTrailer : BaseVehicle
 {
-    public Vector3 position = Vector3.Zero;
-    public System.Numerics.Quaternion rotation = System.Numerics.Quaternion.Identity;
-    /// <summary>
-    ///  Size, X = Width, Y = Height, Z = Length. Note that the length is not always accurate, especially for trailers.
-    /// </summary>
-    public Vector3 size = Vector3.Zero;
+    public required TrafficVehicle parent;
+}
+
+public class TrafficVehicle : BaseVehicle
+{
     public float speed;
     public float acceleration;
     public Int16 trailer_count;
@@ -55,27 +54,6 @@ public class TrafficVehicle
     public bool isTrailer;
 
     public TrafficTrailer[] trailers = Array.Empty<TrafficTrailer>();
-
-    public List<Vector3> GetCornersOnGround()
-    {
-        List<Vector3> corners = new List<Vector3>();
-        Vector3 halfSize = size / 2;
-
-        corners.Add(position + new Vector3(-halfSize.X, -halfSize.Y, -halfSize.Z));
-        corners.Add(position + new Vector3(halfSize.X, -halfSize.Y, -halfSize.Z));
-        corners.Add(position + new Vector3(halfSize.X, -halfSize.Y, halfSize.Z));
-        corners.Add(position + new Vector3(-halfSize.X, -halfSize.Y, halfSize.Z));
-
-        Quaternion invQuat = Quaternion.Conjugate(rotation);
-        Vector3 euler = invQuat.ToEuler();
-        Quaternion filteredRot = Quaternion.CreateFromYawPitchRoll(-euler.Y + (float)Math.PI, -euler.Z + (float)Math.PI, -euler.X);
-        for (int i = 0; i < corners.Count; i++)
-        {
-            corners[i] = Vector3.Transform(corners[i] - position, filteredRot) + position;
-        }
-
-        return corners;
-    }
 }
 
 public class TrafficData
@@ -106,6 +84,11 @@ public class TrafficProvider
             IsBackground = true
         };
         updateThread.Start();
+    }
+
+    public TrafficData? GetCurrentTrafficData()
+    {
+        return _currentData;
     }
 
     private void UpdateThread()
@@ -181,14 +164,14 @@ public class TrafficProvider
             TrafficVehicle vehicle = new TrafficVehicle();
 
             // 0
-            vehicle.position = new Vector3(
+            vehicle.Position = new Vector3(
                 _reader.ReadFloat(offset),
                 _reader.ReadFloat(offset + 4),
                 _reader.ReadFloat(offset + 8)
             ); offset += 12;
 
             // 12
-            vehicle.rotation = new System.Numerics.Quaternion(
+            vehicle.Rotation = new System.Numerics.Quaternion(
                 _reader.ReadFloat(offset),
                 _reader.ReadFloat(offset + 4),
                 _reader.ReadFloat(offset + 8),
@@ -196,7 +179,7 @@ public class TrafficProvider
             ); offset += 16;
 
             // 28
-            vehicle.size = new Vector3(
+            vehicle.Size = new Vector3(
                 _reader.ReadFloat(offset),     // Width
                 _reader.ReadFloat(offset + 4), // Height
                 _reader.ReadFloat(offset + 8)  // Length
@@ -220,15 +203,15 @@ public class TrafficProvider
             for (int j = 0; j < 3; j++)
             {
                 // 0
-                TrafficTrailer trailer = new TrafficTrailer();
-                trailer.position = new Vector3(
+                TrafficTrailer trailer = new TrafficTrailer{ parent = vehicle };
+                trailer.Position = new Vector3(
                     _reader.ReadFloat(offset),
                     _reader.ReadFloat(offset + 4),
                     _reader.ReadFloat(offset + 8)
                 ); offset += 12;
 
                 // 12
-                trailer.rotation = new System.Numerics.Quaternion(
+                trailer.Rotation = new System.Numerics.Quaternion(
                     _reader.ReadFloat(offset),
                     _reader.ReadFloat(offset + 4),
                     _reader.ReadFloat(offset + 8),
@@ -236,7 +219,7 @@ public class TrafficProvider
                 ); offset += 16;
 
                 // 28
-                trailer.size = new Vector3(
+                trailer.Size = new Vector3(
                     _reader.ReadFloat(offset),     // Width
                     _reader.ReadFloat(offset + 4), // Height
                     _reader.ReadFloat(offset + 8)  // Length

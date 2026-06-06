@@ -43,6 +43,22 @@
                 </TabStrip>
             </StackPanel>
 
+            <StackPanel Spacing="10">
+                <Grid ColumnDefinitions="*, Auto">
+                    <TextBlock Text="Snap to 10 units" VerticalAlignment="Center" />
+                    <ToggleSwitch Grid.Column="1" IsChecked="{Binding SnapTo10Units}" Classes="primary-toggle" />
+                </Grid>
+                <TextBlock Text="When changing the speed, snap to the nearest 10 units. i.e. 37 -> 39 -> 40 -> 42..." FontSize="12" Classes="Description" />
+            </StackPanel>
+
+            <StackPanel Spacing="12">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <TextBlock Text="Speed Control Step Size" />
+                    <TextBlock Text="{Binding ElementName=SpeedControlStepSizeSlider, Path=Value, StringFormat='{}{0:0} unit(s)'}" />
+                </StackPanel>
+                <Slider Name="SpeedControlStepSizeSlider" Minimum="1" Maximum="5" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding SpeedControlStepSize}" />
+            </StackPanel>
+
             <Separator />
 
             <StackPanel Spacing="10">

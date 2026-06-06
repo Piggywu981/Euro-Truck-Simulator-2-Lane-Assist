@@ -4,7 +4,7 @@ using ETS2LA.Backend.Events;
 using ETS2LA.Telemetry;
 using ETS2LA.Settings.Global;
 using ETS2LA.Game;
-using ETS2LA.Notifications;
+using ETS2LA.Logging;
 
 namespace ETS2LA.State;
 
@@ -151,6 +151,31 @@ public class ApplicationState
                 DesiredSpeed = (float)Math.Round(DesiredSpeed); // Round to nearest m/s
                 break;
         }
+
+        if (DesiredSpeed < 0)
+            DesiredSpeed = 0;
+    }
+    
+    private float SnapTo10s(float increase)
+    {
+        if (!stateSettings.SnapTo10s)
+            return DesiredSpeed + increase;
+
+        float currentSpeedInDisplayUnits = UnitConversions.FromScientificUnits(UnitType.Speed, DesiredSpeed, DisplayUnits);
+        float newSpeedInDisplayUnits = currentSpeedInDisplayUnits + UnitConversions.FromScientificUnits(UnitType.Speed, increase, DisplayUnits);
+        // When increasing by 2 from 37 we go:
+        // 37 -> 39 -> 40 -> 42 -> 44
+        float currentSpeed10s = (float)(Math.Floor((currentSpeedInDisplayUnits + 0.1f) / 10) * 10);
+        float newSpeed10s = (float)(Math.Floor((newSpeedInDisplayUnits + 0.1f) / 10) * 10);
+        
+        if (currentSpeed10s != newSpeed10s && newSpeed10s > currentSpeed10s)
+        {
+            return UnitConversions.ToScientificUnits(UnitType.Speed, newSpeed10s, DisplayUnits);
+        }
+        else
+        {
+            return DesiredSpeed + increase;
+        }
     }
 
     private void HandleSet(object sender, ControlChangeEventArgs e)
@@ -191,13 +216,15 @@ public class ApplicationState
         switch (DisplayUnits)
         {
             case Units.Metric:
-                DesiredSpeed += UnitConversions.ToScientificUnits(UnitType.Speed, 1.0f, Units.Metric); // 1 km/h in m/s
+                float increaseMetric = UnitConversions.ToScientificUnits(UnitType.Speed, stateSettings.SpeedControlStepSize, Units.Metric);
+                DesiredSpeed = SnapTo10s(increaseMetric);
                 break;
             case Units.Imperial:
-                DesiredSpeed += UnitConversions.ToScientificUnits(UnitType.Speed, 1.0f, Units.Imperial); // 1 mph in m/s
+                float increaseImperial = UnitConversions.ToScientificUnits(UnitType.Speed, stateSettings.SpeedControlStepSize, Units.Imperial);
+                DesiredSpeed = SnapTo10s(increaseImperial);
                 break;
             case Units.Scientific:
-                DesiredSpeed += 1f; // 1 m/s
+                DesiredSpeed += stateSettings.SpeedControlStepSize;
                 break;
         }
 
@@ -219,13 +246,15 @@ public class ApplicationState
         switch (DisplayUnits)
         {
             case Units.Metric:
-                DesiredSpeed -= UnitConversions.ToScientificUnits(UnitType.Speed, 1.0f, Units.Metric); // 1 km/h in m/s
+                float decreaseMetric = UnitConversions.ToScientificUnits(UnitType.Speed, stateSettings.SpeedControlStepSize, Units.Metric);
+                DesiredSpeed = SnapTo10s(-decreaseMetric);
                 break;
             case Units.Imperial:
-                DesiredSpeed -= UnitConversions.ToScientificUnits(UnitType.Speed, 1.0f, Units.Imperial); // 1 mph in m/s
+                float decreaseImperial = UnitConversions.ToScientificUnits(UnitType.Speed, stateSettings.SpeedControlStepSize, Units.Imperial);
+                DesiredSpeed = SnapTo10s(-decreaseImperial);
                 break;
             case Units.Scientific:
-                DesiredSpeed -= 1f; // 1 m/s
+                DesiredSpeed -= stateSettings.SpeedControlStepSize;
                 break;
         }
 

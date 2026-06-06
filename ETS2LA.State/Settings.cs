@@ -7,6 +7,8 @@ namespace ETS2LA.State;
 public class StateSettings
 {
     public Units DisplayUnits = Units.Metric;
+    public int SpeedControlStepSize = 2;
+    public bool SnapTo10s = true;
 }
 
 public class StateSettingsHandler

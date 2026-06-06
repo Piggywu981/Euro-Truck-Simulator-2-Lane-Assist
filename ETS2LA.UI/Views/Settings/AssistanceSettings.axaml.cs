@@ -4,6 +4,7 @@ using Avalonia.Markup.Xaml;
 using ETS2LA.Settings.Global;
 using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
+using ETS2LA.State;
 
 namespace ETS2LA.UI.Views.Settings;
 
@@ -26,6 +27,34 @@ public partial class AssistanceSettingsPage : UserControl, INotifyPropertyChange
                 AssistanceSettings.Current.SeparateCruiseAndSteering = value;
                 AssistanceSettings.Current.Save();
             }
+        }
+    }
+
+    public int SpeedControlStepSize
+    {
+        get => (int)StateSettingsHandler.Current.GetSettings().SpeedControlStepSize;
+        set
+        {
+            if (StateSettingsHandler.Current.GetSettings().SpeedControlStepSize != (int)value)
+            {
+                StateSettingsHandler.Current.GetSettings().SpeedControlStepSize = (int)value;
+                StateSettingsHandler.Current.Save();
+            }
+            OnPropertyChanged(nameof(SpeedControlStepSize));
+        }
+    }
+
+    public bool SnapTo10Units
+    {
+        get => StateSettingsHandler.Current.GetSettings().SnapTo10s;
+        set
+        {
+            if (StateSettingsHandler.Current.GetSettings().SnapTo10s != value)
+            {
+                StateSettingsHandler.Current.GetSettings().SnapTo10s = value;
+                StateSettingsHandler.Current.Save();
+            }
+            OnPropertyChanged(nameof(SnapTo10Units));
         }
     }
 

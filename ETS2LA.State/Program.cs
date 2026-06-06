@@ -98,7 +98,7 @@ public class ApplicationState
     ///  This value will be set to true if the user has temporarily paused the steering assist,
     ///  e.g. by braking. Once the user resumes assists this value will be set to false again.
     /// </summary>
-    public bool PauseSteeringAssist { get; set; } = false;
+    public bool PauseSteeringAssist { get; set; } = true;
 
     /// <summary>
     ///  Defines the level of longitudinal assistance the user wants. It is assumed that lower levels
@@ -110,7 +110,7 @@ public class ApplicationState
     ///  This value will be set to true if the user has temporarily paused the longitudinal assist,
     ///  e.g. by braking. Once the user resumes assists this value will be set to false again.
     /// </summary>
-    public bool PauseLongitudinalAssist { get; set; } = false;
+    public bool PauseLongitudinalAssist { get; set; } = true;
     /// <summary>
     ///  This value will be used by the longitudinal assist to determine the target speed. This value does
     ///  not take into account any environmental factors. That will either be provided by plugins, or the

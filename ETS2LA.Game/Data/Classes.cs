@@ -6,9 +6,7 @@ using ETS2LA.Game.Utils;
 using ETS2LA.Game.PpdFiles;
 using System.Numerics;
 using TruckLib.Models.Ppd;
-using ETS2LA.Settings.Global;
 using ETS2LA.Logging;
-using Avalonia.Controls.Embedding.Offscreen;
 
 namespace ETS2LA.Game.Data;
 
@@ -928,8 +926,52 @@ public class ParsedRoadList : IParsedItem
     }
 }
 
+public class ParsedSemaphore
+{
+    public TruckLib.Models.Ppd.Semaphore Semaphore;
+    public NavCurve Curve;
+
+    // This is set from the source prefab, it's used to a point
+    // to world space once it's generated.
+    private Vector3 prefabStart;
+    private Matrix4x4 rotationMatrix;
+
+    public ParsedSemaphore(TruckLib.Models.Ppd.Semaphore semaphore, NavCurve curve, Matrix4x4 rotationMatrix, Vector3 prefabStart)
+    {
+        Semaphore = semaphore;
+        Curve = curve;
+        this.rotationMatrix = rotationMatrix;
+        this.prefabStart = prefabStart;
+    }
+
+    public OrientedPoint GetCurveStartWorldCoordinates()
+    {
+        OrientedPoint point = new OrientedPoint(Curve.StartPosition, Curve.StartRotation);
+        point.Position = Vector3.Transform(point.Position + prefabStart, rotationMatrix);
+        point.Rotation = Quaternion.Normalize(Quaternion.CreateFromRotationMatrix(rotationMatrix) * point.Rotation);
+        return point;
+    }
+
+    public OrientedPoint GetCurveEndWorldCoordinates()
+    {
+        OrientedPoint point = new OrientedPoint(Curve.EndPosition, Curve.EndRotation);
+        point.Position = Vector3.Transform(point.Position + prefabStart, rotationMatrix);
+        point.Rotation = Quaternion.Normalize(Quaternion.CreateFromRotationMatrix(rotationMatrix) * point.Rotation);
+        return point;
+    }
+
+    public OrientedPoint GetWorldOrientedPoint()
+    {
+        OrientedPoint point = new OrientedPoint(Semaphore.Position, Semaphore.Rotation);
+        point.Position = Vector3.Transform(point.Position + prefabStart, rotationMatrix);
+        point.Rotation = Quaternion.Normalize(Quaternion.CreateFromRotationMatrix(rotationMatrix) * point.Rotation);
+        return point;
+    }
+}
+
 public class PrefabPath
 {
+    public ParsedPrefab Prefab;
     public Node StartNode;
     public Node EndNode;
     public List<NavCurve> Curves;
@@ -941,8 +983,9 @@ public class PrefabPath
     private Vector3 prefabStart;
     private Matrix4x4 rotationMatrix;
 
-    public PrefabPath(Node startNode, Node endNode, List<NavCurve> curves, Direction dir, Matrix4x4 rotationMatrix, Vector3 prefabStart)
+    public PrefabPath(ParsedPrefab prefab, Node startNode, Node endNode, List<NavCurve> curves, Direction dir, Matrix4x4 rotationMatrix, Vector3 prefabStart)
     {
+        Prefab = prefab;
         StartNode = startNode;
         EndNode = endNode;
         Curves = curves;
@@ -950,6 +993,25 @@ public class PrefabPath
         CurveDirection = dir;
         this.prefabStart = prefabStart;
         this.rotationMatrix = rotationMatrix;
+    }
+
+    public List<ParsedSemaphore> GetSemaphores()
+    {
+        PrefabDescriptor? descriptor = Prefab.Descriptor;
+        if (descriptor == null) return new List<ParsedSemaphore>();
+        if (descriptor.Semaphores == null) return new List<ParsedSemaphore>();
+        if (descriptor.Semaphores.Count == 0) return new List<ParsedSemaphore>();
+
+        List<ParsedSemaphore> semaphores = new List<ParsedSemaphore>();
+        foreach (var curve in Curves)
+        {
+            if (curve.SemaphoreId != -1)
+            {
+                semaphores.Add(new ParsedSemaphore(descriptor.Semaphores.FirstOrDefault(s => s.SemaphoreId == curve.SemaphoreId), curve, rotationMatrix, prefabStart));
+            }
+        }
+
+        return semaphores;
     }
 
     /// <summary>
@@ -1257,7 +1319,7 @@ public class ParsedPrefab : IParsedItem
                 Logger.Info($"Path found with {path.Count} curves");
                 if (path.Count > 0 && path.Last() == endCurve)
                 {
-                    paths.Add(new PrefabPath(startNode, endNode, path, dir, rotationMatrix, prefabStart));
+                    paths.Add(new PrefabPath(this, startNode, endNode, path, dir, rotationMatrix, prefabStart));
                 }
             }
         }

@@ -231,7 +231,6 @@ public class UINotificationHandler
 
     private void CloseNotification(string id)
     {
-        Logger.Info($"Closing notification: {id}");
         if (!Dispatcher.UIThread.CheckAccess())
         {
             Dispatcher.UIThread.Post(() => CloseNotification(id));

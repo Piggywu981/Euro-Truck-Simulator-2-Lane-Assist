@@ -42,6 +42,11 @@ public class Semaphore
     public float time_remaining;
     public int state;
     public int id;
+
+    public Vector3 GetWorldCoordinates()
+    {
+        return position + new Vector3(cx, 0, cy) * 512;
+    }
 }
 
 public class SemaphoreData
@@ -72,6 +77,11 @@ public class SemaphoreProvider
             IsBackground = true
         };
         updateThread.Start();
+    }
+
+    public SemaphoreData? GetCurrentData()
+    {
+        return _currentData;
     }
 
     private void UpdateThread()

@@ -494,7 +494,6 @@ public class ParsedRoad : IParsedItem
             prevPoint = nextPoint;
         }
     
-        // Four iterations around bestT
         float searchRange = POINT_DIST; 
         for (int r = 0; r < 4; r++)
         {

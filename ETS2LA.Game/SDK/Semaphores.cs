@@ -47,6 +47,38 @@ public class Semaphore
     {
         return position + new Vector3(cx, 0, cy) * 512;
     }
+
+    public UInt32 GetColor()
+    {
+        if (type == SemaphoreType.TRAFFICLIGHT)
+        {
+            return state switch
+            {
+                (int)TrafficLightState.OFF =>           0x333333FF,
+                (int)TrafficLightState.ORANGETORED =>   0xFF9966FF,
+                (int)TrafficLightState.RED =>           0xFF6666FF,
+                (int)TrafficLightState.ORANGETOGREEN => 0xFF9966FF,
+                (int)TrafficLightState.GREEN =>         0x77EE77FF,
+                (int)TrafficLightState.SLEEP =>         0x333333FF,
+                _ => 0x333333FF,
+            };
+        }
+        else if (type == SemaphoreType.GATE)
+        {
+            return state switch
+            {
+                0 => 0xFF9966FF,
+                1 => 0xFF6666FF,
+                2 => 0xFF9966FF,
+                3 => 0x77EE77FF,
+                _ => 0x333333FF,
+            };
+        }
+        else
+        {
+            return 0x333333FF;
+        }
+    }
 }
 
 public class SemaphoreData

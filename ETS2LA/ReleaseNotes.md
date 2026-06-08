@@ -1,7 +1,6 @@
-### ETS2LA C# 3.3.4
-* Now building `.msi` installer for Windows.
-* Added game version to ETS2LA version, as well as operating system to installer file tables to each release.
-* In-app update changelogs no longer include GitHub information.
+### ETS2LA C# 3.3.6
+* Added function to get semaphore display color.
+* New `core-plugins` update, check Discord for more information.
 
 ---
 <!-- Content inside ETS2LA will be cutoff at the line above, do not place lines inside the changelog. -->

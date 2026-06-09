@@ -17,9 +17,23 @@ public partial class ManagerView : UserControl, INotifyPropertyChanged
 {
     // This list is listened by the UI to show available plugins.
     public ObservableCollection<PluginItem> Plugins { get; } = new();
+    public ObservableCollection<PluginItem> FilteredPlugins { get; } = new();
     private readonly PluginManagerService _pluginService;
     public bool HasPlugins => Plugins.Count > 0;
-    public int PluginColumns => Bounds.Width < 800 ? 1 : 2;
+    public int PluginColumns => (int)(Math.Floor(Bounds.Width / 1000) + 1);
+
+    private string _searchQuery = string.Empty;
+    public string SearchQuery
+    {
+        get => _searchQuery;
+        set
+        {
+            if (_searchQuery == value) return;
+            _searchQuery = value;
+            OnPropertyChanged();
+            FilterPlugins();
+        }
+    }
 
     public ManagerView(PluginManagerService service)
     {
@@ -76,8 +90,25 @@ public partial class ManagerView : UserControl, INotifyPropertyChanged
             };
         }
 
-        OnPropertyChanged(nameof(Plugins));
+        FilterPlugins();
         OnPropertyChanged(nameof(HasPlugins));
+    }
+
+    private void FilterPlugins()
+    {
+        string query = SearchQuery.Trim().ToLowerInvariant();
+        FilteredPlugins.Clear();
+        foreach (var plugin in Plugins)
+        {
+            if (string.IsNullOrEmpty(query) || 
+                plugin.Name.ToLowerInvariant().Contains(query) || 
+                plugin.Description.ToLowerInvariant().Contains(query) || 
+                plugin.Author.ToLowerInvariant().Contains(query))
+            {
+                FilteredPlugins.Add(plugin);
+            }
+        }
+        OnPropertyChanged(nameof(FilteredPlugins));
     }
 
     private void OnUnloadButtonClick(object? sender, RoutedEventArgs e)

@@ -27,7 +27,6 @@ public partial class MainWindow : AppWindow
         Performance,
         Wiki,
         Roadmap,
-        Feedback,
         Settings
     }
 
@@ -51,6 +50,8 @@ public partial class MainWindow : AppWindow
             MainBorder.BorderThickness = new Avalonia.Thickness(1);
             MainBorder.CornerRadius = new Avalonia.CornerRadius(4);
             MainBorder.ClipToBounds = true;
+            DragCorner.IsVisible = true; // Linux systems don't support BorderOnly resizing
+                                         // so we need to add our own drag corner.
         # endif
 
         VersionText.Text = $"v{System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version?.ToString(3)}";
@@ -62,7 +63,7 @@ public partial class MainWindow : AppWindow
         navButtons.AddRange(new[]
         {
             DashboardButton, VisualizationButton, ManagerButton, CatalogueButton,
-            PerformanceButton, WikiButton, RoadmapButton, FeedbackButton, SettingsButton
+            PerformanceButton, WikiButton, RoadmapButton, SettingsButton
         });
 
         UpdateTitlebarButtonVisibility();
@@ -82,6 +83,12 @@ public partial class MainWindow : AppWindow
     {
         if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
             BeginMoveDrag(e);
+    }
+
+    private void OnDragCornerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+            BeginResizeDrag(WindowEdge.SouthEast, e);
     }
 
     private void OnStayOnTopClick(object? sender, RoutedEventArgs e)
@@ -205,7 +212,6 @@ public partial class MainWindow : AppWindow
             PageKind.Performance => CreatePlaceholder("Performance", "This page hasn't been implemented yet, you can monitor performance using external tools."),
             PageKind.Wiki => CreatePlaceholder("Wiki", "Please take a look at https://docs.ets2la.com for documentation. This page will link there once we have more content."),
             PageKind.Roadmap => CreatePlaceholder("Roadmap", "Please take a look at our public roadmap on GitHub. Just got to the repository and click on the Projects tab at the top."),
-            PageKind.Feedback => CreatePlaceholder("Feedback", "Feedback is limited to users in the ETS2LA Closed Beta program. You can use the Discord channels assigned to that for feedback."),
             PageKind.Settings => settingsView,
             _ => dashboardView
         };
@@ -279,12 +285,6 @@ public partial class MainWindow : AppWindow
     {
         SetSelected(RoadmapButton);
         ShowPage(PageKind.Roadmap);
-    }
-
-    private void OnFeedbackClick(object? sender, RoutedEventArgs e)
-    {
-        SetSelected(FeedbackButton);
-        ShowPage(PageKind.Feedback);
     }
 
     private void OnSettingsClick(object? sender, RoutedEventArgs e)

@@ -38,6 +38,12 @@ namespace ETS2LA.Backend
         
         public string[] DiscoverDlls(string path)
         {
+            if (!Directory.Exists(path))
+            {
+                Logger.Warn($"Dll search directory [gray]{path}[/] does not exist.");
+                return Array.Empty<string>();
+            }
+
             try
             {
                 var pluginFiles = Directory.GetFiles(path, "*.dll");

@@ -206,9 +206,19 @@ public class ApplicationState
         bool b = (bool)e.NewValue;
         if(b == true) return; // key down event
 
+        // Resume after pause
         if (PauseLongitudinalAssist)
         {
             PauseLongitudinalAssist = false;
+            return;
+        }
+
+        // We're driving at 40kph with no limit (Desired = 0)
+        // -> Press Increase
+        // -> AEB due to speed now being set to 1kph
+        // -> WTF
+        if (Math.Abs(DesiredSpeed) < 0.01f)
+        {
             DesiredSpeed = latestTelemetryData.truckFloat.speed;
             return;
         }
@@ -239,6 +249,11 @@ public class ApplicationState
         if (PauseLongitudinalAssist)
         {
             PauseLongitudinalAssist = false;
+            return;
+        }
+
+        if (Math.Abs(DesiredSpeed) < 0.01f)
+        {
             DesiredSpeed = latestTelemetryData.truckFloat.speed;
             return;
         }

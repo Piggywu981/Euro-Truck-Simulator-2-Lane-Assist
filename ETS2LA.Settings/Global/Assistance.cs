@@ -2,9 +2,9 @@ namespace ETS2LA.Settings.Global;
 
 public enum AccelerationResponseOption
 {
-    Low,
-    Medium,
-    High
+    Slow,
+    Normal,
+    Fast
 }
 
 public enum SteeringSensitivityOption
@@ -50,7 +50,7 @@ public class AssistanceSettings
     public static AssistanceSettings Current => _instance.Value;
 
     public bool SeparateCruiseAndSteering { get; set; } = false;
-    public AccelerationResponseOption AccelerationResponse { get; set; } = AccelerationResponseOption.Medium;
+    public AccelerationResponseOption AccelerationResponse { get; set; } = AccelerationResponseOption.Normal;
     public SteeringSensitivityOption SteeringSensitivity { get; set; } = SteeringSensitivityOption.Normal;
     public FollowingDistanceOption FollowingDistance { get; set; } = FollowingDistanceOption.Normal;
     public SetSpeedBehaviour SetSpeedBehaviourOption { get; set; } = SetSpeedBehaviour.CurrentSpeed;

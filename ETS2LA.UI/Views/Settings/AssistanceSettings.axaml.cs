@@ -2,6 +2,7 @@ using System.ComponentModel;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using ETS2LA.Settings.Global;
+using ETS2LA.Overlay;
 using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
 using ETS2LA.State;
@@ -30,6 +31,11 @@ public partial class AssistanceSettingsPage : UserControl, INotifyPropertyChange
         }
     }
 
+    public string SpeedControlDisplay => $"{StateSettingsHandler.Current.GetSettings().SpeedControlStepSize:F0} {UnitConversions.GetUnitAbbreviation(
+                                            UnitType.Speed, 
+                                            StateSettingsHandler.Current.GetSettings().DisplayUnits
+                                        )}";
+
     public int SpeedControlStepSize
     {
         get => (int)StateSettingsHandler.Current.GetSettings().SpeedControlStepSize;
@@ -41,8 +47,14 @@ public partial class AssistanceSettingsPage : UserControl, INotifyPropertyChange
                 StateSettingsHandler.Current.Save();
             }
             OnPropertyChanged(nameof(SpeedControlStepSize));
+            OnPropertyChanged(nameof(SpeedControlDisplay));
         }
     }
+
+    public string SnapTo10UnitsDisplay => $"Snap to 10 {UnitConversions.GetUnitAbbreviation(
+                                                UnitType.Speed, 
+                                                StateSettingsHandler.Current.GetSettings().DisplayUnits
+                                            )}";
 
     public bool SnapTo10Units
     {
@@ -55,6 +67,7 @@ public partial class AssistanceSettingsPage : UserControl, INotifyPropertyChange
                 StateSettingsHandler.Current.Save();
             }
             OnPropertyChanged(nameof(SnapTo10Units));
+            OnPropertyChanged(nameof(SnapTo10UnitsDisplay));
         }
     }
 

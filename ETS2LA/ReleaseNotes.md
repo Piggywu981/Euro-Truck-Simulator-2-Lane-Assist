@@ -1,10 +1,9 @@
-### ETS2LA C# 3.3.7
-* Tweak dashboard page, remove previous Ko-Fi donation button and placeholder content.
-* Dashboard buttons now open their respective pages.
-* Add a drag corner to the window on Linux. You can now resize by dragging it as usual.
-* Remove the feedback tab from the sidebar.
-* Add a search bar to the plugin manager.
-* Removed `Example Consumer`, `Example Provider`, `Force Feedback`, `Overlay Pong` plugins from the repository itself. These will be added back later as catalogue plugins. The same will happen to `Internal Visualization` however since it's still required, it will be kept until the catalogue is ready.
+### ETS2LA C# 3.3.8
+* Update settings pages to show correct units.
+* Acceleration response settings are now `Slow, Normal, Fast` instead of `Low, Medium, High`.
+* Fix `ETS2LA.State` bug where `Increase` and `Decrease` binds wouldn't correctly resume ACC.
+* New `core-plugins` update, check Discord.
+* **Drk** - Fix event bus thread safety and handler error.
 
 ---
 <!-- Content inside ETS2LA will be cutoff at the line above, do not place lines inside the changelog. -->

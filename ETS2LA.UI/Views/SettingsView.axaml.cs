@@ -19,6 +19,7 @@ public partial class SettingsView : UserControl
     private readonly Updates _updates = new();
     private readonly AssistanceSettingsPage _assistanceSettings = new();
     private readonly DataSettingsPage _dataSettings = new();
+    private readonly UserSettingsView _userSettings = new();
 
     private readonly List<Button> _navButtons = new();
     ContentControl _contentHost => this.FindControl<ContentControl>("ContentHost") ?? throw new InvalidOperationException("ContentHost not found");
@@ -38,6 +39,7 @@ public partial class SettingsView : UserControl
             this.FindControl<Button>("ThemeButton"),
             this.FindControl<Button>("ControlsButton"),
             this.FindControl<Button>("SDKButton"),
+            this.FindControl<Button>("UserButton"),
             this.FindControl<Button>("UpdateButton"),
             this.FindControl<Button>("AssistanceButton"),
             this.FindControl<Button>("DataButton"),
@@ -56,6 +58,12 @@ public partial class SettingsView : UserControl
         string pageName = active.Replace("Button", "");
         Events.Current.Publish<string>("ETS2LA.UI.SwitchedPage", "Settings." + pageName);
         Events.Current.Publish<EventArgs>($"ETS2LA.UI.SwitchedPage.Settings.{pageName}", EventArgs.Empty);
+    }
+
+    private void OnUserSettingsClick(object? sender, RoutedEventArgs e)
+    {
+        _contentHost.Content = _userSettings;
+        SetSelected("UserButton");
     }
 
     private void OnDisplaySettingsClick(object? sender, RoutedEventArgs e)

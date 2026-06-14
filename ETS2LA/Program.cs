@@ -6,6 +6,13 @@ using ETS2LA.Overlay;
 using ETS2LA.Backend;
 using ETS2LA.Telemetry;
 using ETS2LA.State;
+using ETS2LA.Settings.Global;
+
+using OpenTelemetry;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Exporter;
 
 namespace ETS2LA;
 
@@ -29,6 +36,46 @@ internal static class Program
             ))
             #endif
             .Run();
+
+        string currentVersion = VelopackLocator.Current?.CurrentlyInstalledVersion?.ToString()
+                             ?? System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version?.ToString(3) 
+                             ?? "unknown"; 
+
+        // For OTel (OpenTelemetry)
+        var appResource = ResourceBuilder.CreateDefault()
+            .AddService("ETS2LA", serviceVersion: currentVersion)
+            .AddAttributes(OTelAttributes.GetAttributes());
+
+        // These get automatically removed because of using var
+        using var tracerProvider = Sdk.CreateTracerProviderBuilder()
+            .SetResourceBuilder(appResource)
+            .AddSource("ETS2LA.*")
+            .AddOtlpExporter(options =>
+            {
+                options.Protocol = OtlpExportProtocol.HttpProtobuf;
+                options.Endpoint = UserSettings.Current.IsTelemetryEnabled ? new Uri("https://otel.ets2la.com/v1/traces") : new Uri("http://localhost:4318/v1/traces");
+            })
+            .Build();
+        
+        using var meterProvider = Sdk.CreateMeterProviderBuilder()
+            .SetResourceBuilder(appResource)
+            .AddMeter("ETS2LA.*")
+            .AddOtlpExporter(options =>
+            {
+                options.Protocol = OtlpExportProtocol.HttpProtobuf;
+                options.Endpoint = UserSettings.Current.IsTelemetryEnabled ? new Uri("https://otel.ets2la.com/v1/metrics") : new Uri("http://localhost:4318/v1/metrics");
+            })
+            .Build();
+
+        bool shutdown = false;
+        var AnalyticsThread = Task.Run(() =>
+        {
+            while (!shutdown)
+            {
+                AppAnalytics.Pulse();
+                Thread.Sleep(TimeSpan.FromMinutes(1));
+            }
+        });
 
         var BackendThread = Task.Run(() =>
         {
@@ -55,6 +102,8 @@ internal static class Program
         // Gotta wait for the UI thread to close (i.e. user closed the window)
         // and then tell the backend to shutdown too.
         UI.Program.Main(args);
+
+        shutdown = true;
         PluginBackend.Current.Shutdown();
         OverlayHandler.Current.Shutdown();
         GameTelemetry.Current.Shutdown();

@@ -1,4 +1,8 @@
-﻿using ETS2LA.Shared;
+﻿// NOTE: This file is NOT for ETS2LA's own telemetry. Instead this is for reading
+// the game telemetry and then publishing it to the event bus for other plugins to consume.
+// TODO: Move to ETS2LA.Game.Telemetry
+
+using ETS2LA.Shared;
 using ETS2LA.Backend.Events;
 using ETS2LA.Notifications;
 using ETS2LA.Logging;

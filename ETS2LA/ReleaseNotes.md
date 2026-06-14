@@ -1,9 +1,7 @@
-### ETS2LA C# 3.3.8
-* Update settings pages to show correct units.
-* Acceleration response settings are now `Slow, Normal, Fast` instead of `Low, Medium, High`.
-* Fix `ETS2LA.State` bug where `Increase` and `Decrease` binds wouldn't correctly resume ACC.
-* New `core-plugins` update, check Discord.
-* **Drk** - Fix event bus thread safety and handler error.
+### ETS2LA C# 3.3.9
+* Implemented anonymous telemetry.
+* This tracks RAM, OS, CPU, ETS2LA Version, and gives us a real time active user count.
+* You can disable the telemetry in the settings, but we obviously encourage you to keep it on!
 
 ---
 <!-- Content inside ETS2LA will be cutoff at the line above, do not place lines inside the changelog. -->

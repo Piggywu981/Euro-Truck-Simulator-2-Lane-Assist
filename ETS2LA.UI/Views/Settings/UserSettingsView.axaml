@@ -18,6 +18,10 @@
                 <TextBlock Text="This value requires a restart to take effect." FontSize="12" Classes="Warning" />
             </StackPanel>
 
+            <StackPanel Spacing="12">
+                <HyperlinkButton Content="View Public Telemetry Data" NavigateUri="https://telemetry.ets2la.com/public-dashboards/17f53fce4749475c8efcab181b1306f3" FontSize="12" />
+            </StackPanel>
+
         </StackPanel>
     </Grid>
 </UserControl>

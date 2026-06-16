@@ -299,7 +299,9 @@ public static class DataUtils
             if (line.Contains("mod", StringComparison.OrdinalIgnoreCase) &&
                 line.Contains(".scs mounted", StringComparison.OrdinalIgnoreCase))
             {
-                foundMods.Add(line.Split("[fs] device ")[1].Split(" mounted")[0]);
+                string filename = line.Split("[fs] device ")[1].Split(" mounted")[0];
+                if (!foundMods.Contains(filename))
+                    foundMods.Add(filename);
             }
         }
         return foundMods;

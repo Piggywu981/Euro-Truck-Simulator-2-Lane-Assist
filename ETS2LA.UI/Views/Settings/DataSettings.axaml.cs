@@ -13,6 +13,22 @@ public partial class DataSettingsPage : UserControl, INotifyPropertyChanged
     public ObservableCollection<TabStripItemHandler> DataFidelityOptions { get; } = new();
     public ObservableCollection<TabStripItemHandler> CurveQualityOptions { get; } = new();
 
+    public bool BaseMapNameNeedsRestart { get; set; } = false;
+    public bool ForceBaseMapName
+    {
+        get => DataSettings.Current.ForceBaseMapName;
+        set
+        {
+            if (DataSettings.Current.ForceBaseMapName != value)
+            {
+                DataSettings.Current.ForceBaseMapName = value;
+                DataSettings.Current.Save();
+                BaseMapNameNeedsRestart = true;
+                OnPropertyChanged(nameof(BaseMapNameNeedsRestart));
+            }
+        }
+    }
+
     public int SelectedDataFidelityOption { get; set; }
     public int SelectedCurveQualityOption { get; set; }
     public bool ShowRamWarning { get; set; } = false;

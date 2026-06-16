@@ -132,7 +132,7 @@ public class Installation
             maps.Remove("/map/europe.mbd");
             foreach (var map in maps)
             {
-                if (map.EndsWith(".mbd"))
+                if (map.EndsWith(".mbd") && !DataSettings.Current.ForceBaseMapName)
                     return map;
             }
 
@@ -143,7 +143,7 @@ public class Installation
             maps.Remove("/map/usa.mbd");
             foreach (var map in maps)
             {
-                if (map.EndsWith(".mbd"))
+                if (map.EndsWith(".mbd") && !DataSettings.Current.ForceBaseMapName)
                     return map;
             }
 

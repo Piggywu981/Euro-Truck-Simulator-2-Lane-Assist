@@ -7,6 +7,18 @@
     <StackPanel>
         <Grid ColumnDefinitions="500,*">
         <StackPanel Grid.Column="0" Spacing="20" Margin="20">
+
+            <StackPanel Spacing="10">
+                <Grid ColumnDefinitions="*, Auto">
+                    <TextBlock Text="Force Base Map Name" VerticalAlignment="Center" />
+                    <ToggleSwitch Grid.Column="1" IsChecked="{Binding ForceBaseMapName}" Classes="primary-toggle" />
+                </Grid>
+                <TextBlock Text="Some mods implement additional maps like japan.mbd or russia.mbd. If you find your mods are not loading properly, try enabling this option. This is required for RusMap." FontSize="12" Classes="Description" />
+                <StackPanel IsVisible="{Binding BaseMapNameNeedsRestart}">
+                    <TextBlock Text="Warning: You need to restart ETS2LA to apply this change." FontSize="12" Classes="Warning" />
+                </StackPanel>
+            </StackPanel>
+
             <StackPanel Spacing="10">
                 <StackPanel Spacing="3">
                     <TextBlock Text="Data Fidelity" />

@@ -1,7 +1,9 @@
-### ETS2LA C# 3.3.9
-* Implemented anonymous telemetry.
-* This tracks RAM, OS, CPU, ETS2LA Version, and gives us a real time active user count.
-* You can disable the telemetry in the settings, but we obviously encourage you to keep it on!
+### ETS2LA C# 3.3.10
+- Add button to view public telemetry data.
+- Add option to force `europe.mbd` instead of mods' maps. This fixed RusMap compatibility.
+- Add `AutomationName` avalonia variable to all UI controls. This fixes accessibility issues.
+  - This is not yet implemented for notifications.
+- Overlay border is now 1px in all edges.
 
 ---
 <!-- Content inside ETS2LA will be cutoff at the line above, do not place lines inside the changelog. -->

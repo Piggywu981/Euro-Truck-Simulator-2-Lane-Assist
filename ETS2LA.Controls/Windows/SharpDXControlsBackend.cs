@@ -249,21 +249,24 @@ public class SharpDXControlsBackend : IControlsBackend
                         c.DeviceId == joystick.Information.InstanceGuid.ToString() && 
                         c.ControlId.ToString() == controlId);
 
-                    foreach (var control in matchingControls)
+                    try
                     {
-                        if (update.Offset >= JoystickOffset.Buttons0 && update.Offset <= JoystickOffset.Buttons127)
+                        foreach (var control in matchingControls)
                         {
-                            // Value is 128 for pressed, 0 for released (for whatever reason...)
-                            control.UpdateState(update.Value == 128);
+                            if (update.Offset >= JoystickOffset.Buttons0 && update.Offset <= JoystickOffset.Buttons127)
+                            {
+                                // Value is 128 for pressed, 0 for released (for whatever reason...)
+                                control.UpdateState(update.Value == 128);
+                            }
+                            else
+                            {
+                                // SharpDX axis values go from 0 to 65535
+                                // (luckily that stays constant across devices)
+                                float normalizedValue = NormalizeAxisValue(update.Value / 65535.0f, control.AxisBehavior);
+                                control.UpdateState(normalizedValue);
+                            }
                         }
-                        else
-                        {
-                            // SharpDX axis values go from 0 to 65535
-                            // (luckily that stays constant across devices)
-                            float normalizedValue = NormalizeAxisValue(update.Value / 65535.0f, control.AxisBehavior);
-                            control.UpdateState(normalizedValue);
-                        }
-                    }
+                    } catch {}
                 }
             }
 

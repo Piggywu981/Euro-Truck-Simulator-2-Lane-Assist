@@ -21,19 +21,19 @@
                         <WrapPanel ItemSpacing="16">
                             <StackPanel Spacing="4">
                                 <husk:Tag>
-                                    <TextBlock Text="Current Release" FontSize="12" FontWeight="450" />
+                                    <TextBlock Text="Current Release" FontSize="12" />
                                 </husk:Tag>
                                 <TextBlock Text="{Binding CurrentRelease}" FontSize="13" Margin="6 0 0 0"/>
                             </StackPanel>
                             <StackPanel Spacing="4">
                                 <husk:Tag>
-                                    <TextBlock Text="Users Online" FontSize="12" FontWeight="450" />
+                                    <TextBlock Text="Users Online" FontSize="12" />
                                 </husk:Tag>
                                 <TextBlock Text="-" FontSize="13" Margin="6 0 0 0"/>
                             </StackPanel>
                             <StackPanel Spacing="4">
                                 <husk:Tag>
-                                    <TextBlock Text="Users Over 24h" FontSize="12" FontWeight="450" />
+                                    <TextBlock Text="Users Over 24h" FontSize="12" />
                                 </husk:Tag>
                                 <TextBlock Text="-" FontSize="13" Margin="6 0 0 0"/>
                             </StackPanel>
@@ -54,9 +54,9 @@
                             <TextBlock HorizontalAlignment="Stretch" Text="Follow development and get support. Keep in mind that this version of ETS2LA is still in development. If you find bugs, please report them!" Classes="Description" FontSize="13"/>
                         </StackPanel>
                         <WrapPanel Grid.Row="1" ItemSpacing="8" VerticalAlignment="Bottom">
-                            <Button Content="Documentation" Click="OpenDocumentation"/>
-                            <Button Content="GitHub" Click="OpenGitHub"/>
-                            <Button Content="Discord" Click="OpenDiscord"/>
+                            <Button Content="Documentation" Click="OpenDocumentation" AutomationProperties.Name="Open the ETS2LA Documentation in Browser, button"/>
+                            <Button Content="GitHub" Click="OpenGitHub" AutomationProperties.Name="Open the ETS2LA GitHub in Browser, button"/>
+                            <Button Content="Discord" Click="OpenDiscord" AutomationProperties.Name="Open the ETS2LA Discord in Browser, button"/>
                         </WrapPanel>
                     </Grid>
                 </husk:Card>

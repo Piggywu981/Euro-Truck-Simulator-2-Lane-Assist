@@ -15,7 +15,7 @@
                         <TextBlock Classes="Highlight" Text="{Binding CurrentVersion}"/>
                         <TextBlock Text="." />
                     </StackPanel>
-                    <Button Content="Check for Updates" Width="150" HorizontalAlignment="Left" Click="OnCheckForUpdatesClick"/>
+                    <Button Content="Check for Updates" Width="150" HorizontalAlignment="Left" Click="OnCheckForUpdatesClick" AutomationProperties.Name="Check for Updates"/>
                 </StackPanel>
 
                 <TextBlock VerticalAlignment="Center" Text="→" FontSize="20" Classes="Description" IsVisible="{Binding IsUpdateAvailable}"/>
@@ -25,7 +25,7 @@
                         <TextBlock Text="Latest Version: " />
                         <TextBlock Classes="Highlight" Text="{Binding LatestVersion}"/>
                     </StackPanel>
-                    <Button Content="Install and Restart" Width="150" HorizontalAlignment="Left" Click="OnInstallAndRestartClick"/>
+                    <Button Content="Install and Restart" Width="150" HorizontalAlignment="Left" Click="OnInstallAndRestartClick" AutomationProperties.Name="Install Update and Restart"/>
                 </StackPanel>
             </StackPanel>
 

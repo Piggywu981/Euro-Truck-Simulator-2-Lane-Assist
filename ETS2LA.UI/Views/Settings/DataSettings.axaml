@@ -11,7 +11,7 @@
             <StackPanel Spacing="10">
                 <Grid ColumnDefinitions="*, Auto">
                     <TextBlock Text="Force Base Map Name" VerticalAlignment="Center" />
-                    <ToggleSwitch Grid.Column="1" IsChecked="{Binding ForceBaseMapName}" Classes="primary-toggle" />
+                    <ToggleSwitch Grid.Column="1" IsChecked="{Binding ForceBaseMapName}" Classes="primary-toggle" AutomationProperties.Name="Force Base Map Name, so far only necessary for RusMap, requires restart" />
                 </Grid>
                 <TextBlock Text="Some mods implement additional maps like japan.mbd or russia.mbd. If you find your mods are not loading properly, try enabling this option. This is required for RusMap." FontSize="12" Classes="Description" />
                 <StackPanel IsVisible="{Binding BaseMapNameNeedsRestart}">
@@ -26,7 +26,15 @@
                 </StackPanel>
                 <TabStrip ItemsSource="{Binding DataFidelityOptions}" 
                         SelectedIndex="{Binding SelectedDataFidelityOption}" 
-                        SelectionChanged="OnDataFidelityChanged">
+                        SelectionChanged="OnDataFidelityChanged"
+                        AutomationProperties.Name="Data Fidelity selection, high values use more RAM">
+
+                    <TabStrip.Styles>
+                        <Style Selector="TabStripItem" x:DataType="views:TabStripItemHandler">
+                            <Setter Property="AutomationProperties.Name" Value="{Binding AutomationName}" />
+                        </Style>
+                    </TabStrip.Styles>
+
                     <TabStrip.ItemTemplate>
                         <DataTemplate x:DataType="views:TabStripItemHandler">
                             <Border Width="70" Height="24" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -69,7 +77,15 @@
                 </StackPanel>
                 <TabStrip ItemsSource="{Binding CurveQualityOptions}" 
                         SelectedIndex="{Binding SelectedCurveQualityOption}" 
-                        SelectionChanged="OnCurveQualityChanged">
+                        SelectionChanged="OnCurveQualityChanged"
+                        AutomationProperties.Name="Curve quality">
+
+                    <TabStrip.Styles>
+                        <Style Selector="TabStripItem" x:DataType="views:TabStripItemHandler">
+                            <Setter Property="AutomationProperties.Name" Value="{Binding AutomationName}" />
+                        </Style>
+                    </TabStrip.Styles>
+                    
                     <TabStrip.ItemTemplate>
                         <DataTemplate x:DataType="views:TabStripItemHandler">
                             <Border Width="115" Height="24" VerticalAlignment="Center" HorizontalAlignment="Center">

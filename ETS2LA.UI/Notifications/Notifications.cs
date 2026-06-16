@@ -4,7 +4,6 @@ using ETS2LA.Notifications;
 
 using Avalonia.Threading;
 using Huskui.Avalonia.Controls;
-using Avalonia.LogicalTree;
 using Huskui.Avalonia.Models;
 using Avalonia.Controls.Templates;
 

@@ -15,14 +15,14 @@
     <Grid ColumnDefinitions="200, Auto, *" ColumnSpacing="0">
         <StackPanel Orientation="Vertical" Spacing="8" VerticalAlignment="Top" Margin="24">
             <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Top">
-                <Button Click="OnOpenFolderButtonClick" ToolTip.Tip="Open plugins folder">
+                <Button Click="OnOpenFolderButtonClick" ToolTip.Tip="Open plugins folder" AutomationProperties.Name="Open Plugins Folder, button, icon-only">
                     <i:Icon Value="fa-folder-open" FontSize="12" />
                 </Button>
                 <Separator Height="20" Width="1" />
-                <Button Click="OnUnloadButtonClick" IsEnabled="{Binding HasPlugins}" ToolTip.Tip="Unload plugins">
+                <Button Click="OnUnloadButtonClick" IsEnabled="{Binding HasPlugins}" ToolTip.Tip="Unload plugins" AutomationProperties.Name="Unload Plugins, button, icon-only">
                     <i:Icon Value="fa-eject" FontSize="12" />
                 </Button>
-                <Button Click="OnReloadButtonClick" IsEnabled="{Binding !HasPlugins}" ToolTip.Tip="Reload plugins">
+                <Button Click="OnReloadButtonClick" IsEnabled="{Binding !HasPlugins}" ToolTip.Tip="Reload plugins" AutomationProperties.Name="Reload Plugins, button, icon-only">
                     <i:Icon Value="fa-sync" FontSize="12" />
                 </Button>
             </StackPanel>
@@ -47,6 +47,10 @@
                                 Cursor="Hand"
                                 Classes.Highlight="{Binding IsEnabled}"
                                 PointerPressed="OnCardPointerPressed"
+
+                                Focusable="True"
+                                KeyDown="OnCardKeyDown"
+                                AutomationProperties.Name="{Binding AutomationName}"
                             >
                                 <Grid ColumnDefinitions="Auto, *, Auto, Auto">
                                     <Border CornerRadius="4" 

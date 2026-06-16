@@ -36,7 +36,6 @@ public partial class MainWindow : AppWindow
     private readonly ManagerView managerView;
     private readonly SettingsView settingsView;
     public static event EventHandler? WindowOpened;
-    
 
     public MainWindow()
     {

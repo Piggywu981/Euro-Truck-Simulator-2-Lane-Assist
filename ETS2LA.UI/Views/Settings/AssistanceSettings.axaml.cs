@@ -6,6 +6,8 @@ using ETS2LA.Overlay;
 using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
 using ETS2LA.State;
+using Avalonia.Automation;
+using Avalonia.Automation.Peers;
 
 namespace ETS2LA.UI.Views.Settings;
 
@@ -36,6 +38,8 @@ public partial class AssistanceSettingsPage : UserControl, INotifyPropertyChange
                                             StateSettingsHandler.Current.GetSettings().DisplayUnits
                                         )}";
 
+    public string SpeedControlAutomationName => $"Speed control step size, slider, {SpeedControlStepSize}";
+
     public int SpeedControlStepSize
     {
         get => (int)StateSettingsHandler.Current.GetSettings().SpeedControlStepSize;
@@ -48,6 +52,7 @@ public partial class AssistanceSettingsPage : UserControl, INotifyPropertyChange
             }
             OnPropertyChanged(nameof(SpeedControlStepSize));
             OnPropertyChanged(nameof(SpeedControlDisplay));
+            OnPropertyChanged(nameof(SpeedControlAutomationName));
         }
     }
 
@@ -55,6 +60,8 @@ public partial class AssistanceSettingsPage : UserControl, INotifyPropertyChange
                                                 UnitType.Speed, 
                                                 StateSettingsHandler.Current.GetSettings().DisplayUnits
                                             )}";
+
+    public string SnapTo10UnitsAutomationName => $"Snap ACC to 10 units, toggle, {(SnapTo10Units ? "enabled" : "disabled")}";
 
     public bool SnapTo10Units
     {
@@ -68,6 +75,7 @@ public partial class AssistanceSettingsPage : UserControl, INotifyPropertyChange
             }
             OnPropertyChanged(nameof(SnapTo10Units));
             OnPropertyChanged(nameof(SnapTo10UnitsDisplay));
+            OnPropertyChanged(nameof(SnapTo10UnitsAutomationName));
         }
     }
 
@@ -215,6 +223,7 @@ public class TabStripItemHandler: INotifyPropertyChanged
 {
     public string Item { get; }
     public string Header => GetFormattedName();
+    public string AutomationName => GetAutomationText();
     public bool IsDisabled { get; set; } = false;
 
     public TabStripItemHandler(string option, bool? isDisabled = null)
@@ -229,6 +238,12 @@ public class TabStripItemHandler: INotifyPropertyChanged
         // e.g., "AccelerationResponse" -> "Acceleration Response"
         var formatted = System.Text.RegularExpressions.Regex.Replace(Item, "(\\B[A-Z])", " $1");
         return formatted;
+    }
+
+    private string GetAutomationText()
+    {
+        string text = $"Tab strip item {Header}, button";
+        return text;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

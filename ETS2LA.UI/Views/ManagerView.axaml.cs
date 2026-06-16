@@ -64,7 +64,18 @@ public partial class ManagerView : UserControl, INotifyPropertyChanged
             item.Toggle();
         }
     }
-    
+
+    private void OnCardKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (sender is Huskui.Avalonia.Controls.Card { Tag: PluginItem item })
+        {
+            if (e.Key == Key.Enter || e.Key == Key.Space)
+            {
+                item.Toggle();
+            }
+        }
+    }
+
     private void UpdatePluginList()
     {
         Plugins.Clear();
@@ -156,6 +167,7 @@ public class PluginItem : INotifyPropertyChanged
 
     public string Id => _instance.Info.Id;
     public string Name => _instance.Info.Name;
+    public string AutomationName => GetAutomationText();
     public string Description => _instance.Info.Description;
     public string Version => _instance.Info.Version;
     public string IconUrl => _instance.Info.Icon;
@@ -173,7 +185,8 @@ public class PluginItem : INotifyPropertyChanged
         {
             if (_isEnabled == value) return;
             _isEnabled = value;
-            OnPropertyChanged();
+            OnPropertyChanged(nameof(IsEnabled));
+            OnPropertyChanged(nameof(AutomationName));
         }
     }
 
@@ -203,6 +216,14 @@ public class PluginItem : INotifyPropertyChanged
         if (parts.Length == 1)
             return parts[0].Length >= 2 ? parts[0].Substring(0, 2).ToUpperInvariant() : parts[0].ToUpperInvariant();
         return string.Concat(parts.Take(2).Select(p => p[0])).ToUpperInvariant();
+    }
+
+    private string GetAutomationText()
+    {
+        string text = _isEnabled ? "Enabled plugin card," : "Disabled plugin card,";
+        text += $" {Name}";
+        text += ", button";
+        return text;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

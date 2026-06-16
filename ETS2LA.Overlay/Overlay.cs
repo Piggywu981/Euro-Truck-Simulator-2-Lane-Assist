@@ -518,16 +518,17 @@ public class OverlayHandler
         width = GLFW.GetVideoMode(mon).Width;
         height = GLFW.GetVideoMode(mon).Height;
 
-        // NOTE: Width and height set to screen-1
+        // NOTE: Width and height set to screen-2
         // If they are set to the screen size, windows does some optimizations that cause the window
-        // to go full black when focused. Setting these to -1 seems to prevent that.
-        glfwWindow = GLFW.CreateWindow(width-1, height-1, "ETS2LA overlay", null, null);
+        // to go full black when focused. Setting these to -2 seems to prevent that.
+        glfwWindow = GLFW.CreateWindow(width - 2, height - 2, "ETS2LA overlay", null, null);
         if (glfwWindow.IsNull)
         {
             Logger.Error("Failed to create GLFW window");
             GLFW.Terminate();
             return false;
         }
+        GLFW.SetWindowPos(glfwWindow, 1, 1);
 
         return true;
     }

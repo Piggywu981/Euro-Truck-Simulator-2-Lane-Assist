@@ -69,16 +69,24 @@ public class TrafficProvider
     private float UpdateRate { get; set; } = 1f / 60f;
     public string EventString = "ETS2LA.Game.SDK.Traffic.Data";
 
-    private MemoryReader? _reader;
+    private MemoryReader _reader;
     private TrafficData? _currentData = new();
-    
+
 
     string mmapName = "Local\\ETS2LATraffic";
     string mmapNameLinux = "/dev/shm/ETS2LATraffic";
     int mmapSize = 6800;
 
+    private MemoryMappedFile? _mmf;
+    private MemoryMappedViewAccessor? _accessor;
+    private byte[] _buffer = Array.Empty<byte>();
+    private readonly Stopwatch _sinceReconnect = Stopwatch.StartNew();
+
     public TrafficProvider()
     {
+        _buffer = new byte[mmapSize];
+        _reader = new MemoryReader(_buffer);
+
         Thread updateThread = new Thread(UpdateThread)
         {
             IsBackground = true
@@ -114,6 +122,45 @@ public class TrafficProvider
         }
     }
     
+    private bool TryOpenMemory()
+    {
+        if (_accessor != null)
+            return true;
+
+        try
+        {
+            #if WINDOWS
+                _mmf = MemoryMappedFile.OpenExisting(mmapName);
+            # else
+                _mmf = MemoryMappedFile.CreateFromFile(mmapNameLinux);
+            # endif
+
+            _accessor = _mmf.CreateViewAccessor(0, mmapSize, MemoryMappedFileAccess.Read);
+            return true;
+        }
+        catch (FileNotFoundException)
+        {
+            CloseMemory();
+            Thread.Sleep(10000);
+            return false;
+        }
+        catch (Exception ex)
+        {
+            CloseMemory();
+            Logger.Error($"Error initializing memory mapped file: {ex.Message}");
+            Thread.Sleep(10000);
+            return false;
+        }
+    }
+
+    private void CloseMemory()
+    {
+        _accessor?.Dispose();
+        _accessor = null;
+        _mmf?.Dispose();
+        _mmf = null;
+    }
+
     private void Update()
     {
         if (_currentData == null)
@@ -121,41 +168,19 @@ public class TrafficProvider
             _currentData = new TrafficData();
         }
 
-        MemoryMappedFile? mmf = null;
-        MemoryMappedViewAccessor? accessor = null;
-        byte[] buffer = new byte[mmapSize];
+        if (!TryOpenMemory())
+            return;
 
         try
         {
-            #if WINDOWS
-                mmf = MemoryMappedFile.OpenExisting(mmapName);
-            # else
-                mmf = MemoryMappedFile.CreateFromFile(mmapNameLinux);
-            # endif
-
-            accessor = mmf.CreateViewAccessor(0, mmapSize, MemoryMappedFileAccess.Read);
-            accessor.ReadArray(0, buffer, 0, mmapSize);
-            _reader = new MemoryReader(buffer);
+            _accessor!.ReadArray(0, _buffer, 0, mmapSize);
         }
-        catch (FileNotFoundException)
+        catch (Exception)
         {
-            Thread.Sleep(10000);
-            _reader = null;
+            // Mapping went away (e.g. game closed), reconnect on the next update.
+            CloseMemory();
             return;
         }
-        catch (Exception ex)
-        {
-            Logger.Error($"Error initializing memory mapped file: {ex.Message}");
-            Thread.Sleep(10000);
-            _reader = null;
-            return;
-        }
-        finally
-        {
-            accessor?.Dispose();
-            mmf?.Dispose();
-        }
-
 
         List<TrafficVehicle> vehicles = new List<TrafficVehicle>();
         int offset = 0;
@@ -235,5 +260,12 @@ public class TrafficProvider
 
         _currentData.vehicles = vehicles.ToArray();
         Events.Current.Publish<TrafficData>(EventString, _currentData);
+
+        // Periodically reopen the mmap to detect game restarts.
+        if (_sinceReconnect.Elapsed.TotalSeconds > 1.0)
+        {
+            CloseMemory();
+            _sinceReconnect.Restart();
+        }
     }
 }

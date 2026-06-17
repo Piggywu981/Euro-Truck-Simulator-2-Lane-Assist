@@ -315,10 +315,10 @@ public class ARRenderer
     /// <param name="thickness">The thickness of the polygon outline.</param>
     public void Draw3DPolygon(ARCoordinate[] points, UInt32 color, bool filled = false, float thickness = 1)
     {
-        if (AllPointsOutsideRenderDistance(points))
+        if (points == null || points.Length < 3)
             return;
 
-        if (points == null || points.Length < 3)
+        if (AllPointsOutsideRenderDistance(points))
             return;
 
         Vector2[] screenPoints = new Vector2[points.Length];

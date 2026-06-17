@@ -29,16 +29,21 @@ public class GameTelemetry
 
     public string EventString = "ETS2LA.Telemetry.Data";
     
-    private MemoryReader? _reader;
+    private MemoryReader _reader;
     private GameTelemetryData? _currentData = new();
     private bool shutdown = false;
-    
+
 
     string mmapName = "Local\\SCSTelemetry";
     string mmapNameLinux = "/dev/shm/SCSTelemetry";
 
     int mmapSize = 32 * 1024;
     int stringSize = 64;
+
+    private MemoryMappedFile? _mmf;
+    private MemoryMappedViewAccessor? _accessor;
+    private byte[] _buffer = Array.Empty<byte>();
+    private readonly Stopwatch _sinceReconnect = Stopwatch.StartNew();
     
     Dictionary<int, string> intToDays = new Dictionary<int, string>
     {
@@ -81,6 +86,9 @@ public class GameTelemetry
 
     public GameTelemetry()
     {
+        _buffer = new byte[mmapSize];
+        _reader = new MemoryReader(_buffer);
+
         Thread updateThread = new Thread(UpdateThread)
         {
             IsBackground = true
@@ -117,32 +125,29 @@ public class GameTelemetry
                 Logger.Error(ex.ToString(), "Error in telemetry update loop.");
             }
         }
+
+        CloseMemory();
     }
 
-    private void Update()
+    private bool TryOpenMemory()
     {
-        if (_currentData == null)
-            _currentData = new();
-        
-        MemoryMappedFile? mmf = null;
-        MemoryMappedViewAccessor? accessor = null;
-        byte[] buffer = new byte[mmapSize];
+        if (_accessor != null)
+            return true;
 
         try
         {
             #if WINDOWS
-                mmf = MemoryMappedFile.OpenExisting(mmapName);
+                _mmf = MemoryMappedFile.OpenExisting(mmapName);
             # else
-                mmf = MemoryMappedFile.CreateFromFile(mmapNameLinux);
+                _mmf = MemoryMappedFile.CreateFromFile(mmapNameLinux);
             # endif
-            
-            accessor = mmf.CreateViewAccessor(0, mmapSize, MemoryMappedFileAccess.Read);
-            accessor.ReadArray(0, buffer, 0, mmapSize);
-            _reader = new MemoryReader(buffer);
+
+            _accessor = _mmf.CreateViewAccessor(0, mmapSize, MemoryMappedFileAccess.Read);
+            return true;
         }
         catch (FileNotFoundException)
         {
-            _currentData.sdkActive = false;
+            CloseMemory();
             NotificationHandler.Current.SendNotification(new Notification
             {
                 Id = "GameTelemetry.MMFNotFound",
@@ -151,24 +156,43 @@ public class GameTelemetry
                 IsProgressIndeterminate = true,
             });
             Thread.Sleep(1000);
-            _reader = null;
-            return;
+            return false;
         }
         catch (Exception)
         {
+            CloseMemory();
             Thread.Sleep(1000);
-            _reader = null;
+            return false;
+        }
+    }
+
+    private void CloseMemory()
+    {
+        _accessor?.Dispose();
+        _accessor = null;
+        _mmf?.Dispose();
+        _mmf = null;
+    }
+
+    private void Update()
+    {
+        if (_currentData == null)
+            _currentData = new();
+
+        if (!TryOpenMemory())
+        {
+            _currentData.sdkActive = false;
             return;
         }
-        finally
-        {
-            accessor?.Dispose();
-            mmf?.Dispose();
-        }
 
-        if (_reader == null)
+        try
         {
-            Logging.Logger.Debug("Memory reader is null, skipping telemetry read.");
+            _accessor!.ReadArray(0, _buffer, 0, mmapSize);
+        }
+        catch (Exception)
+        {
+            // Mapping went away (e.g. game closed), reconnect on the next update.
+            CloseMemory();
             return;
         }
 
@@ -191,7 +215,7 @@ public class GameTelemetry
         _currentData.scsValues.telemetryPluginRevision = _reader.ReadInt(offset); offset += 4;
         _currentData.scsValues.versionMajor = _reader.ReadInt(offset); offset += 4;
         _currentData.scsValues.versionMinor = _reader.ReadInt(offset); offset += 4;
-        _currentData.scsValues.game = ReadGame(offset, buffer); offset += 4;
+        _currentData.scsValues.game = ReadGame(offset, _buffer); offset += 4;
         _currentData.scsValues.telemetryVersionGameMajor = _reader.ReadInt(offset); offset += 4;
         _currentData.scsValues.telemetryVersionGameMinor = _reader.ReadInt(offset); offset += 4;
 
@@ -510,6 +534,13 @@ public class GameTelemetry
 
         // Publish to the event bus
         Events.Current.Publish<GameTelemetryData>(EventString, _currentData);
+
+        // Periodically reopen the mmap to detect game restarts.
+        if (_sinceReconnect.Elapsed.TotalSeconds > 1.0)
+        {
+            CloseMemory();
+            _sinceReconnect.Restart();
+        }
     }
 
     public void Shutdown()

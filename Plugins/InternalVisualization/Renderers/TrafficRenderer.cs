@@ -1,7 +1,7 @@
 using ETS2LA.Game.Data;
 using ETS2LA.Logging;
 using ETS2LA.Game.SDK;
-using ETS2LA.Telemetry;
+using ETS2LA.Game.Telemetry;
 using ETS2LA.Backend.Events;
 
 using TruckLib.ScsMap;

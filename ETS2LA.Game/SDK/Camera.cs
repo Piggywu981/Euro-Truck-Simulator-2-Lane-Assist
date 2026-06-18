@@ -1,7 +1,7 @@
 using ETS2LA.Shared;
 using ETS2LA.Logging;
 using ETS2LA.Backend.Events;
-using ETS2LA.Telemetry;
+using ETS2LA.Game.Telemetry;
 
 using System.Numerics;
 using System.IO.MemoryMappedFiles;

@@ -19,7 +19,7 @@ using ETS2LA.Controls;
 using ETS2LA.Overlay.Window;
 using ETS2LA.Overlay.AR;
 using System.Diagnostics;
-using ETS2LA.Telemetry;
+using ETS2LA.Game.Telemetry;
 
 namespace ETS2LA.Overlay;
 

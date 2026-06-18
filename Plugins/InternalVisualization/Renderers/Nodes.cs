@@ -1,6 +1,6 @@
 using ETS2LA.Game.Data;
 using ETS2LA.Shared;
-using ETS2LA.Telemetry;
+using ETS2LA.Game.Telemetry;
 using ETS2LA.Logging;
 
 using TruckLib.ScsMap;

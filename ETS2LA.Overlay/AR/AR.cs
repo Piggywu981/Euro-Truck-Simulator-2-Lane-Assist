@@ -6,7 +6,7 @@ using Hexa.NET.ImGui;
 using TruckLib;
 using Hexa.NET.OpenGL;
 using Hexa.NET.ImGui.Backends.OpenGL3;
-using ETS2LA.Telemetry;
+using ETS2LA.Game.Telemetry;
 
 namespace ETS2LA.Overlay.AR;
 

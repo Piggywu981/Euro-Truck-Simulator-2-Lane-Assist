@@ -1,7 +1,7 @@
 ﻿using ETS2LA.Controls;
 using ETS2LA.Controls.Defaults;
 using ETS2LA.Backend.Events;
-using ETS2LA.Telemetry;
+using ETS2LA.Game.Telemetry;
 using ETS2LA.Settings.Global;
 using ETS2LA.Game;
 using ETS2LA.Logging;

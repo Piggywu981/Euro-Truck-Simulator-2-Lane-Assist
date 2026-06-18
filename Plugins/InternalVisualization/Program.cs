@@ -1,4 +1,4 @@
-using ETS2LA.Telemetry;
+using ETS2LA.Game.Telemetry;
 using ETS2LA.Overlay;
 using ETS2LA.Shared;
 using ETS2LA.Backend.Events;

@@ -1,5 +1,5 @@
 using ETS2LA.Game.Data;
-using ETS2LA.Telemetry;
+using ETS2LA.Game.Telemetry;
 using TruckLib.ScsMap;
 using Hexa.NET.ImGui;
 using System.Numerics;

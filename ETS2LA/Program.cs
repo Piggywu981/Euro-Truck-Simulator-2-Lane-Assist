@@ -4,9 +4,10 @@ using Velopack.Locators;
 using ETS2LA.Tutorials;
 using ETS2LA.Overlay;
 using ETS2LA.Backend;
-using ETS2LA.Telemetry;
+using ETS2LA.Game.Telemetry;
 using ETS2LA.State;
 using ETS2LA.Settings.Global;
+using ETS2LA.Telemetry;
 
 using OpenTelemetry;
 using OpenTelemetry.Resources;

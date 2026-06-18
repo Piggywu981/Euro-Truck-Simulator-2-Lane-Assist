@@ -6,7 +6,7 @@ First download .NET 10 from Microsoft. You can find that [here](https://dotnet.m
 
 Now clone the repository and open the solution file in your preferred IDE. It's recommended to use VSCode, and that's what I'll be using here. Any code editor should work, but the project comes prepackaged with VSCode defs. For VSCode you should download the `C# Dev Kit` extension, other IDEs should have their own equivalent extensions.
 
-You can build the project by pressing `F1` and then typing in `.NET: Build`. Code will ask you for projects to build and you'll want to select `All Projects`. This should build ETS2LA and you'll see a `bin` folder appear in `ETS2LA.UI/bin` where the compiled files are.
+You can build the project by pressing `F1` and then typing in `.NET: Build`. Code will ask you for projects to build and you'll want to select `All Projects`. This should build ETS2LA and you'll see a `bin` folder appear in `ETS2LA/bin` where the compiled files are.
 
 > You don't need to build *everything* all the time, once you've built once you can just build whatever you changed by selecting only that project.
 

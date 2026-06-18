@@ -31,16 +31,7 @@ public class SharpDXControlsBackend : IControlsBackend
         _keyboard.Properties.BufferSize = 16;
         _keyboard.Acquire();
 
-        // TODO: Gotta make this update as we go, rather than once at start.
-        var devices = _directInput.GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly);
-        foreach (var device in devices)
-        {
-            var joystick = new Joystick(_directInput, device.InstanceGuid);
-            joystick.Properties.BufferSize = 16;
-            joystick.Acquire();
-            _connectedJoysticks.Add(joystick);
-            Logger.Info($"Connected joystick: [bold]{device.InstanceName}[/] [gray italic]({device.InstanceGuid})[/]");
-        }
+        RefreshConnectedJoysticks();
 
         Task.Run(() => ControlListener());
         RegisterControl(DefaultControls.Assist);
@@ -48,6 +39,61 @@ public class SharpDXControlsBackend : IControlsBackend
         RegisterControl(DefaultControls.Next);
         RegisterControl(DefaultControls.Increase);
         RegisterControl(DefaultControls.Decrease);
+    }
+
+    private void RefreshConnectedJoysticks()
+    {
+        var attachedGuids = _directInput
+            .GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly)
+            .Select(device => device.InstanceGuid)
+            .ToHashSet();
+
+        var currentByGuid = new Dictionary<Guid, Joystick>();
+        foreach (var joystick in _connectedJoysticks)
+        {
+            try { currentByGuid[joystick.Information.InstanceGuid] = joystick; }
+            catch { }
+        }
+
+        var currentGuids = currentByGuid.Keys.ToHashSet();
+        if (attachedGuids.SetEquals(currentGuids))
+            return;
+
+        var updated = new List<Joystick>();
+
+        foreach (var (guid, joystick) in currentByGuid)
+        {
+            if (attachedGuids.Contains(guid))
+            {
+                updated.Add(joystick);
+            }
+            else
+            {
+                Logger.Info($"Disconnected joystick: [gray italic]({guid})[/]");
+                try { joystick.Unacquire(); } catch { }
+            }
+        }
+
+        foreach (var guid in attachedGuids)
+        {
+            if (currentGuids.Contains(guid))
+                continue;
+
+            try
+            {
+                var joystick = new Joystick(_directInput, guid);
+                joystick.Properties.BufferSize = 16;
+                joystick.Acquire();
+                updated.Add(joystick);
+                Logger.Info($"Connected joystick: [bold]{joystick.Information.InstanceName}[/] [gray italic]({guid})[/]");
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn($"Failed to acquire joystick [gray italic]({guid})[/]: {ex.Message}");
+            }
+        }
+
+        _connectedJoysticks = updated;
     }
 
     public void RegisterControl(ControlDefinition definition)
@@ -218,8 +264,16 @@ public class SharpDXControlsBackend : IControlsBackend
 
     private void ControlListener()
     {
+        var lastDeviceRefresh = DateTime.MinValue;
         while (true)
         {
+            if ((DateTime.Now - lastDeviceRefresh).TotalSeconds >= 2)
+            {
+                try { RefreshConnectedJoysticks(); }
+                catch (Exception ex) { Logger.Warn($"Failed to refresh joysticks: {ex.Message}"); }
+                lastDeviceRefresh = DateTime.Now;
+            }
+
             var kbBuffer = _keyboard.GetBufferedData();
             foreach (var keyEvent in kbBuffer)
             {
@@ -237,8 +291,16 @@ public class SharpDXControlsBackend : IControlsBackend
 
             foreach (var joystick in _connectedJoysticks)
             {
-                joystick.Poll();
-                var data = joystick.GetBufferedData();
+                JoystickUpdate[] data;
+                try
+                {
+                    joystick.Poll();
+                    data = joystick.GetBufferedData();
+                }
+                catch
+                {
+                    continue;
+                }
 
                 foreach (var update in data)
                 {
@@ -290,8 +352,17 @@ public class SharpDXControlsBackend : IControlsBackend
 
             foreach (var joystick in _connectedJoysticks)
             {
-                joystick.Poll();
-                var data = joystick.GetBufferedData();
+                JoystickUpdate[] data;
+                try
+                {
+                    joystick.Poll();
+                    data = joystick.GetBufferedData();
+                }
+                catch
+                {
+                    continue;
+                }
+
                 if (data.Length > 0)
                 {
                     var update = data[0];

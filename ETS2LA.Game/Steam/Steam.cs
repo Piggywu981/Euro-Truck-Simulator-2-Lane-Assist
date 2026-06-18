@@ -2,6 +2,8 @@
 using Microsoft.Win32;
 #endif
 
+using ETS2LA.Logging;
+
 namespace ETS2LA.Game.Steam;
 
 /// <summary>
@@ -39,7 +41,8 @@ class SteamHandler
             string steamInstallFolder = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\Valve\Steam", "SteamPath", null) as string ?? "C:\\Program Files (x86)\\Steam";
             return Path.Combine(steamInstallFolder, "steamapps", "libraryfolders.vdf");
         #else
-            return Path.Combine(Environment.GetEnvironmentVariable("HOME"), ".steam", "root", "steamapps", "libraryfolders.vdf");
+            string path = Path.Combine(Environment.GetEnvironmentVariable("HOME"), ".steam", "root", "steamapps", "libraryfolders.vdf");
+            return path;
         #endif
     }
 

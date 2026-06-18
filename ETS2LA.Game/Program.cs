@@ -81,12 +81,27 @@ public class GameHandler
                 #endif
             );
 
+            string version = "Unknown";
+            # if WINDOWS
+                try
+                {
+                    FileVersionInfo info = FileVersionInfo.GetVersionInfo(executablePath);
+                    version = info.FileVersion ?? version;
+                }
+                catch (FileNotFoundException ex)
+                {
+                    Logger.Warn($"Executable not found at '{executablePath}': {ex.Message}");
+                }
+            # endif
+            // TODO: Is there a way we can somehow get the version automatically on linux?
+
             Installations.Add(new Installation
             {
                 Type = type,
                 Path = gamePath,
                 DocumentsPath = documentsPath,
                 ExecutablePath = executablePath,
+                Version = version
             });
 
             Installation installation = Installations[^1];

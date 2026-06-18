@@ -40,17 +40,17 @@ public class GameHandler
 
     private void PopulateInstallations()
     {
-        List<string> games = SteamHandler.FindGamesInLibraries(new List<string>
+        Dictionary<string, string> games = SteamHandler.FindGamesInLibraries(new List<string>
         {
-            "Euro Truck Simulator 2",
-            "American Truck Simulator"
+            SteamHandler.EuroTruckSimulator2AppId,
+            SteamHandler.AmericanTruckSimulatorAppId
         });
 
         Logger.Info($"Found {games.Count} game installations.");
-        games.ForEach(gamePath =>
+        foreach ((string appId, string gamePath) in games)
         {
-            GameType type = gamePath.EndsWith("Euro Truck Simulator 2") 
-                            ? GameType.EuroTruckSimulator2 
+            GameType type = appId == SteamHandler.EuroTruckSimulator2AppId
+                            ? GameType.EuroTruckSimulator2
                             : GameType.AmericanTruckSimulator;
 
             string executablePath = Path.Combine(
@@ -90,6 +90,6 @@ public class GameHandler
             });
 
             Installation installation = Installations[^1];
-        });
+        }
     }
 }

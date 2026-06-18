@@ -86,7 +86,7 @@ public class GameHandler
                 try
                 {
                     FileVersionInfo info = FileVersionInfo.GetVersionInfo(executablePath);
-                    version = info.FileVersion ?? version;
+                    version = info.FileVersion != null ? (info.FileVersion.Split(".")[0] + "." + info.FileVersion.Split(".")[1]) : version;
                 }
                 catch (FileNotFoundException ex)
                 {

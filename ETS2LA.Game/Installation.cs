@@ -309,7 +309,7 @@ public class Installation
                 sdkPath = System.IO.Path.Combine(ExecutablePath.Replace("amtrucks", ""), "plugins", "ets2la_" + version);
         # endif
 
-        if (Directory.Exists(sdkPath))
+        if (File.Exists(sdkPath))
             return true;
         else
             return false;

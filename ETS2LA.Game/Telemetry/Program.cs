@@ -25,8 +25,8 @@ public class GameTelemetry
 
     public string EventString = "ETS2LA.Telemetry.Data";
     
-    private MemoryReader _reader;
-    private GameTelemetryData? _currentData = new();
+    private MemoryReader reader;
+    private GameTelemetryData? currentData = new();
     private bool shutdown = false;
 
 
@@ -36,10 +36,10 @@ public class GameTelemetry
     int mmapSize = 32 * 1024;
     int stringSize = 64;
 
-    private MemoryMappedFile? _mmf;
-    private MemoryMappedViewAccessor? _accessor;
-    private byte[] _buffer = Array.Empty<byte>();
-    private readonly Stopwatch _sinceReconnect = Stopwatch.StartNew();
+    private MemoryMappedFile? mmf;
+    private MemoryMappedViewAccessor? accessor;
+    private byte[] buffer = Array.Empty<byte>();
+    private readonly Stopwatch sinceReconnect = Stopwatch.StartNew();
     
     Dictionary<int, string> intToDays = new Dictionary<int, string>
     {
@@ -82,8 +82,8 @@ public class GameTelemetry
 
     public GameTelemetry()
     {
-        _buffer = new byte[mmapSize];
-        _reader = new MemoryReader(_buffer);
+        buffer = new byte[mmapSize];
+        reader = new MemoryReader(buffer);
 
         Thread updateThread = new Thread(UpdateThread)
         {
@@ -94,10 +94,10 @@ public class GameTelemetry
 
     public GameTelemetryData GetCurrentData()
     {
-        if (_currentData == null)
-            _currentData = new();
+        if (currentData == null)
+            currentData = new();
         
-        return _currentData;
+        return currentData;
     }
 
     private void UpdateThread()
@@ -127,18 +127,18 @@ public class GameTelemetry
 
     private bool TryOpenMemory()
     {
-        if (_accessor != null)
+        if (accessor != null)
             return true;
 
         try
         {
             #if WINDOWS
-                _mmf = MemoryMappedFile.OpenExisting(mmapName);
+                mmf = MemoryMappedFile.OpenExisting(mmapName);
             # else
-                _mmf = MemoryMappedFile.CreateFromFile(mmapNameLinux);
+                mmf = MemoryMappedFile.CreateFromFile(mmapNameLinux);
             # endif
 
-            _accessor = _mmf.CreateViewAccessor(0, mmapSize, MemoryMappedFileAccess.Read);
+            accessor = mmf.CreateViewAccessor(0, mmapSize, MemoryMappedFileAccess.Read);
             return true;
         }
         catch (FileNotFoundException)
@@ -164,26 +164,26 @@ public class GameTelemetry
 
     private void CloseMemory()
     {
-        _accessor?.Dispose();
-        _accessor = null;
-        _mmf?.Dispose();
-        _mmf = null;
+        accessor?.Dispose();
+        accessor = null;
+        mmf?.Dispose();
+        mmf = null;
     }
 
     private void Update()
     {
-        if (_currentData == null)
-            _currentData = new();
+        if (currentData == null)
+            currentData = new();
 
         if (!TryOpenMemory())
         {
-            _currentData.sdkActive = false;
+            currentData.sdkActive = false;
             return;
         }
 
         try
         {
-            _accessor!.ReadArray(0, _buffer, 0, mmapSize);
+            accessor!.ReadArray(0, buffer, 0, mmapSize);
         }
         catch (Exception)
         {
@@ -197,202 +197,202 @@ public class GameTelemetry
         int offset = 0;
 
         // Root Values
-        _currentData.sdkActive = _reader.ReadBool(offset); offset += 1;
+        currentData.sdkActive = reader.ReadBool(offset); offset += 1;
         offset += 3; // Padding
-        _currentData.paused = _reader.ReadBool(offset); offset += 1;
+        currentData.paused = reader.ReadBool(offset); offset += 1;
         offset += 3; // Padding
 
-        _currentData.time = _reader.ReadLongLong(offset); offset += 8;
-        _currentData.simulatedTime = _reader.ReadLongLong(offset); offset += 8;
-        _currentData.renderTime = _reader.ReadLongLong(offset); offset += 8;
-        _currentData.multiplayerTimeOffset = _reader.ReadInt(offset); offset += 8;
+        currentData.time = reader.ReadLongLong(offset); offset += 8;
+        currentData.simulatedTime = reader.ReadLongLong(offset); offset += 8;
+        currentData.renderTime = reader.ReadLongLong(offset); offset += 8;
+        currentData.multiplayerTimeOffset = reader.ReadInt(offset); offset += 8;
 
         // SCSValues
-        _currentData.scsValues.telemetryPluginRevision = _reader.ReadInt(offset); offset += 4;
-        _currentData.scsValues.versionMajor = _reader.ReadInt(offset); offset += 4;
-        _currentData.scsValues.versionMinor = _reader.ReadInt(offset); offset += 4;
-        _currentData.scsValues.game = ReadGame(offset, _buffer); offset += 4;
-        _currentData.scsValues.telemetryVersionGameMajor = _reader.ReadInt(offset); offset += 4;
-        _currentData.scsValues.telemetryVersionGameMinor = _reader.ReadInt(offset); offset += 4;
+        currentData.scsValues.telemetryPluginRevision = reader.ReadInt(offset); offset += 4;
+        currentData.scsValues.versionMajor = reader.ReadInt(offset); offset += 4;
+        currentData.scsValues.versionMinor = reader.ReadInt(offset); offset += 4;
+        currentData.scsValues.game = ReadGame(offset, buffer); offset += 4;
+        currentData.scsValues.telemetryVersionGameMajor = reader.ReadInt(offset); offset += 4;
+        currentData.scsValues.telemetryVersionGameMinor = reader.ReadInt(offset); offset += 4;
 
         // CommonUI
-        _currentData.commonUI.timeAbsolute = _reader.ReadInt(offset); offset += 4;
-        _currentData.commonUI.timeReadable = AbsoluteToReadableTime(_currentData.commonUI.timeAbsolute);
+        currentData.commonUI.timeAbsolute = reader.ReadInt(offset); offset += 4;
+        currentData.commonUI.timeReadable = AbsoluteToReadableTime(currentData.commonUI.timeAbsolute);
 
         // ConfigUI
-        _currentData.configUI.gears = _reader.ReadInt(offset); offset += 4;
-        _currentData.configUI.gearsReverse = _reader.ReadInt(offset); offset += 4;
-        _currentData.configUI.retarderStepCount = _reader.ReadInt(offset); offset += 4;
-        _currentData.configUI.truckWheelCount = _reader.ReadInt(offset); offset += 4;
-        _currentData.configUI.selectorCount = _reader.ReadInt(offset); offset += 4;
-        _currentData.configUI.timeAbsDelivery = _reader.ReadInt(offset); offset += 4;
-        _currentData.configUI.maxTrailerCount = _reader.ReadInt(offset); offset += 4;
-        _currentData.configUI.unitCount = _reader.ReadInt(offset); offset += 4;
-        _currentData.configUI.plannedDistanceKm = _reader.ReadInt(offset); offset += 4;
+        currentData.configUI.gears = reader.ReadInt(offset); offset += 4;
+        currentData.configUI.gearsReverse = reader.ReadInt(offset); offset += 4;
+        currentData.configUI.retarderStepCount = reader.ReadInt(offset); offset += 4;
+        currentData.configUI.truckWheelCount = reader.ReadInt(offset); offset += 4;
+        currentData.configUI.selectorCount = reader.ReadInt(offset); offset += 4;
+        currentData.configUI.timeAbsDelivery = reader.ReadInt(offset); offset += 4;
+        currentData.configUI.maxTrailerCount = reader.ReadInt(offset); offset += 4;
+        currentData.configUI.unitCount = reader.ReadInt(offset); offset += 4;
+        currentData.configUI.plannedDistanceKm = reader.ReadInt(offset); offset += 4;
 
         // TruckUI
-        _currentData.truckUI.shifterSlot = _reader.ReadInt(offset); offset += 4;
-        _currentData.truckUI.retarderBrake = _reader.ReadInt(offset); offset += 4;
-        _currentData.truckUI.lightsAuxFront = _reader.ReadInt(offset); offset += 4;
-        _currentData.truckUI.lightsAuxRoof = _reader.ReadInt(offset); offset += 4;
-        _currentData.truckUI.truckWheelSubstance = _reader.ReadInt(offset, 16); offset += 16 * 4;
-        _currentData.truckUI.hshifterPosition = _reader.ReadInt(offset, 32); offset += 32 * 4;
-        _currentData.truckUI.hshifterBitmask = _reader.ReadInt(offset, 32); offset += 32 * 4;
+        currentData.truckUI.shifterSlot = reader.ReadInt(offset); offset += 4;
+        currentData.truckUI.retarderBrake = reader.ReadInt(offset); offset += 4;
+        currentData.truckUI.lightsAuxFront = reader.ReadInt(offset); offset += 4;
+        currentData.truckUI.lightsAuxRoof = reader.ReadInt(offset); offset += 4;
+        currentData.truckUI.truckWheelSubstance = reader.ReadInt(offset, 16); offset += 16 * 4;
+        currentData.truckUI.hshifterPosition = reader.ReadInt(offset, 32); offset += 32 * 4;
+        currentData.truckUI.hshifterBitmask = reader.ReadInt(offset, 32); offset += 32 * 4;
 
         // GameplayUI
-        _currentData.gameplayUI.jobDeliveredDeliveryTime = _reader.ReadInt(offset); offset += 4;
-        _currentData.gameplayUI.jobFinishedTime = _reader.ReadInt(offset); offset += 4;
-        _currentData.gameplayUI.jobStartingTime = _reader.ReadInt(offset); offset += 4;
+        currentData.gameplayUI.jobDeliveredDeliveryTime = reader.ReadInt(offset); offset += 4;
+        currentData.gameplayUI.jobFinishedTime = reader.ReadInt(offset); offset += 4;
+        currentData.gameplayUI.jobStartingTime = reader.ReadInt(offset); offset += 4;
         offset += 48; // Padding
 
         // CommonInt
-        _currentData.commonInt.restStop = _reader.ReadInt(offset); offset += 4;
+        currentData.commonInt.restStop = reader.ReadInt(offset); offset += 4;
 
         // TruckInt
-        _currentData.truckInt.gear = _reader.ReadInt(offset); offset += 4;
-        _currentData.truckInt.gearDashboard = _reader.ReadInt(offset); offset += 4;
-        _currentData.truckInt.hshifterResultingGear = _reader.ReadInt(offset, 32); offset += 32 * 4;
+        currentData.truckInt.gear = reader.ReadInt(offset); offset += 4;
+        currentData.truckInt.gearDashboard = reader.ReadInt(offset); offset += 4;
+        currentData.truckInt.hshifterResultingGear = reader.ReadInt(offset, 32); offset += 32 * 4;
         offset += 56; // Padding
         offset += 4;  // Padding
 
         // CommonFloat
-        _currentData.commonFloat.scale = _reader.ReadFloat(offset); offset += 4;
+        currentData.commonFloat.scale = reader.ReadFloat(offset); offset += 4;
 
         // ConfigFloat
-        _currentData.configFloat.fuelCapacity = _reader.ReadFloat(offset); offset += 4;
-        _currentData.configFloat.fuelWarningFactor = _reader.ReadFloat(offset); offset += 4;
-        _currentData.configFloat.adblueCapacity = _reader.ReadFloat(offset); offset += 4;
-        _currentData.configFloat.adblueWarningFactor = _reader.ReadFloat(offset); offset += 4;
-        _currentData.configFloat.airPressureWarning = _reader.ReadFloat(offset); offset += 4;
-        _currentData.configFloat.airPressureEmergency = _reader.ReadFloat(offset); offset += 4;
-        _currentData.configFloat.oilPressureWarning = _reader.ReadFloat(offset); offset += 4;
-        _currentData.configFloat.waterTemperatureWarning = _reader.ReadFloat(offset); offset += 4;
-        _currentData.configFloat.batteryVoltageWarning = _reader.ReadFloat(offset); offset += 4;
-        _currentData.configFloat.engineRpmMax = _reader.ReadFloat(offset); offset += 4;
-        _currentData.configFloat.gearDifferential = _reader.ReadFloat(offset); offset += 4;
-        _currentData.configFloat.cargoMass = _reader.ReadFloat(offset); offset += 4;
-        _currentData.configFloat.truckWheelRadius = _reader.ReadFloat(offset, 16); offset += 16 * 4;
-        _currentData.configFloat.gearRatiosForward = _reader.ReadFloat(offset, 24); offset += 24 * 4;
-        _currentData.configFloat.gearRatiosReverse = _reader.ReadFloat(offset, 8); offset += 8 * 4;
-        _currentData.configFloat.unitMass = _reader.ReadFloat(offset); offset += 4;
+        currentData.configFloat.fuelCapacity = reader.ReadFloat(offset); offset += 4;
+        currentData.configFloat.fuelWarningFactor = reader.ReadFloat(offset); offset += 4;
+        currentData.configFloat.adblueCapacity = reader.ReadFloat(offset); offset += 4;
+        currentData.configFloat.adblueWarningFactor = reader.ReadFloat(offset); offset += 4;
+        currentData.configFloat.airPressureWarning = reader.ReadFloat(offset); offset += 4;
+        currentData.configFloat.airPressureEmergency = reader.ReadFloat(offset); offset += 4;
+        currentData.configFloat.oilPressureWarning = reader.ReadFloat(offset); offset += 4;
+        currentData.configFloat.waterTemperatureWarning = reader.ReadFloat(offset); offset += 4;
+        currentData.configFloat.batteryVoltageWarning = reader.ReadFloat(offset); offset += 4;
+        currentData.configFloat.engineRpmMax = reader.ReadFloat(offset); offset += 4;
+        currentData.configFloat.gearDifferential = reader.ReadFloat(offset); offset += 4;
+        currentData.configFloat.cargoMass = reader.ReadFloat(offset); offset += 4;
+        currentData.configFloat.truckWheelRadius = reader.ReadFloat(offset, 16); offset += 16 * 4;
+        currentData.configFloat.gearRatiosForward = reader.ReadFloat(offset, 24); offset += 24 * 4;
+        currentData.configFloat.gearRatiosReverse = reader.ReadFloat(offset, 8); offset += 8 * 4;
+        currentData.configFloat.unitMass = reader.ReadFloat(offset); offset += 4;
 
         // TruckFloat
-        _currentData.truckFloat.speed = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.engineRpm = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.userSteer = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.userThrottle = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.userBrake = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.userClutch = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.gameSteer = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.gameThrottle = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.gameBrake = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.gameClutch = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.cruiseControlSpeed = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.airPressure = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.brakeTemperature = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.fuel = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.fuelAvgConsumption = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.fuelRange = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.adblue = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.oilPressure = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.oilTemperature = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.waterTemperature = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.batteryVoltage = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.lightsDashboard = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.wearEngine = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.wearTransmission = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.wearCabin = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.wearChassis = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.wearWheels = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.truckOdometer = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.routeDistance = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.routeTime = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.speedLimit = _reader.ReadFloat(offset); offset += 4;
-        _currentData.truckFloat.truckWheelSuspDeflection = _reader.ReadFloat(offset, 16); offset += 16 * 4;
-        _currentData.truckFloat.truckWheelVelocity = _reader.ReadFloat(offset, 16); offset += 16 * 4;
-        _currentData.truckFloat.truckWheelSteering = _reader.ReadFloat(offset, 16); offset += 16 * 4;
-        _currentData.truckFloat.truckWheelRotation = _reader.ReadFloat(offset, 16); offset += 16 * 4;
-        _currentData.truckFloat.truckWheelLift = _reader.ReadFloat(offset, 16); offset += 16 * 4;
-        _currentData.truckFloat.truckWheelLiftOffset = _reader.ReadFloat(offset, 16); offset += 16 * 4;
+        currentData.truckFloat.speed = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.engineRpm = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.userSteer = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.userThrottle = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.userBrake = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.userClutch = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.gameSteer = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.gameThrottle = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.gameBrake = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.gameClutch = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.cruiseControlSpeed = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.airPressure = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.brakeTemperature = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.fuel = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.fuelAvgConsumption = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.fuelRange = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.adblue = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.oilPressure = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.oilTemperature = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.waterTemperature = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.batteryVoltage = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.lightsDashboard = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.wearEngine = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.wearTransmission = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.wearCabin = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.wearChassis = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.wearWheels = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.truckOdometer = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.routeDistance = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.routeTime = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.speedLimit = reader.ReadFloat(offset); offset += 4;
+        currentData.truckFloat.truckWheelSuspDeflection = reader.ReadFloat(offset, 16); offset += 16 * 4;
+        currentData.truckFloat.truckWheelVelocity = reader.ReadFloat(offset, 16); offset += 16 * 4;
+        currentData.truckFloat.truckWheelSteering = reader.ReadFloat(offset, 16); offset += 16 * 4;
+        currentData.truckFloat.truckWheelRotation = reader.ReadFloat(offset, 16); offset += 16 * 4;
+        currentData.truckFloat.truckWheelLift = reader.ReadFloat(offset, 16); offset += 16 * 4;
+        currentData.truckFloat.truckWheelLiftOffset = reader.ReadFloat(offset, 16); offset += 16 * 4;
 
         // GameplayFloat
-        _currentData.gameplayFloat.jobDeliveredCargoDamage = _reader.ReadFloat(offset); offset += 4;
-        _currentData.gameplayFloat.jobDeliveredDistanceKm = _reader.ReadFloat(offset); offset += 4;
-        _currentData.gameplayFloat.refuelAmount = _reader.ReadFloat(offset); offset += 4;
+        currentData.gameplayFloat.jobDeliveredCargoDamage = reader.ReadFloat(offset); offset += 4;
+        currentData.gameplayFloat.jobDeliveredDistanceKm = reader.ReadFloat(offset); offset += 4;
+        currentData.gameplayFloat.refuelAmount = reader.ReadFloat(offset); offset += 4;
 
         // JobFloat
-        _currentData.jobFloat.cargoDamage = _reader.ReadFloat(offset); offset += 4;
+        currentData.jobFloat.cargoDamage = reader.ReadFloat(offset); offset += 4;
         offset += 28; // Padding
 
         // ConfigBool
-        _currentData.configBool.truckWheelSteerable = _reader.ReadBool(offset, 16); offset += 16 * 1;
-        _currentData.configBool.truckWheelSimulated = _reader.ReadBool(offset, 16); offset += 16 * 1;
-        _currentData.configBool.truckWheelPowered = _reader.ReadBool(offset, 16); offset += 16 * 1;
-        _currentData.configBool.truckWheelLiftable = _reader.ReadBool(offset, 16); offset += 16 * 1;
-        _currentData.configBool.isCargoLoaded = _reader.ReadBool(offset); offset += 1;
-        _currentData.configBool.specialJob = _reader.ReadBool(offset); offset += 1;
+        currentData.configBool.truckWheelSteerable = reader.ReadBool(offset, 16); offset += 16 * 1;
+        currentData.configBool.truckWheelSimulated = reader.ReadBool(offset, 16); offset += 16 * 1;
+        currentData.configBool.truckWheelPowered = reader.ReadBool(offset, 16); offset += 16 * 1;
+        currentData.configBool.truckWheelLiftable = reader.ReadBool(offset, 16); offset += 16 * 1;
+        currentData.configBool.isCargoLoaded = reader.ReadBool(offset); offset += 1;
+        currentData.configBool.specialJob = reader.ReadBool(offset); offset += 1;
 
         // TruckBool
-        _currentData.truckBool.parkingBrake = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.motorBrake = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.airPressureWarning = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.airPressureEmergency = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.fuelWarning = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.adblueWarning = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.oilPressureWarning = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.waterTemperatureWarning = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.batteryVoltageWarning = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.electricEnabled = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.engineEnabled = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.wipers = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.blinkerLeftActive = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.blinkerRightActive = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.blinkerLeftOn = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.blinkerRightOn = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.lightsParking = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.lightsBeamLow = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.lightsBeamHigh = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.lightsBeacon = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.lightsBrake = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.lightsReverse = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.lightsHazard = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.cruiseControl = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.truckWheelOnGround = _reader.ReadBool(offset, 16); offset += 16 * 1;
-        _currentData.truckBool.shifterToggle = _reader.ReadBool(offset, 2); offset += 2 * 1;
-        _currentData.truckBool.differentialLock = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.liftAxle = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.liftAxleIndicator = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.trailerLiftAxle = _reader.ReadBool(offset); offset += 1;
-        _currentData.truckBool.trailerLiftAxleIndicator = _reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.parkingBrake = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.motorBrake = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.airPressureWarning = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.airPressureEmergency = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.fuelWarning = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.adblueWarning = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.oilPressureWarning = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.waterTemperatureWarning = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.batteryVoltageWarning = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.electricEnabled = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.engineEnabled = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.wipers = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.blinkerLeftActive = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.blinkerRightActive = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.blinkerLeftOn = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.blinkerRightOn = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.lightsParking = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.lightsBeamLow = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.lightsBeamHigh = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.lightsBeacon = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.lightsBrake = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.lightsReverse = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.lightsHazard = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.cruiseControl = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.truckWheelOnGround = reader.ReadBool(offset, 16); offset += 16 * 1;
+        currentData.truckBool.shifterToggle = reader.ReadBool(offset, 2); offset += 2 * 1;
+        currentData.truckBool.differentialLock = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.liftAxle = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.liftAxleIndicator = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.trailerLiftAxle = reader.ReadBool(offset); offset += 1;
+        currentData.truckBool.trailerLiftAxleIndicator = reader.ReadBool(offset); offset += 1;
 
         // GameplayBool
-        _currentData.gameplayBool.jobDeliveredAutoparkUsed = _reader.ReadBool(offset); offset += 1;
-        _currentData.gameplayBool.jobDeliveredAutoloadUsed = _reader.ReadBool(offset); offset += 1;
+        currentData.gameplayBool.jobDeliveredAutoparkUsed = reader.ReadBool(offset); offset += 1;
+        currentData.gameplayBool.jobDeliveredAutoloadUsed = reader.ReadBool(offset); offset += 1;
         offset += 25; // Padding
 
         // ConfigVector
-        _currentData.configVector.cabinPosition = new Vector3(
-            _reader.ReadFloat(offset),
-            _reader.ReadFloat(offset + 4),
-            _reader.ReadFloat(offset + 8)
+        currentData.configVector.cabinPosition = new Vector3(
+            reader.ReadFloat(offset),
+            reader.ReadFloat(offset + 4),
+            reader.ReadFloat(offset + 8)
         ); offset += 12;
-        _currentData.configVector.headPosition = new Vector3(
-            _reader.ReadFloat(offset),
-            _reader.ReadFloat(offset + 4),
-            _reader.ReadFloat(offset + 8)
+        currentData.configVector.headPosition = new Vector3(
+            reader.ReadFloat(offset),
+            reader.ReadFloat(offset + 4),
+            reader.ReadFloat(offset + 8)
         ); offset += 12;
-        _currentData.configVector.truckHookPosition = new Vector3(
-            _reader.ReadFloat(offset),
-            _reader.ReadFloat(offset + 4),
-            _reader.ReadFloat(offset + 8)
+        currentData.configVector.truckHookPosition = new Vector3(
+            reader.ReadFloat(offset),
+            reader.ReadFloat(offset + 4),
+            reader.ReadFloat(offset + 8)
         ); offset += 12;
-        _currentData.configVector.truckWheelPositions = new Vector3[16];
-        float[] wheelX = _reader.ReadFloat(offset, 16); offset += 16 * 4;
-        float[] wheelY = _reader.ReadFloat(offset, 16); offset += 16 * 4;
-        float[] wheelZ = _reader.ReadFloat(offset, 16); offset += 16 * 4;
+        currentData.configVector.truckWheelPositions = new Vector3[16];
+        float[] wheelX = reader.ReadFloat(offset, 16); offset += 16 * 4;
+        float[] wheelY = reader.ReadFloat(offset, 16); offset += 16 * 4;
+        float[] wheelZ = reader.ReadFloat(offset, 16); offset += 16 * 4;
         for (int i = 0; i < 16; i++)
         {
-            _currentData.configVector.truckWheelPositions[i] = new Vector3(
+            currentData.configVector.truckWheelPositions[i] = new Vector3(
                 wheelX[i],
                 wheelY[i],
                 wheelZ[i]
@@ -400,142 +400,143 @@ public class GameTelemetry
         }
 
         // TruckVector
-        _currentData.truckVector.linearVelocityAcceleration = new Vector3(
-            _reader.ReadFloat(offset),
-            _reader.ReadFloat(offset + 4),
-            _reader.ReadFloat(offset + 8)
+        currentData.truckVector.linearVelocityAcceleration = new Vector3(
+            reader.ReadFloat(offset),
+            reader.ReadFloat(offset + 4),
+            reader.ReadFloat(offset + 8)
         ); offset += 12;
-        _currentData.truckVector.angularVelocityAcceleration = new Vector3(
-            _reader.ReadFloat(offset),
-            _reader.ReadFloat(offset + 4),
-            _reader.ReadFloat(offset + 8)
+        currentData.truckVector.angularVelocityAcceleration = new Vector3(
+            reader.ReadFloat(offset),
+            reader.ReadFloat(offset + 4),
+            reader.ReadFloat(offset + 8)
         ); offset += 12;
-        _currentData.truckVector.acceleration = new Vector3(
-            _reader.ReadFloat(offset),
-            _reader.ReadFloat(offset + 4),
-            _reader.ReadFloat(offset + 8)
+        currentData.truckVector.acceleration = new Vector3(
+            reader.ReadFloat(offset),
+            reader.ReadFloat(offset + 4),
+            reader.ReadFloat(offset + 8)
         ); offset += 12;
-        _currentData.truckVector.angularRotationAcceleration = new Vector3(
-            _reader.ReadFloat(offset),
-            _reader.ReadFloat(offset + 4),
-            _reader.ReadFloat(offset + 8)
+        currentData.truckVector.angularRotationAcceleration = new Vector3(
+            reader.ReadFloat(offset),
+            reader.ReadFloat(offset + 4),
+            reader.ReadFloat(offset + 8)
         ); offset += 12;
-        _currentData.truckVector.cabinAngularVelocity = new Vector3(
-            _reader.ReadFloat(offset),
-            _reader.ReadFloat(offset + 4),
-            _reader.ReadFloat(offset + 8)
+        currentData.truckVector.cabinAngularVelocity = new Vector3(
+            reader.ReadFloat(offset),
+            reader.ReadFloat(offset + 4),
+            reader.ReadFloat(offset + 8)
         ); offset += 12;
-        _currentData.truckVector.cabinAngularAcceleration = new Vector3(
-            _reader.ReadFloat(offset),
-            _reader.ReadFloat(offset + 4),
-            _reader.ReadFloat(offset + 8)
+        currentData.truckVector.cabinAngularAcceleration = new Vector3(
+            reader.ReadFloat(offset),
+            reader.ReadFloat(offset + 4),
+            reader.ReadFloat(offset + 8)
         ); offset += 12;
         offset += 60; // Padding
 
         // HeadPlacement
-        _currentData.headPlacement.cabinOffset = new Vector3(
-            _reader.ReadFloat(offset),
-            _reader.ReadFloat(offset + 4),
-            _reader.ReadFloat(offset + 8)
+        currentData.headPlacement.cabinOffset = new Vector3(
+            reader.ReadFloat(offset),
+            reader.ReadFloat(offset + 4),
+            reader.ReadFloat(offset + 8)
         ); offset += 12;
-        _currentData.headPlacement.cabinOffsetRotation = new Vector3(
-            _reader.ReadFloat(offset),
-            _reader.ReadFloat(offset + 4),
-            _reader.ReadFloat(offset + 8)
+        currentData.headPlacement.cabinOffsetRotation = new Vector3(
+            reader.ReadFloat(offset),
+            reader.ReadFloat(offset + 4),
+            reader.ReadFloat(offset + 8)
         ); offset += 12;
-        _currentData.headPlacement.headOffset = new Vector3(
-            _reader.ReadFloat(offset),
-            _reader.ReadFloat(offset + 4),
-            _reader.ReadFloat(offset + 8)
+        currentData.headPlacement.headOffset = new Vector3(
+            reader.ReadFloat(offset),
+            reader.ReadFloat(offset + 4),
+            reader.ReadFloat(offset + 8)
         ); offset += 12;
-        _currentData.headPlacement.headOffsetRotation = new Vector3(
-            _reader.ReadFloat(offset),
-            _reader.ReadFloat(offset + 4),
-            _reader.ReadFloat(offset + 8)
+        currentData.headPlacement.headOffsetRotation = new Vector3(
+            reader.ReadFloat(offset),
+            reader.ReadFloat(offset + 4),
+            reader.ReadFloat(offset + 8)
         ); offset += 12;
         offset += 152; // Padding
 
 
         // TruckPlacement
-        _currentData.truckPlacement.coordinate = new Vector3Double(
-            _reader.ReadDouble(offset),
-            _reader.ReadDouble(offset + 8),
-            _reader.ReadDouble(offset + 16)
+        currentData.truckPlacement.coordinate = new Vector3Double(
+            reader.ReadDouble(offset),
+            reader.ReadDouble(offset + 8),
+            reader.ReadDouble(offset + 16)
         ); offset += 24;
-        _currentData.truckPlacement.rotation = new Vector3Double(
-            _reader.ReadDouble(offset),
-            _reader.ReadDouble(offset + 8),
-            _reader.ReadDouble(offset + 16)
+        currentData.truckPlacement.rotation = new Vector3Double(
+            reader.ReadDouble(offset),
+            reader.ReadDouble(offset + 8),
+            reader.ReadDouble(offset + 16)
         ); offset += 24;
         offset += 52; // Padding
 
         // ConfigString
-        _currentData.configString.truckBrandId = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.configString.truckBrand = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.configString.truckId = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.configString.truckName = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.configString.cargoId = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.configString.cargo = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.configString.cityDstId = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.configString.cityDst = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.configString.compDstId = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.configString.compDst = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.configString.citySrcId = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.configString.citySrc = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.configString.compSrcId = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.configString.compSrc = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.configString.shifterType = _reader.ReadChar(offset, 16); offset += 16;
-        _currentData.configString.truckLicensePlate = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.configString.truckLicensePlateCountryId = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.configString.truckLicensePlateCountry = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.configString.jobMarket = _reader.ReadChar(offset, 32); offset += 32;
+        currentData.configString.truckBrandId = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.configString.truckBrand = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.configString.truckId = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.configString.truckName = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.configString.cargoId = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.configString.cargo = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.configString.cityDstId = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.configString.cityDst = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.configString.compDstId = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.configString.compDst = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.configString.citySrcId = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.configString.citySrc = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.configString.compSrcId = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.configString.compSrc = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.configString.shifterType = reader.ReadChar(offset, 16); offset += 16;
+        currentData.configString.truckLicensePlate = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.configString.truckLicensePlateCountryId = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.configString.truckLicensePlateCountry = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.configString.jobMarket = reader.ReadChar(offset, 32); offset += 32;
 
         // GameplayString
-        _currentData.gameplayString.fineOffence = _reader.ReadChar(offset, 32); offset += 32;
-        _currentData.gameplayString.ferrySourceName = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.gameplayString.ferryTargetName = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.gameplayString.ferrySourceId = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.gameplayString.ferryTargetId = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.gameplayString.trainSourceName = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.gameplayString.trainTargetName = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.gameplayString.trainSourceId = _reader.ReadChar(offset, stringSize); offset += stringSize;
-        _currentData.gameplayString.trainTargetId = _reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.gameplayString.fineOffence = reader.ReadChar(offset, 32); offset += 32;
+        currentData.gameplayString.ferrySourceName = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.gameplayString.ferryTargetName = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.gameplayString.ferrySourceId = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.gameplayString.ferryTargetId = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.gameplayString.trainSourceName = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.gameplayString.trainTargetName = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.gameplayString.trainSourceId = reader.ReadChar(offset, stringSize); offset += stringSize;
+        currentData.gameplayString.trainTargetId = reader.ReadChar(offset, stringSize); offset += stringSize;
         offset += 20; // Padding
 
         // ConfigLongLong
-        _currentData.configLongLong.jobIncome = _reader.ReadLongLong(offset); offset += 8;
+        currentData.configLongLong.jobIncome = reader.ReadLongLong(offset); offset += 8;
         offset += 192; // Padding
 
         // GameplayLongLong
-        _currentData.gameplayLongLong.jobCancelledPenalty = _reader.ReadLongLong(offset); offset += 8;
-        _currentData.gameplayLongLong.jobDeliveredRevenue = _reader.ReadLongLong(offset); offset += 8;
-        _currentData.gameplayLongLong.fineAmount = _reader.ReadLongLong(offset); offset += 8;
-        _currentData.gameplayLongLong.tollgatePayAmount = _reader.ReadLongLong(offset); offset += 8;
-        _currentData.gameplayLongLong.ferryPayAmount = _reader.ReadLongLong(offset); offset += 8;
-        _currentData.gameplayLongLong.trainPayAmount = _reader.ReadLongLong(offset); offset += 8;
+        currentData.gameplayLongLong.jobCancelledPenalty = reader.ReadLongLong(offset); offset += 8;
+        currentData.gameplayLongLong.jobDeliveredRevenue = reader.ReadLongLong(offset); offset += 8;
+        currentData.gameplayLongLong.fineAmount = reader.ReadLongLong(offset); offset += 8;
+        currentData.gameplayLongLong.tollgatePayAmount = reader.ReadLongLong(offset); offset += 8;
+        currentData.gameplayLongLong.ferryPayAmount = reader.ReadLongLong(offset); offset += 8;
+        currentData.gameplayLongLong.trainPayAmount = reader.ReadLongLong(offset); offset += 8;
         offset += 52;
 
         // SpecialBool
-        _currentData.specialBool.onJob = _reader.ReadBool(offset); offset += 1;
-        _currentData.specialBool.jobFinished = _reader.ReadBool(offset); offset += 1;
-        _currentData.specialBool.jobCancelled = _reader.ReadBool(offset); offset += 1;
-        _currentData.specialBool.jobDelivered = _reader.ReadBool(offset); offset += 1;
-        _currentData.specialBool.fined = _reader.ReadBool(offset); offset += 1;
-        _currentData.specialBool.tollgate = _reader.ReadBool(offset); offset += 1;
-        _currentData.specialBool.ferry = _reader.ReadBool(offset); offset += 1;
-        _currentData.specialBool.train = _reader.ReadBool(offset); offset += 1;
-        _currentData.specialBool.refuel = _reader.ReadBool(offset); offset += 1;
-        _currentData.specialBool.refuelPaid = _reader.ReadBool(offset); offset += 1;
+        currentData.specialBool.onJob = reader.ReadBool(offset); offset += 1;
+        currentData.specialBool.jobFinished = reader.ReadBool(offset); offset += 1;
+        currentData.specialBool.jobCancelled = reader.ReadBool(offset); offset += 1;
+        currentData.specialBool.jobDelivered = reader.ReadBool(offset); offset += 1;
+        currentData.specialBool.fined = reader.ReadBool(offset); offset += 1;
+        currentData.specialBool.tollgate = reader.ReadBool(offset); offset += 1;
+        currentData.specialBool.ferry = reader.ReadBool(offset); offset += 1;
+        currentData.specialBool.train = reader.ReadBool(offset); offset += 1;
+        currentData.specialBool.refuel = reader.ReadBool(offset); offset += 1;
+        currentData.specialBool.refuelPaid = reader.ReadBool(offset); offset += 1;
         offset += 90;
 
         // Publish to the event bus
-        Events.Current.Publish<GameTelemetryData>(EventString, _currentData);
+        Events.Current.Publish<GameTelemetryData>(EventString, currentData);
+        TelemetryEvents.Current.UpdateEvents(currentData);
 
         // Periodically reopen the mmap to detect game restarts.
-        if (_sinceReconnect.Elapsed.TotalSeconds > 1.0)
+        if (sinceReconnect.Elapsed.TotalSeconds > 1.0)
         {
             CloseMemory();
-            _sinceReconnect.Restart();
+            sinceReconnect.Restart();
         }
     }
 

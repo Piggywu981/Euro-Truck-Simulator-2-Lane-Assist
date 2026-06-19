@@ -5,6 +5,7 @@ using ETS2LA.Game.Telemetry;
 using ETS2LA.Settings.Global;
 using ETS2LA.Game;
 using ETS2LA.Logging;
+using ETS2LA.Notifications;
 
 namespace ETS2LA.State;
 
@@ -36,6 +37,7 @@ public class ApplicationState
     {
 
         Events.Current.Subscribe<GameTelemetryData>(GameTelemetry.Current.EventString, HandleTelemetryUpdate);
+        Events.Current.Subscribe<float>("TelemetryEvents.SpeedLimitChanged", HandleSpeedLimitChanged);
 
         ControlsBackend.Current.On(DefaultControls.SET.Id, HandleSet);
         ControlsBackend.Current.On(DefaultControls.Increase.Id, HandleIncrease);
@@ -178,6 +180,21 @@ public class ApplicationState
         }
     }
 
+    private void HandleSpeedLimitChanged(float newSpeedLimit)
+    {
+        if (DesiredSpeed == 0)
+            return;
+
+        DesiredSpeed = newSpeedLimit;
+        RoundToNearestUnit();
+        NotificationHandler.Current.SendNotification(new Notification
+        {
+            Id = "ApplicationState.SpeedLimitChanged",
+            Title = "Speed limit changed",
+            Content = $"New limit {UnitConversions.FromScientificUnits(UnitType.Speed, newSpeedLimit, DisplayUnits):0} {DisplayUnits.ToString().Substring(0, 1)}"
+        });
+    }
+
     private void HandleSet(object sender, ControlChangeEventArgs e)
     {
         bool b = (bool)e.NewValue;
@@ -186,6 +203,7 @@ public class ApplicationState
         if (PauseLongitudinalAssist)
         {
             PauseLongitudinalAssist = false;
+            PauseSteeringAssist = false;
             if (assistanceSettings.SetSpeedBehaviourOption == SetSpeedBehaviour.CurrentSpeed)
                 DesiredSpeed = latestTelemetryData.truckFloat.speed;
             else if (assistanceSettings.SetSpeedBehaviourOption == SetSpeedBehaviour.SpeedLimit)
@@ -196,8 +214,7 @@ public class ApplicationState
         else
         {
             PauseLongitudinalAssist = true;
-            PauseSteeringAssist = true; // we also pause steering as it doesn't really
-                                        // make sense to have it active when longitudinal assist is paused.
+            PauseSteeringAssist = true;
         }
     }
 
@@ -210,6 +227,12 @@ public class ApplicationState
         if (PauseLongitudinalAssist)
         {
             PauseLongitudinalAssist = false;
+            // Reset speed if it's too low compared to current speed
+            // to avoid an "AEB" like event.
+            if (latestTelemetryData.truckFloat.speed > DesiredSpeed + 5 / 3.6f)
+            {
+                DesiredSpeed = latestTelemetryData.truckFloat.speed;
+            }
             return;
         }
 
@@ -249,6 +272,12 @@ public class ApplicationState
         if (PauseLongitudinalAssist)
         {
             PauseLongitudinalAssist = false;
+            // Reset speed if it's too low compared to current speed
+            // to avoid an "AEB" like event.
+            if (latestTelemetryData.truckFloat.speed > DesiredSpeed + 5 / 3.6f)
+            {
+                DesiredSpeed = latestTelemetryData.truckFloat.speed;
+            }
             return;
         }
 

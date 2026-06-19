@@ -53,7 +53,7 @@ public class AssistanceSettings
     public AccelerationResponseOption AccelerationResponse { get; set; } = AccelerationResponseOption.Normal;
     public SteeringSensitivityOption SteeringSensitivity { get; set; } = SteeringSensitivityOption.Normal;
     public FollowingDistanceOption FollowingDistance { get; set; } = FollowingDistanceOption.Normal;
-    public SetSpeedBehaviour SetSpeedBehaviourOption { get; set; } = SetSpeedBehaviour.CurrentSpeed;
+    public SetSpeedBehaviour SetSpeedBehaviourOption { get; set; } = SetSpeedBehaviour.SpeedLimit;
     public SpeedLimitWarning SpeedLimitWarningOption { get; set; } = SpeedLimitWarning.Visual;
     public CollisionAvoidance CollisionAvoidanceOption { get; set; } = CollisionAvoidance.Early;
 

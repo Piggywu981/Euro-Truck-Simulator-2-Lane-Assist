@@ -1,12 +1,10 @@
-### ETS2LA C# 3.4.0
-- Move `ETS2LA.Telemetry` to `ETS2LA.Game.Telemetry`, then replace `ETS2LA.Telemetry` with our anonymous telemetry code.
-- Update to latest `TruckLib`. Support for game version 1.60.
-- Added support for installing SDKs via the settings. This includes 1.60 SDKs for both Windows and Linux.
-  - There are some usability problems on Linux, it does work though. Please read the text on the page for details.
-- **Drk** - Optimize memory maps in `ETS2LA.Game.SDK` and `ETS2LA.Game.Telemetry` to improve performance.
-- **Drk** - Fix `NullReferenceException` in `ETS2LA.Overlay.AR`.
-- **Drk** - Resolve Steam game installs using AppID instead of game name in `ETS2LA.Game`.
-- **Drk** - Fix `ETS2LA.Audio` memory leak and broken loop condition.
+### ETS2LA C# 3.4.3
+- Implement `ETS2LA.Game.Telemetry` events. These can be added to as we need more events from the telemetry data.
+- `SET` will now also unpause steering assist in addition to ACC. You can unpause just steering using the `ASSIST` key.
+- `INCREASE` / `DECREASE` will now set the target speed to the current speed when unpausing, if the current speed is over 5kph more than the target. This avoids an AEB event after resuming ACC.
+- `SET` behaviour is now `SpeedLimit` by default. All existing users' settings won't be changed.
+- `ApplicationState` now automatically follows speed limits. This was waiting for telemetry events to be done.
+- `core-plugins` update, check Discord for latest .DLLs.
 
 ---
 <!-- Content inside ETS2LA will be cutoff at the line above, do not place lines inside the changelog. -->
@@ -30,4 +28,3 @@ Press **_Assets_** below to download the installer.</sub>
 | ----------------- | ------------------------- |
 | Windows           | `ETS2LA-win-*.msi`        |
 | Linux             | `ETS2LA-linux-*.AppImage` |
-| MacOS             | `ETS2LA-macos-*.pkg`      |

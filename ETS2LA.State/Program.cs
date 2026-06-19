@@ -350,7 +350,6 @@ public class ApplicationState
                 
                 if(install.Type == RunningGameType)
                 {
-                    install.Version = RunningGameVersion;
                     parsingTask = Task.Run(async () =>
                     {
                         bool success = install.Parse();

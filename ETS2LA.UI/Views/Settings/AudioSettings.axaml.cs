@@ -40,7 +40,7 @@ public partial class AudioSettings : UserControl
             _audioHandler.Queue(volumeSound, overrideCurrent: true);
         }
 
-        await Task.Delay(1500);
+        await Task.Delay(750);
         _soundPlaying = false;
     }
 }

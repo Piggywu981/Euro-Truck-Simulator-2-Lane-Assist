@@ -48,7 +48,7 @@ public partial class DashboardView : UserControl
 
     public void OpenGitHub(object? sender, RoutedEventArgs e)
     {
-        OpenLink("https://ets2la.com/github");
+        OpenLink("https://ets2la.com/repo");
     }
 
     public void OpenDiscord(object? sender, RoutedEventArgs e)

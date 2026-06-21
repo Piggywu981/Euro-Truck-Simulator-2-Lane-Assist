@@ -34,10 +34,10 @@ public partial class AudioSettings : UserControl
 
         _soundPlaying = true;
 
-        var engageSound = Path.Combine(AppContext.BaseDirectory, "Assets", "Sounds", "engage.mp3");
-        if (File.Exists(engageSound))
+        var volumeSound = Path.Combine(AppContext.BaseDirectory, "Assets", "Sounds", "volume.mp3");
+        if (File.Exists(volumeSound))
         {
-            _audioHandler.Queue(engageSound, overrideCurrent: true);
+            _audioHandler.Queue(volumeSound, overrideCurrent: true);
         }
 
         await Task.Delay(1500);

@@ -1,10 +1,7 @@
-### ETS2LA C# 3.4.3
-- Implement `ETS2LA.Game.Telemetry` events. These can be added to as we need more events from the telemetry data.
-- `SET` will now also unpause steering assist in addition to ACC. You can unpause just steering using the `ASSIST` key.
-- `INCREASE` / `DECREASE` will now set the target speed to the current speed when unpausing, if the current speed is over 5kph more than the target. This avoids an AEB event after resuming ACC.
-- `SET` behaviour is now `SpeedLimit` by default. All existing users' settings won't be changed.
-- `ApplicationState` now automatically follows speed limits. This was waiting for telemetry events to be done.
-- `core-plugins` update, check Discord for latest .DLLs.
+### ETS2LA C# 3.4.4
+- Fix issue where `ETS2LA.Game.Output` could get stuck in an infinite `Thread.Sleep` causing no controls to be sent to the game.
+- **Airskye** - Add sound effect when audio volume slider is dragged.
+- **nulijiazaizhong** - Mirror to CNB on commit push for CN users.
 
 ---
 <!-- Content inside ETS2LA will be cutoff at the line above, do not place lines inside the changelog. -->

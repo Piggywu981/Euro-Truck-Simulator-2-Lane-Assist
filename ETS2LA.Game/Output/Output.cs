@@ -1,3 +1,4 @@
+using ETS2LA.Logging;
 using ETS2LA.Backend.Events;
 
 using System.Diagnostics;
@@ -77,7 +78,6 @@ public class GameOutput
         float secondsSinceLastTry = (float)SinceTriedMemoryAccess.Elapsed.TotalSeconds;
         if (secondsSinceLastTry < 5f)
             return;
-
 
         try
         {
@@ -233,7 +233,7 @@ public class GameOutput
         while(true)
         {
             float timeLeft = TickRate - (float)tickTimer.Elapsed.TotalSeconds;
-            if (timeLeft > 0)
+            if (timeLeft > 0 && timeLeft < TickRate)
             {   
                 Thread.Sleep((int)(timeLeft * 1000));
                 continue;

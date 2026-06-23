@@ -49,7 +49,7 @@ jobs:
       - name: Install .NET 10
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: "10.0.x"
 
       - name: Build
         run: |
@@ -61,9 +61,38 @@ jobs:
       - name: Pack & Upload Velopack
         shell: pwsh
         run: |
-          $vpk = Join-Path $env:USERPROFILE '.dotnet\tools\vpk.exe'
-              & $vpk pack --channel "win-beta" --packId ETS2LA --packVersion ${{ needs.check_version.outputs.version }} --packDir .\publish --mainExe ETS2LA.exe --msi --instLocation PerUser -i .\ETS2LA.UI\Assets\logo.ico --instLicense .\LICENSE.txt --msiBanner .\Assets\Installer\welcome.bmp --msiLogo .\Assets\Installer\banner.bmp -f net10-x64-desktop --packTitle "ETS2LA" --releaseNotes .\ETS2LA\ReleaseNotes.md
-              & $vpk upload github --channel "win-beta" --pre --merge --repoUrl "https://github.com/${{ github.repository }}" --publish --releaseName "ETS2LA C# v${{ needs.check_version.outputs.version }}" --tag "v${{ needs.check_version.outputs.version }}" --token ${{ secrets.GITHUB_TOKEN }} --targetCommitish ${{ github.sha }}
+          $vpk = Join-Path $env:USERPROFILE ".dotnet\tools\vpk.exe"
+          & $vpk pack `
+            --channel "win-beta" `
+            --packId ETS2LA `
+            --packVersion ${{ needs.check_version.outputs.version }} `
+            --packDir .\publish `
+            --mainExe ETS2LA.exe `
+            --msi `
+            --instLocation PerUser `
+            -i .\ETS2LA.UI\Assets\logo.ico `
+            --instLicense .\LICENSE.txt `
+            --msiBanner .\Assets\Installer\welcome.bmp `
+            --msiLogo .\Assets\Installer\banner.bmp `
+            -f net10-x64-desktop `
+            --packTitle "ETS2LA" `
+            --releaseNotes .\ETS2LA\ReleaseNotes.md
+          & $vpk upload github `
+            --channel "win-beta" `
+            --pre `
+            --merge `
+            --repoUrl "https://github.com/${{ github.repository }}" `
+            --publish `
+            --releaseName "ETS2LA C# v${{ needs.check_version.outputs.version }}" `
+            --tag "v${{ needs.check_version.outputs.version }}" `
+            --token ${{ secrets.GITHUB_TOKEN }} `
+            --targetCommitish ${{ github.sha }}
+
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ETS2LA-Windows
+          path: Releases/**
 
   pack-linux:
     name: Pack & Upload Velopack (Linux)
@@ -79,7 +108,7 @@ jobs:
       - name: Install .NET 10
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: "10.0.x"
 
       - name: Build
         run: |
@@ -92,5 +121,90 @@ jobs:
       - name: Pack & Upload Velopack
         run: |
           VPK="$HOME/.dotnet/tools/vpk"
-          $VPK pack --channel "linux-beta" --packId ETS2LA --packVersion ${{ needs.check_version.outputs.version }} --packDir ./publish --mainExe ETS2LA --icon ./ETS2LA.UI/Assets/logo.ico --packTitle "ETS2LA" --releaseNotes ./ETS2LA/ReleaseNotes.md
-          $VPK upload github --channel "linux-beta" --pre --merge --repoUrl "https://github.com/${{ github.repository }}" --publish --releaseName "ETS2LA C# v${{ needs.check_version.outputs.version }}" --tag "v${{ needs.check_version.outputs.version }}" --token ${{ secrets.GITHUB_TOKEN }} --targetCommitish ${{ github.sha }}
+          $VPK pack \
+            --channel "linux-beta" \
+            --packId ETS2LA \
+            --packVersion ${{ needs.check_version.outputs.version }} \
+            --packDir ./publish \
+            --mainExe ETS2LA \
+            --icon ./ETS2LA.UI/Assets/logo.ico \
+            --packTitle "ETS2LA" \
+            --releaseNotes ./ETS2LA/ReleaseNotes.md
+          $VPK upload github \
+            --channel "linux-beta" \
+            --pre \
+            --merge \
+            --repoUrl "https://github.com/${{ github.repository }}" \
+            --publish \
+            --releaseName "ETS2LA C# v${{ needs.check_version.outputs.version }}" \
+            --tag "v${{ needs.check_version.outputs.version }}" \
+            --token ${{ secrets.GITHUB_TOKEN }} \
+            --targetCommitish ${{ github.sha }}
+
+      - name: Upload Linux Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ETS2LA-Linux
+          path: Releases/**
+
+  release-cnb:
+    name: Upload CNB Release Assets
+    needs:
+      - check_version
+      - pack-windows
+      - pack-linux
+    if: needs.check_version.outputs.should_publish == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Download Artifacts
+        id: download-artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Push CNB
+        id: push-cnb
+        run: |
+          git fetch origin "refs/tags/v${{ needs.check_version.outputs.version }}:refs/tags/v${{ needs.check_version.outputs.version }}"
+          git remote add cnb https://${{ secrets.CNB_USERNAME }}:${{ secrets.CNB_TOKEN }}@cnb.cool/ETS2LA-CN/Euro-Truck-Simulator-2-Lane-Assist.git
+          git push cnb rewrite
+          git push cnb "refs/tags/v${{ needs.check_version.outputs.version }}"
+
+      - name: Upload CNB Assets
+        id: upload-cnb-assets
+        run: |
+          for i in {1..20}; do
+            stop_marker="cnb-attachments-output-$RANDOM-$RANDOM"
+            echo "::stop-commands::$stop_marker"
+
+            set +e
+            docker run --rm \
+              -e CNB_TOKEN="${{ secrets.CNB_TOKEN }}" \
+              -e CNB_API_ENDPOINT="https://api.cnb.cool" \
+              -e CNB_WEB_ENDPOINT="https://cnb.cool" \
+              -e CNB_REPO_SLUG="ETS2LA-CN/Euro-Truck-Simulator-2-Lane-Assist" \
+              -e PLUGIN_TAG="v${{ needs.check_version.outputs.version }}" \
+              -e PLUGIN_ATTACHMENTS="artifacts/**/*" \
+              -v ${{ github.workspace }}:/work \
+              -w /work \
+              cnbcool/attachments:latest
+            status=$?
+            set -e
+
+            echo "::$stop_marker::"
+
+            if [ "$status" -eq 0 ]; then
+              exit 0
+            fi
+
+            echo "CNB release is not ready yet, retrying in 15 seconds... ($i/20)"
+            sleep 15
+          done
+
+          echo "Failed to upload CNB assets after waiting for the CNB release."
+          exit 1

@@ -17,6 +17,7 @@ public class ARRenderer
     private List<ARRenderCallback> renderCallbacks = new();
     private Matrix4x4 thisFrameProjection;
     private Matrix4x4 thisFrameView;
+    private Matrix4x4 thisFrameViewProjection;
     private int thisFrameOffsetX = 0;
     private int thisFrameOffsetZ = 0;
     private int thisFrameWidth = 0;
@@ -76,6 +77,7 @@ public class ARRenderer
     {
         thisFrameProjection = default;
         thisFrameView = default;
+        thisFrameViewProjection = default;
         GetViewMatrix();
 
         thisFrameWidth = (int)OverlayHandler.Current.OverlayWidth;
@@ -180,10 +182,10 @@ public class ARRenderer
     /// <returns>Screen coordinate if the world position is visible, otherwise null.</returns>
     public Vector2? WorldToScreen(Vector3 worldPos, int destinationWidth, int destinationHeight)
     {
-        Matrix4x4 viewMatrix = GetViewMatrix();
-        Matrix4x4 projectionMatrix = GetProjectionMatrix();
+        if (thisFrameViewProjection == default)
+            thisFrameViewProjection = GetViewMatrix() * GetProjectionMatrix();
 
-        Vector4 clipSpacePos = Vector4.Transform(new Vector4(worldPos, 1.0f), viewMatrix * projectionMatrix);
+        Vector4 clipSpacePos = Vector4.Transform(new Vector4(worldPos, 1.0f), thisFrameViewProjection);
         if (clipSpacePos.W <= 0.1f) return null; // behind the camera
 
         // perspective divide to normalize coordinates

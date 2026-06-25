@@ -12,6 +12,10 @@ namespace ETS2LA.Backend.Updates;
 // https://docs.velopack.io/integrating/overview#configuring-updates
 public class Updater
 {
+    private const string GitHubSourceName = "GitHub";
+    private const string CnbSourceName = "CNB";
+    private const string DistributionSourceFile = "Assets/DistributionSource.txt";
+
     private static readonly Lazy<Updater> _instance = new(() => new Updater());
     public static Updater Current => _instance.Value;
 
@@ -21,19 +25,15 @@ public class Updater
     private UpdateInfo? _latestUpdateInfo;
     public List<UpdaterSource> AvailableSources => new()
     {
-        new UpdaterSource(new GithubSource("https://github.com/ETS2LA/Euro-Truck-Simulator-2-Lane-Assist", null, true), "GitHub")
+        new UpdaterSource(new GithubSource("https://github.com/ETS2LA/Euro-Truck-Simulator-2-Lane-Assist", null, true), GitHubSourceName),
+        new UpdaterSource(new SimpleWebSource("https://cnb.cool/ETS2LA-CN/Euro-Truck-Simulator-2-Lane-Assist/-/releases/latest/"), CnbSourceName)
     };
 
     public Updater()
     {
         _settingsHandler = new SettingsHandler();
         _settings = _settingsHandler.Load<UpdaterSettings>("Updater.json");
-        UpdateManager = new UpdateManager(GetSelectedSource().source, new UpdateOptions
-        {
-            #if DEBUG
-            ExplicitChannel = "win-beta"
-            #endif
-        });
+        UpdateManager = CreateUpdateManager(GetSelectedSource().source);
     }
 
     public UpdateInfo? CheckForUpdates()
@@ -94,20 +94,56 @@ public class Updater
             return;
         }
         _settings.SelectedSource = sourceName;
+        _settings.IsSourceSelectedByUser = true;
         _settingsHandler.Save("Updater.json", _settings);
-        UpdateManager = new UpdateManager(source.source);
+        UpdateManager = CreateUpdateManager(source.source);
+        _latestUpdateInfo = null;
         Logger.Info($"Changed update source to '{sourceName}'.");
     }
 
     public UpdaterSource GetSelectedSource()
     {
-        var source = AvailableSources.FirstOrDefault(s => s.sourceName == _settings.SelectedSource);
+        var selectedSource = _settings.IsSourceSelectedByUser && !string.IsNullOrWhiteSpace(_settings.SelectedSource)
+            ? _settings.SelectedSource
+            : GetBundledDefaultSourceName();
+
+        var source = AvailableSources.FirstOrDefault(s => s.sourceName == selectedSource);
         if (source == null)
         {
-            Logger.Warn($"Selected update source '{_settings.SelectedSource}' not found, defaulting to first available source.");
+            Logger.Warn($"Selected update source '{selectedSource}' not found, defaulting to first available source.");
             source = AvailableSources[0];
             Logger.Warn($"> '{source.sourceName}'.");
         }
         return source;
+    }
+
+    private UpdateManager CreateUpdateManager(IUpdateSource source)
+    {
+        return new UpdateManager(source, new UpdateOptions
+        {
+#if DEBUG
+            ExplicitChannel = "win-beta"
+#endif
+        });
+    }
+
+    private string GetBundledDefaultSourceName()
+    {
+        var sourceFile = Path.Combine(AppContext.BaseDirectory, DistributionSourceFile);
+        if (!File.Exists(sourceFile))
+        {
+            return GitHubSourceName;
+        }
+
+        try
+        {
+            var sourceName = File.ReadAllText(sourceFile).Trim();
+            return string.IsNullOrWhiteSpace(sourceName) ? GitHubSourceName : sourceName;
+        }
+        catch (Exception ex)
+        {
+            Logger.Warn($"Failed to read bundled update source marker: {ex.Message}");
+            return GitHubSourceName;
+        }
     }
 }

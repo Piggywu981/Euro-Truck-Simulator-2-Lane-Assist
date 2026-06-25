@@ -62,6 +62,8 @@ jobs:
         shell: pwsh
         run: |
           $vpk = Join-Path $env:USERPROFILE ".dotnet\tools\vpk.exe"
+          New-Item -ItemType Directory -Force -Path .\publish\Assets | Out-Null
+          Set-Content -Path .\publish\Assets\DistributionSource.txt -Value "GitHub" -NoNewline
           & $vpk pack `
             --channel "win-beta" `
             --packId ETS2LA `
@@ -88,10 +90,28 @@ jobs:
             --token ${{ secrets.GITHUB_TOKEN }} `
             --targetCommitish ${{ github.sha }}
 
-      - name: Upload Windows Artifact
+          Remove-Item -Path .\Releases -Recurse -Force
+          Set-Content -Path .\publish\Assets\DistributionSource.txt -Value "CNB" -NoNewline
+          & $vpk pack `
+            --channel "win-beta" `
+            --packId ETS2LA `
+            --packVersion ${{ needs.check_version.outputs.version }} `
+            --packDir .\publish `
+            --mainExe ETS2LA.exe `
+            --msi `
+            --instLocation PerUser `
+            -i .\ETS2LA.UI\Assets\logo.ico `
+            --instLicense .\LICENSE.txt `
+            --msiBanner .\Assets\Installer\welcome.bmp `
+            --msiLogo .\Assets\Installer\banner.bmp `
+            -f net10-x64-desktop `
+            --packTitle "ETS2LA" `
+            --releaseNotes .\ETS2LA\ReleaseNotes.md
+
+      - name: Upload Windows CNB Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ETS2LA-Windows
+          name: ETS2LA-Windows-CNB
           path: Releases/**
 
   pack-linux:
@@ -121,6 +141,8 @@ jobs:
       - name: Pack & Upload Velopack
         run: |
           VPK="$HOME/.dotnet/tools/vpk"
+          mkdir -p ./publish/Assets
+          printf "GitHub" > ./publish/Assets/DistributionSource.txt
           $VPK pack \
             --channel "linux-beta" \
             --packId ETS2LA \
@@ -141,10 +163,22 @@ jobs:
             --token ${{ secrets.GITHUB_TOKEN }} \
             --targetCommitish ${{ github.sha }}
 
-      - name: Upload Linux Artifact
+          rm -rf ./Releases
+          printf "CNB" > ./publish/Assets/DistributionSource.txt
+          $VPK pack \
+            --channel "linux-beta" \
+            --packId ETS2LA \
+            --packVersion ${{ needs.check_version.outputs.version }} \
+            --packDir ./publish \
+            --mainExe ETS2LA \
+            --icon ./ETS2LA.UI/Assets/logo.ico \
+            --packTitle "ETS2LA" \
+            --releaseNotes ./ETS2LA/ReleaseNotes.md
+
+      - name: Upload Linux CNB Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ETS2LA-Linux
+          name: ETS2LA-Linux-CNB
           path: Releases/**
 
   release-cnb:
@@ -160,6 +194,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+          fetch-depth: 0
 
       - name: Download Artifacts
         id: download-artifacts

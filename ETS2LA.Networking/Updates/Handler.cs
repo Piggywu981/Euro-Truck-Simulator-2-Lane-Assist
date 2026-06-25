@@ -39,8 +39,8 @@ public class Updater
 
     public Updater()
     {
-        _settingsHandler = new SettingsHandler();
-        _settings = _settingsHandler.Load<UpdaterSettings>("Updater.json");
+        settingsHandler = new SettingsHandler();
+        settings = settingsHandler.Load<UpdaterSettings>("Updater.json");
         UpdateManager = CreateUpdateManager(GetSelectedSource().source);
     }
 
@@ -101,18 +101,18 @@ public class Updater
             Logger.Error($"Tried to change update source to '{sourceName}', but it was not found among available sources.");
             return;
         }
-        _settings.SelectedSource = sourceName;
-        _settings.IsSourceSelectedByUser = true;
-        _settingsHandler.Save("Updater.json", _settings);
+        settings.SelectedSource = sourceName;
+        settings.IsSourceSelectedByUser = true;
+        settingsHandler.Save("Updater.json", settings);
         UpdateManager = CreateUpdateManager(source.source);
-        _latestUpdateInfo = null;
+        latestUpdateInfo = null;
         Logger.Info($"Changed update source to '{sourceName}'.");
     }
 
     public UpdaterSource GetSelectedSource()
     {
-        var selectedSource = _settings.IsSourceSelectedByUser && !string.IsNullOrWhiteSpace(_settings.SelectedSource)
-            ? _settings.SelectedSource
+        var selectedSource = settings.IsSourceSelectedByUser && !string.IsNullOrWhiteSpace(settings.SelectedSource)
+            ? settings.SelectedSource
             : GetBundledDefaultSourceName();
 
         var source = AvailableSources.FirstOrDefault(s => s.sourceName == selectedSource);

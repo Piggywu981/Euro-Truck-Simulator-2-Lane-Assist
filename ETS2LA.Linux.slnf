@@ -13,8 +13,7 @@
       "ETS2LA.Controls/ETS2LA.Controls.csproj",
       "ETS2LA.Audio/ETS2LA.Audio.csproj",
       "TruckLib/TruckLib/TruckLib.csproj",
-      "ETS2LA.Overlay/ETS2LA.Overlay.csproj",
-      "Plugins/InternalVisualization/InternalVisualization.csproj"
+      "ETS2LA.Overlay/ETS2LA.Overlay.csproj"
     ]
   }
 }

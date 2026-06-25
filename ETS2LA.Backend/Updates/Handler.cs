@@ -12,8 +12,9 @@ namespace ETS2LA.Backend.Updates;
 // https://docs.velopack.io/integrating/overview#configuring-updates
 public class Updater
 {
-    private const string GitHubSourceName = "GitHub";
-    private const string CnbSourceName = "CNB";
+    private const string FallbackSource = "GitHub";
+    // This is used to determine the default source for updates. It's set at build time 
+    // and bundled with the application. If it's missing we fallback to the FallbackSource.
     private const string DistributionSourceFile = "Assets/DistributionSource.txt";
 
     private static readonly Lazy<Updater> _instance = new(() => new Updater());
@@ -25,8 +26,14 @@ public class Updater
     private UpdateInfo? _latestUpdateInfo;
     public List<UpdaterSource> AvailableSources => new()
     {
-        new UpdaterSource(new GithubSource("https://github.com/ETS2LA/Euro-Truck-Simulator-2-Lane-Assist", null, true), GitHubSourceName),
-        new UpdaterSource(new SimpleWebSource("https://cnb.cool/ETS2LA-CN/Euro-Truck-Simulator-2-Lane-Assist/-/releases/latest/"), CnbSourceName)
+        new UpdaterSource(
+            new GithubSource("https://github.com/ETS2LA/Euro-Truck-Simulator-2-Lane-Assist", null, true), 
+            "GitHub"
+        ),
+        new UpdaterSource(
+            new SimpleWebSource("https://cnb.cool/ETS2LA-CN/Euro-Truck-Simulator-2-Lane-Assist/-/releases/latest/"), 
+            "CNB"
+        )
     };
 
     public Updater()
@@ -121,9 +128,9 @@ public class Updater
     {
         return new UpdateManager(source, new UpdateOptions
         {
-#if DEBUG
-            ExplicitChannel = "win-beta"
-#endif
+            #if DEBUG
+                ExplicitChannel = "win-beta"
+            #endif
         });
     }
 
@@ -132,18 +139,18 @@ public class Updater
         var sourceFile = Path.Combine(AppContext.BaseDirectory, DistributionSourceFile);
         if (!File.Exists(sourceFile))
         {
-            return GitHubSourceName;
+            return FallbackSource;
         }
 
         try
         {
             var sourceName = File.ReadAllText(sourceFile).Trim();
-            return string.IsNullOrWhiteSpace(sourceName) ? GitHubSourceName : sourceName;
+            return string.IsNullOrWhiteSpace(sourceName) ? FallbackSource : sourceName;
         }
         catch (Exception ex)
         {
             Logger.Warn($"Failed to read bundled update source marker: {ex.Message}");
-            return GitHubSourceName;
+            return FallbackSource;
         }
     }
 }

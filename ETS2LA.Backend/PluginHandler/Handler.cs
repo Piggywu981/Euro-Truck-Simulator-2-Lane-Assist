@@ -35,13 +35,23 @@ namespace ETS2LA.Backend
         public Action<IPlugin>? PluginEnabled;
         public Action<IPlugin>? PluginDisabled;
         public bool loading = false;
-        
+
+        # if WINDOWS
+            // On Windows we just use the already existing AppData folder that
+            // velopack creates during installs. (the current root, so no changes needed)
+            public string PluginRootPath = "";
+        # else
+            // This is ~/.local/share/ETS2LA/Plugins
+            public string PluginRootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ETS2LA");
+        # endif
+
         public string[] DiscoverDlls(string path)
         {
+            path = Path.Combine(PluginRootPath, path);
             if (!Directory.Exists(path))
             {
-                Logger.Warn($"Dll search directory [gray]{path}[/] does not exist.");
-                return Array.Empty<string>();
+                Directory.CreateDirectory(path);
+                Logger.Info($"Created plugin directory: [gray]{path}[/]");
             }
 
             try

@@ -1,6 +1,6 @@
 ﻿using ETS2LA.Networking.Settings;
 using ETS2LA.Networking.Plugins;
-
+using ETS2LA.Networking.Updates;
 namespace ETS2LA.Networking;
 
 public class NetworkingClient
@@ -18,10 +18,15 @@ public class NetworkingClient
 
     public NetworkingClient()
     {
-        // TODO: Check if we're in China and use the China server by default if so.
         if (NetworkingSettings.Current.CurrentApiServer == null)
         {
-            NetworkingSettings.Current.CurrentApiServer = apiServers[0];
+            // Updater sets it's source based on the download location. We can assume that
+            // if the download was from CNB, then we should use the China server.
+            if (Updater.Current.GetSelectedSource().sourceName == "CNB")
+                NetworkingSettings.Current.CurrentApiServer = apiServers.FirstOrDefault(s => s.Name == "China", apiServers[0]);
+            else
+                NetworkingSettings.Current.CurrentApiServer = apiServers.FirstOrDefault(s => s.Name == "Global", apiServers[0]);
+
             NetworkingSettings.Current.Save();
         }
 

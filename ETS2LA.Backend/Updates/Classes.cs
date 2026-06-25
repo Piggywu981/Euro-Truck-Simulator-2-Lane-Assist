@@ -18,5 +18,6 @@ public class UpdaterSource
 [Serializable]
 public class UpdaterSettings
 {
-    public string SelectedSource { get; set; } = "GitHub";
+    public string? SelectedSource { get; set; }
+    public bool IsSourceSelectedByUser { get; set; }
 }

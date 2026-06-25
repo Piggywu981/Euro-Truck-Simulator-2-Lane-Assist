@@ -3,7 +3,7 @@ using ETS2LA.Settings;
 using Velopack;
 using Velopack.Sources;
 
-namespace ETS2LA.Backend.Updates;
+namespace ETS2LA.Networking.Updates;
 
 // NOTE FOR FUTURE DEV:
 // ETS2LA itself is only "officially" hosted on GitHub, however if you want to support a 3rd party host
@@ -16,9 +16,10 @@ public class Updater
     public static Updater Current => _instance.Value;
 
     public UpdateManager UpdateManager;
-    private UpdaterSettings _settings = new();
-    private SettingsHandler _settingsHandler;
-    private UpdateInfo? _latestUpdateInfo;
+    private UpdaterSettings settings = new();
+    private SettingsHandler settingsHandler;
+    private UpdateInfo? latestUpdateInfo;
+    
     public List<UpdaterSource> AvailableSources => new()
     {
         new UpdaterSource(new GithubSource("https://github.com/ETS2LA/Euro-Truck-Simulator-2-Lane-Assist", null, true), "GitHub")
@@ -26,22 +27,20 @@ public class Updater
 
     public Updater()
     {
-        _settingsHandler = new SettingsHandler();
-        _settings = _settingsHandler.Load<UpdaterSettings>("Updater.json");
+        settingsHandler = new SettingsHandler();
+        settings = settingsHandler.Load<UpdaterSettings>("Updater.json");
         UpdateManager = new UpdateManager(GetSelectedSource().source, new UpdateOptions
         {
-            #if DEBUG
-            ExplicitChannel = "win-beta"
-            #endif
+            // ExplicitChannel = "stable" // or beta or etc...
         });
     }
 
     public UpdateInfo? CheckForUpdates()
     {
-        if (_latestUpdateInfo != null)
+        if (latestUpdateInfo != null)
         {
             Logger.Info("Update check skipped, using already cached result.");
-            return _latestUpdateInfo;
+            return latestUpdateInfo;
         }
 
         try
@@ -49,7 +48,7 @@ public class Updater
             var updateInfo = UpdateManager.CheckForUpdates();
             if (updateInfo != null) { Logger.Info($"Update available: {updateInfo.TargetFullRelease.Version}"); }
             else { Logger.Info("No updates available."); }
-            _latestUpdateInfo = updateInfo;
+            latestUpdateInfo = updateInfo;
             return updateInfo;
         }
         catch (Exception ex)
@@ -93,18 +92,18 @@ public class Updater
             Logger.Error($"Tried to change update source to '{sourceName}', but it was not found among available sources.");
             return;
         }
-        _settings.SelectedSource = sourceName;
-        _settingsHandler.Save("Updater.json", _settings);
+        settings.SelectedSource = sourceName;
+        settingsHandler.Save("Updater.json", settings);
         UpdateManager = new UpdateManager(source.source);
         Logger.Info($"Changed update source to '{sourceName}'.");
     }
 
     public UpdaterSource GetSelectedSource()
     {
-        var source = AvailableSources.FirstOrDefault(s => s.sourceName == _settings.SelectedSource);
+        var source = AvailableSources.FirstOrDefault(s => s.sourceName == settings.SelectedSource);
         if (source == null)
         {
-            Logger.Warn($"Selected update source '{_settings.SelectedSource}' not found, defaulting to first available source.");
+            Logger.Warn($"Selected update source '{settings.SelectedSource}' not found, defaulting to first available source.");
             source = AvailableSources[0];
             Logger.Warn($"> '{source.sourceName}'.");
         }

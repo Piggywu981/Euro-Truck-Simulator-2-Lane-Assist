@@ -1,7 +1,7 @@
 using Velopack;
 using Velopack.Sources;
 
-namespace ETS2LA.Backend.Updates;
+namespace ETS2LA.Networking.Updates;
 
 public class UpdaterSource
 {

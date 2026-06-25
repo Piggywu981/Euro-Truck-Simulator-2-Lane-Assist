@@ -2,7 +2,7 @@ using Avalonia.Controls;
 using Huskui.Avalonia.Models;
 
 using ETS2LA.Shared;
-using ETS2LA.Backend.Updates;
+using ETS2LA.Networking.Updates;
 using ETS2LA.Notifications;
 
 using Velopack;

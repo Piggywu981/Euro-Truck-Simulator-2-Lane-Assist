@@ -1,7 +1,6 @@
-### ETS2LA C# 3.4.4
-- Fix issue where `ETS2LA.Game.Output` could get stuck in an infinite `Thread.Sleep` causing no controls to be sent to the game.
-- **Airskye** - Add sound effect when audio volume slider is dragged.
-- **nulijiazaizhong** - Mirror to CNB on commit push for CN users.
+### ETS2LA C# 3.4.5
+- **Drk** - Cache AR view projection matrix each frame. Avoids recalculation on every projection.
+- **nulijiazaizhong** - Add support for updating via CNB. Updates now automatically come from the source the application was downloaded from.
 
 ---
 <!-- Content inside ETS2LA will be cutoff at the line above, do not place lines inside the changelog. -->

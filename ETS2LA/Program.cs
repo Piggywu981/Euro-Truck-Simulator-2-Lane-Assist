@@ -8,6 +8,7 @@ using ETS2LA.Game.Telemetry;
 using ETS2LA.State;
 using ETS2LA.Settings.Global;
 using ETS2LA.Telemetry;
+using ETS2LA.Networking;
 
 using OpenTelemetry;
 using OpenTelemetry.Resources;
@@ -87,6 +88,7 @@ internal static class Program
             var telemetry = GameTelemetry.Current;
             var state = ApplicationState.Current;
             var tutorials = TutorialHandler.Current;
+            var networking = NetworkingClient.Current;
         });
 
         # if LINUX

@@ -26,6 +26,7 @@
     <ProjectReference Include="..\ETS2LA.Tutorials\ETS2LA.Tutorials.csproj" />
     <ProjectReference Include="..\ETS2LA.State\ETS2LA.State.csproj" />
     <ProjectReference Include="..\ETS2LA.Settings\ETS2LA.Settings.csproj" />
+    <ProjectReference Include="..\ETS2LA.Networking\ETS2LA.Networking.csproj" />
   </ItemGroup>
 
   <ItemGroup Label="ETS2LA.UI Requirements">

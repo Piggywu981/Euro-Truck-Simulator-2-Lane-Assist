@@ -1,6 +1,10 @@
-### ETS2LA C# 3.4.5
-- **Drk** - Cache AR view projection matrix each frame. Avoids recalculation on every projection.
-- **nulijiazaizhong** - Add support for updating via CNB. Updates now automatically come from the source the application was downloaded from.
+### ETS2LA C# 3.4.6
+- Added `InstalledPluginManifest` to store installed plugins and their versions.
+- Moved `InternalVisualization` to `ETS2LA/official-plugins`, it is no longer included in the main ETS2LA release.
+- Implemented `ETS2LA.Networking` to handle all network communication with the ETS2LA servers.
+- Implemented the Plugin Catalogue, which allows users to browse and install plugins from ETS2LA servers.
+  - The catalogue won't work properly until Friday 2026-06-25, when we transition our servers to release mode and add all our plugins.
+- **nulijiazaizhong** - CNB is now available as an official mirror for downloads as well as updates.
 
 ---
 <!-- Content inside ETS2LA will be cutoff at the line above, do not place lines inside the changelog. -->

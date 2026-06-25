@@ -207,8 +207,28 @@ jobs:
         run: |
           git fetch origin "refs/tags/v${{ needs.check_version.outputs.version }}:refs/tags/v${{ needs.check_version.outputs.version }}"
           git remote add cnb https://${{ secrets.CNB_USERNAME }}:${{ secrets.CNB_TOKEN }}@cnb.cool/ETS2LA-CN/Euro-Truck-Simulator-2-Lane-Assist.git
-          git push cnb rewrite
+          git fetch cnb rewrite || true
+          git push --force-with-lease cnb HEAD:refs/heads/rewrite
           git push cnb "refs/tags/v${{ needs.check_version.outputs.version }}"
+
+      - name: Wait for CNB Release
+        id: wait-cnb-release
+        run: |
+          RELEASE_URL="https://cnb.cool/ETS2LA-CN/shshsh/-/releases/tag/v${{ needs.check_version.outputs.version }}"
+          for i in {1..20}; do
+            page="$(curl --silent --show-error --location --fail "$RELEASE_URL" || true)"
+
+            if echo "$page" | grep -q "Download source code"; then
+              echo "CNB release is ready: $RELEASE_URL"
+              exit 0
+            fi
+
+            echo "CNB release page is not ready yet, retrying in 15 seconds... ($i/20)"
+            sleep 15
+          done
+
+          echo "CNB release did not become available in time: $RELEASE_URL"
+          exit 1
 
       - name: Upload CNB Assets
         id: upload-cnb-assets

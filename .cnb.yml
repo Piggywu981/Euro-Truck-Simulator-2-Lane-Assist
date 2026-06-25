@@ -1,4 +1,4 @@
-rewrite:
+v*:
   tag_push:
     - stages:
         - name: Create CNB Release

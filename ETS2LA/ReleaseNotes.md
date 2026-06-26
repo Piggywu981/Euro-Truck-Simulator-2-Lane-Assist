@@ -1,8 +1,8 @@
-### ETS2LA C# 3.4.7
-- Update catalogue to support restarting ETS2LA.
-- Catalogue now handles plugin updates.
-- Catalogue now handles installing plugin dependencies, and preventing uninstall of dependencies.
-- Backend synced between `ets2la.com` and `ets2la.cn`.
+### ETS2LA C# 3.4.8
+- Multiple viewports are now disabled by default.
+- Updated onboarding tutorials to go through installing plugins.
+- When new speedlimit is 0, we will now fall back to 30kph.
+- Acceleration now uses the legacy mode by default. This should result in smoother acceleration.
 
 ---
 <!-- Content inside ETS2LA will be cutoff at the line above, do not place lines inside the changelog. -->

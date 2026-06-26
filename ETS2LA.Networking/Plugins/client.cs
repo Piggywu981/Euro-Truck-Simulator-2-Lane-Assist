@@ -117,9 +117,12 @@ public class PluginApiClient
             return false;
         }
 
-        // Downloading is done from whatever region the user is in.
+        // Downloading is done from whatever region the user is in
         Region currentRegion = NetworkingSettings.Current.CurrentApiServer?.Name == "China" ? Region.China : Region.Global;
-        string downloadUrl = latestVersion.DownloadUrl.FirstOrDefault(d => d.Key == currentRegion).Value;
+        string downloadUrl = latestVersion.DownloadUrl.FirstOrDefault(d => d.Key == Region.Global).Value;
+        if (currentRegion == Region.China)
+            downloadUrl = downloadUrl.Replace("ets2la.com", "ets2la.cn");
+
         if (string.IsNullOrEmpty(downloadUrl))
         {
             Log($"No download URL found for plugin with ID {pluginId} in region {currentRegion}.", NotificationLevel.Warning);

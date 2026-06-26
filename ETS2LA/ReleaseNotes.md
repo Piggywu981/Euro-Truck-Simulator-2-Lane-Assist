@@ -1,8 +1,6 @@
-### ETS2LA C# 3.4.8
-- Multiple viewports are now disabled by default.
-- Updated onboarding tutorials to go through installing plugins.
-- When new speedlimit is 0, we will now fall back to 30kph.
-- Acceleration now uses the legacy mode by default. This should result in smoother acceleration.
+### ETS2LA C# 3.4.9
+- Fix `foreach` loop crashing `ETS2LA.Game.Output` when processing channels.
+- Allow library updates even if there's a plugin that depends on it.
 
 ---
 <!-- Content inside ETS2LA will be cutoff at the line above, do not place lines inside the changelog. -->

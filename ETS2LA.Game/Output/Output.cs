@@ -236,9 +236,11 @@ public class GameOutput
             double timeLeft = TickRate - tickTimer.Elapsed.TotalSeconds;
             if (timeLeft > 0 && timeLeft < TickRate)
             {
-                Logger.Debug($"Sleeping for {timeLeft * 1000} ms.");
-                Thread.Sleep((int)(timeLeft * 1000));
-                continue;
+                if (timeLeft * 1000 > 0.5)
+                {
+                    Thread.Sleep((int)(timeLeft * 1000));
+                    continue;
+                }
             }
 
             // These || need to be added to silence warnings...
@@ -246,7 +248,6 @@ public class GameOutput
             // that the accessors are not null, then please tell me.
             if (!MemoryAccessAvailable || legacyAccessor == null || modernAccessor == null)
             {
-                Logger.Debug("Memory access not available or accessors are null.");
                 TryOpenMemory();
                 tickTimer.Restart();
                 continue;
@@ -254,7 +255,6 @@ public class GameOutput
 
             if(Channels.Count == 0)
             {
-                Logger.Debug("No channels to process.");
                 if (!IsReset)
                     ResetOutputs();
                 
@@ -262,24 +262,27 @@ public class GameOutput
                 continue;
             }
 
-            Logger.Debug("ETS2LA.Game.Output tick");
             IsReset = false;
-            foreach (var channel in Channels.Values)
+            Logger.Debug("Channels");
+            try
             {
-                if (channel.Properties == null || channel.Variables == null)
-                    continue;
-
-                if (channel.LastUpdate.Elapsed.TotalSeconds > channel.Definition.Timeout)
+                foreach (var channel in Channels.Values)
                 {
-                    Logging.Logger.Debug($"Channel {channel.Definition.Id} timed out, removing.");
-                    Channels.Remove(channel.Definition.Id);
-                    continue;
-                }
+                    if (channel.Properties == null || channel.Variables == null)
+                        continue;
 
-                ProcessChannel(channel);
-            }
+                    if (channel.LastUpdate.Elapsed.TotalSeconds > channel.Definition.Timeout)
+                    {
+                        Channels.Remove(channel.Definition.Id);
+                        continue;
+                    }
+
+                    ProcessChannel(channel);
+                }
+            } catch {}
 
             double time = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
+            Logger.Debug("Floats");
             foreach (var kvp in curFrameFloats)
             {
                 string propName = kvp.Key;
@@ -291,7 +294,6 @@ public class GameOutput
 
                 if(propName == "steering")
                 {
-                    Logger.Debug($"Writing steering value: {weightedValue}");
                     WriteFloat(modernAccessor, 0, weightedValue);
                     WriteBool(modernAccessor, 4, weightedValue != 0.0f);
                     WriteDouble(modernAccessor, 5, time);

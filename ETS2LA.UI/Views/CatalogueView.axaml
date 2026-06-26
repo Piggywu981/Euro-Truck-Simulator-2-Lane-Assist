@@ -62,6 +62,9 @@
                                                     <husk:Tag IsVisible="{Binding IsInstalled}" Classes="Primary" HorizontalAlignment="Right">
                                                         <TextBlock Text="Installed" FontSize="12" FontWeight="SemiBold" />
                                                     </husk:Tag>
+                                                    <husk:Tag IsVisible="{Binding NeedsUpdate}" Classes="Primary" HorizontalAlignment="Right">
+                                                        <TextBlock Text="Update Available" FontSize="12" FontWeight="SemiBold" />
+                                                    </husk:Tag>
                                                     <husk:Tag IsVisible="{Binding IsPlugin}" Classes="Secondary" HorizontalAlignment="Right">
                                                         <TextBlock Text="Plugin" FontSize="12" FontWeight="SemiBold" />
                                                     </husk:Tag>
@@ -98,7 +101,7 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
                 <StackPanel Margin="10" IsVisible="{Binding !HasPlugins}">
-                    <TextBlock Text="No plugins found in the catalogue, you may need to install some manually." Classes="Description" />
+                    <TextBlock Text="No plugins found in the catalogue, please refresh using the button. You may still install some manually." Classes="Description" />
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

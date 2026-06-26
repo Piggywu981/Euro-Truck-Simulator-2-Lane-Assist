@@ -71,6 +71,35 @@ public class PluginApiClient
         Log($"Fetched {AvailablePlugins.Count} plugins from {apiServer.Value.BaseUrl}");
     }
 
+    public bool PluginHasUpdateAvailable(string pluginId)
+    {
+        var plugin = AvailablePlugins.FirstOrDefault(p => p.Id == pluginId);
+        if (plugin == null)
+        {
+            Log($"Plugin with ID {pluginId} not found in available plugins.", NotificationLevel.Warning);
+            return false;
+        }
+
+        InstalledPlugin? installedPlugin = InstalledPluginManifest.Current.InstalledPlugins.FirstOrDefault(p => p.Id == pluginId);
+        if (installedPlugin == null)
+        {
+            Log($"Plugin with ID {pluginId} is not installed.", NotificationLevel.Warning);
+            return false;
+        }
+
+        var appVersion = Assembly.GetEntryAssembly()?.GetName().Version?.ToString(3) ?? "0.0.0";
+        OperatingSystem currentOS = Environment.OSVersion.Platform != PlatformID.Unix ? OperatingSystem.Windows : OperatingSystem.Linux;
+        var latestVersion = plugin.GetLatestCompatibleVersion(appVersion, currentOS);
+
+        if (latestVersion == null)
+        {
+            Log($"No valid versions found for plugin with ID {pluginId}.", NotificationLevel.Warning);
+            return false;
+        }
+
+        return new Version(latestVersion.Version) > new Version(installedPlugin.Value.Version);
+    }
+
     public bool InstallPlugin(string pluginId)
     {
         var plugin = AvailablePlugins.FirstOrDefault(p => p.Id == pluginId);
@@ -158,6 +187,32 @@ public class PluginApiClient
         InstalledPluginManifest.Current.Save();
 
         Log($"Successfully installed plugin {plugin.Name} ({plugin.Id}, {latestVersion.Version})", NotificationLevel.Success);
+        return true;
+    }
+
+    public bool UpdatePlugin(string pluginId)
+    {
+        if (!PluginHasUpdateAvailable(pluginId))
+        {
+            Log($"No update available for plugin with ID {pluginId}.", NotificationLevel.Information);
+            return false;
+        }
+
+        // Uninstall the current version first.
+        if (!UninstallPlugin(pluginId))
+        {
+            Log($"Failed to uninstall current version of plugin with ID {pluginId}.", NotificationLevel.Warning);
+            return false;
+        }
+
+        // Then install the latest version.
+        if (!InstallPlugin(pluginId))
+        {
+            Log($"Failed to install latest version of plugin with ID {pluginId}.", NotificationLevel.Warning);
+            return false;
+        }
+
+        Log($"Successfully updated plugin with ID {pluginId}.", NotificationLevel.Success);
         return true;
     }
 

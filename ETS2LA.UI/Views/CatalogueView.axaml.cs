@@ -61,16 +61,26 @@ public partial class CatalogueView : UserControl, INotifyPropertyChanged
         {
             if (item.IsInstalled)
             {
-
-                Logger.Info($"Installing plugin {item.Name} ({item.Id})");
-                if (NetworkingClient.Current.Plugins.UninstallPlugin(item.Id))
+                if (NetworkingClient.Current.Plugins.PluginHasUpdateAvailable(item.Id))
                 {
-                    item.SetInstalled(false);
+                    Logger.Info($"Updating plugin {item.Name} ({item.Id})");
+                    if (NetworkingClient.Current.Plugins.UpdatePlugin(item.Id))
+                    {
+                        item.SetInstalled(true);
+                    }
+                }
+                else
+                {
+                    Logger.Info($"Uninstalling plugin {item.Name} ({item.Id})");
+                    if (NetworkingClient.Current.Plugins.UninstallPlugin(item.Id))
+                    {
+                        item.SetInstalled(false);
+                    }
                 }
             }
             else
             {
-                Logger.Info($"Uninstalling plugin {item.Name} ({item.Id})");
+                Logger.Info($"Installing plugin {item.Name} ({item.Id})");
                 if (NetworkingClient.Current.Plugins.InstallPlugin(item.Id))
                 {
                     item.SetInstalled(true);
@@ -173,6 +183,7 @@ public class NetworkPluginItem : INotifyPropertyChanged
     public string Initials => BuildInitials(Name);
     public bool IsPlugin => _instance.Tags.Contains(NetworkPluginTags.Plugin);
     public bool IsLibrary => _instance.Tags.Contains(NetworkPluginTags.Library);
+    public bool NeedsUpdate => NetworkingClient.Current.Plugins.PluginHasUpdateAvailable(Id);
 
     public bool IsInstalled
     {

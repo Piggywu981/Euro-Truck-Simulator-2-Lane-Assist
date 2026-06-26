@@ -207,7 +207,7 @@ public class PluginApiClient
         }
 
         // Uninstall the current version first.
-        if (!UninstallPlugin(pluginId))
+        if (!UninstallPlugin(pluginId, overrideDependencyCheck: true))
         {
             Log($"Failed to uninstall current version of plugin with ID {pluginId}.", NotificationLevel.Warning);
             return false;
@@ -226,7 +226,7 @@ public class PluginApiClient
         return true;
     }
 
-    public bool UninstallPlugin(string pluginId)
+    public bool UninstallPlugin(string pluginId, bool overrideDependencyCheck = false)
     {
         InstalledPlugin? installedPlugin = InstalledPluginManifest.Current.InstalledPlugins.FirstOrDefault(p => p.Id == pluginId);
         if (installedPlugin == null)
@@ -235,14 +235,17 @@ public class PluginApiClient
             return false;
         }
 
-        // Scan for other plugins that depend on this one.
-        var dependentPlugins = InstalledPluginManifest.Current.InstalledPlugins
-            .Where(p => p.Dependencies.Contains(installedPlugin.Value.Id));
-        if (dependentPlugins.Any())
+        if (!overrideDependencyCheck)
         {
-            string dependentPluginIds = string.Join(", ", dependentPlugins.Select(p => p.Id));
-            Log($"Cannot uninstall plugin with ID {pluginId} because the following installed plugins depend on it: {dependentPluginIds}", NotificationLevel.Warning);
-            return false;
+            // Scan for other plugins that depend on this one.
+            var dependentPlugins = InstalledPluginManifest.Current.InstalledPlugins
+                .Where(p => p.Dependencies.Contains(installedPlugin.Value.Id));
+            if (dependentPlugins.Any())
+            {
+                string dependentPluginIds = string.Join(", ", dependentPlugins.Select(p => p.Id));
+                Log($"Cannot uninstall plugin with ID {pluginId} because the following installed plugins depend on it: {dependentPluginIds}", NotificationLevel.Warning);
+                return false;
+            }
         }
         
         // Remove the plugin's files from the filesystem.

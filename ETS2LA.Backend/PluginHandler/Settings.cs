@@ -1,4 +1,5 @@
 using ETS2LA.Settings;
+using ETS2LA.Logging;
 
 namespace ETS2LA.Backend.Plugins;
 
@@ -42,6 +43,26 @@ public class InstalledPluginManifest
             if (loadedSettings != null)
             {
                 InstalledPlugins = loadedSettings.InstalledPlugins;
+
+                // Check if the plugins actually exist
+                int index = 0;
+                bool didRemove = false;
+                while (index < InstalledPlugins.Count)
+                {
+                    var plugin = InstalledPlugins[index];
+                    if (!File.Exists(plugin.DllPath))
+                    {
+                        InstalledPlugins.RemoveAt(index);
+                        Logger.Warn($"Plugin '{plugin.Id}' is missing its DLL at '{plugin.DllPath}' and has been removed.");
+                        didRemove = true;
+                    }
+                    else
+                    {
+                        index++;
+                    }
+                }
+                if (didRemove) Save();
+
             }
             _settingsHandler.RegisterListener<InstalledPluginManifest>("InstalledPluginManifest.json", OnSettingsChanged);
         }

@@ -15,6 +15,7 @@ public struct InstalledPlugin
     public string Id { get; set; }
     public string Version { get; set; }
     public string DllPath { get; set; }
+    public List<string> Dependencies { get; set; }
     public PluginType Type { get; set; }
 }
 

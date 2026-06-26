@@ -81,9 +81,8 @@ public class PluginApiClient
         }
 
         InstalledPlugin? installedPlugin = InstalledPluginManifest.Current.InstalledPlugins.FirstOrDefault(p => p.Id == pluginId);
-        if (installedPlugin == null)
+        if (!installedPlugin.HasValue || string.IsNullOrEmpty(installedPlugin.Value.Version))
         {
-            Log($"Plugin with ID {pluginId} is not installed.", NotificationLevel.Warning);
             return false;
         }
 
@@ -91,7 +90,7 @@ public class PluginApiClient
         OperatingSystem currentOS = Environment.OSVersion.Platform != PlatformID.Unix ? OperatingSystem.Windows : OperatingSystem.Linux;
         var latestVersion = plugin.GetLatestCompatibleVersion(appVersion, currentOS);
 
-        if (latestVersion == null)
+        if (latestVersion == null || string.IsNullOrEmpty(latestVersion.Version))
         {
             Log($"No valid versions found for plugin with ID {pluginId}.", NotificationLevel.Warning);
             return false;
@@ -134,9 +133,11 @@ public class PluginApiClient
             {
                 if (!InstalledPluginManifest.Current.InstalledPlugins.Any(p => p.Id == dependencyId))
                 {
-                    Log($"Dependency {dependencyId} for plugin {pluginId} is not installed.", NotificationLevel.Warning);
-                    allDependenciesInstalled = false;
-                    break;
+                    if (!InstallPlugin(dependencyId))
+                    {
+                        Log($"Failed to install dependency {dependencyId} for plugin {pluginId}.", NotificationLevel.Warning);
+                        allDependenciesInstalled = false;
+                    }
                 }
             }
             if (!allDependenciesInstalled)
@@ -181,6 +182,7 @@ public class PluginApiClient
         {
             Id = plugin.Id,
             Version = latestVersion.Version,
+            Dependencies = latestVersion.Dependencies,
             DllPath = Path.Combine(outputPath, latestVersion.DllPath),
             Type = type == "Plugin" ? PluginType.Plugin : PluginType.Library
         });
@@ -225,6 +227,16 @@ public class PluginApiClient
             return false;
         }
 
+        // Scan for other plugins that depend on this one.
+        var dependentPlugins = InstalledPluginManifest.Current.InstalledPlugins
+            .Where(p => p.Dependencies.Contains(installedPlugin.Value.Id));
+        if (dependentPlugins.Any())
+        {
+            string dependentPluginIds = string.Join(", ", dependentPlugins.Select(p => p.Id));
+            Log($"Cannot uninstall plugin with ID {pluginId} because the following installed plugins depend on it: {dependentPluginIds}", NotificationLevel.Warning);
+            return false;
+        }
+        
         // Remove the plugin's files from the filesystem.
         string pluginPath = Path.Combine(
             PluginBackend.Current.PluginHandler?.PluginRootPath ?? string.Empty, 

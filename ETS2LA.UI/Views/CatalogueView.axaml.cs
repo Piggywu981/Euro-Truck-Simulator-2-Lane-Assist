@@ -25,6 +25,7 @@ public partial class CatalogueView : UserControl, INotifyPropertyChanged
 
     public bool HasPlugins => Plugins.Count > 0;
     public int PluginColumns => (int)(Math.Floor(Bounds.Width / 1000) + 1);
+    public bool NeedsRestart {get; set;} = false;
 
     private string _searchQuery = string.Empty;
     public string SearchQuery
@@ -48,11 +49,21 @@ public partial class CatalogueView : UserControl, INotifyPropertyChanged
         SizeChanged += (_, _) => OnPropertyChanged(nameof(PluginColumns));
     }
 
+    private void OnRestartClick(object? sender, RoutedEventArgs e)
+    {
+        Logger.Info("Restarting ETS2LA...");
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName,
+            UseShellExecute = true
+        });
+        Environment.Exit(0);
+    }
+
     private void RefreshCatalogueClick(object? sender, RoutedEventArgs e)
     {
         UpdatePluginList();
     }
-
 
     private void OnCardPointerPressed(object? sender, PointerPressedEventArgs e)
     {
@@ -86,7 +97,13 @@ public partial class CatalogueView : UserControl, INotifyPropertyChanged
                     item.SetInstalled(true);
                 }
             }
+
         }
+        
+        NeedsRestart = true;
+        OnPropertyChanged(nameof(NeedsRestart));
+        // Might've installed other plugins as well.
+        UpdatePluginList();
     }
 
     private void OnCardKeyDown(object? sender, KeyEventArgs e)

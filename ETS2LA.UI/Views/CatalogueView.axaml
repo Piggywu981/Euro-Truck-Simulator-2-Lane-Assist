@@ -15,11 +15,20 @@
     <Grid ColumnDefinitions="200, Auto, *" ColumnSpacing="0">
         <StackPanel Orientation="Vertical" Spacing="8" VerticalAlignment="Top" Margin="24">
             <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Top">
-                <Button Click="RefreshCatalogueClick" ToolTip.Tip="Refresh Catalogue" AutomationProperties.Name="Refresh Catalogue, button, icon-only">
+                <Button Click="RefreshCatalogueClick" ToolTip.Tip="Refresh Catalogue" AutomationProperties.Name="Refresh Catalogue, icon-only">
                     <i:Icon Value="fa-sync" FontSize="12" />
                 </Button>
             </StackPanel>
             <TextBox PlaceholderText="Search plugins..." Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" />
+            <Border IsVisible="{Binding NeedsRestart}" HorizontalAlignment="Stretch" Background="{DynamicResource Warning4Color}" Padding="8" CornerRadius="4">
+                <TextBlock Text="Restart required!" FontSize="12" Classes="Warning" HorizontalAlignment="Center" />
+            </Border>
+            <Button Click="OnRestartClick" IsVisible="{Binding NeedsRestart}" HorizontalAlignment="Stretch" ToolTip.Tip="Restart ETS2LA to apply plugin changes" AutomationProperties.Name="Restart ETS2LA">
+                <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Center">
+                    <i:Icon Value="fa-redo-alt" FontSize="12" />
+                    <TextBlock Text="Restart ETS2LA" FontSize="12" />
+                </StackPanel>
+            </Button>
         </StackPanel>
 
         <husk:Divider Grid.Column="1" Orientation="Vertical" VerticalAlignment="Stretch" />

@@ -54,6 +54,10 @@ public class TrafficVehicle : BaseVehicle
     public bool isTrailer;
 
     public TrafficTrailer[] trailers = Array.Empty<TrafficTrailer>();
+
+    // These are only internal
+    public Vector3 lastPosition = Vector3.Zero;
+    public float lastUpdateTime = 0f;
 }
 
 public class TrafficData
@@ -67,10 +71,12 @@ public class TrafficProvider
     public static TrafficProvider Current => _instance.Value;
 
     private float UpdateRate { get; set; } = 1f / 60f;
+    private float SpeedUpdateRateInTMP = 1f / 2f;
     public string EventString = "ETS2LA.Game.SDK.Traffic.Data";
 
     private MemoryReader _reader;
     private TrafficData? _currentData = new();
+    private TrafficVehicle[] _lastVehicles = Array.Empty<TrafficVehicle>();
 
 
     string mmapName = "Local\\ETS2LATraffic";
@@ -258,7 +264,32 @@ public class TrafficProvider
             vehicles.Add(vehicle);
         }
 
+        _lastVehicles = _currentData.vehicles;
         _currentData.vehicles = vehicles.ToArray();
+
+        // Update vehicle speeds
+        var curTime = Environment.TickCount / 1000f;
+        foreach (var vehicle in _currentData.vehicles)
+        {
+            if (vehicle.isTMP)
+            {
+                var lastVehicle = _lastVehicles.FirstOrDefault(v => v.id == vehicle.id);
+                if (lastVehicle != null)
+                {
+                    vehicle.speed = lastVehicle.speed;
+                    vehicle.lastPosition = lastVehicle.lastPosition;
+                    vehicle.lastUpdateTime = lastVehicle.lastUpdateTime;
+                    if (curTime - vehicle.lastUpdateTime > SpeedUpdateRateInTMP)
+                    {
+                        var distance = Vector3.Distance(vehicle.lastPosition, vehicle.Position);
+                        vehicle.speed = distance / (curTime - vehicle.lastUpdateTime);
+                        vehicle.lastPosition = vehicle.Position;
+                        vehicle.lastUpdateTime = curTime;
+                    }
+                }
+            }
+        }
+
         Events.Current.Publish<TrafficData>(EventString, _currentData);
 
         // Periodically reopen the mmap to detect game restarts.

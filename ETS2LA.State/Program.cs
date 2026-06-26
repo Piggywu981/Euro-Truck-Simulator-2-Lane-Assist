@@ -185,13 +185,16 @@ public class ApplicationState
         if (DesiredSpeed == 0)
             return;
 
+        if (newSpeedLimit == 0)
+            newSpeedLimit = UnitConversions.ToScientificUnits(UnitType.Speed, 30, Units.Metric);
+
         DesiredSpeed = newSpeedLimit;
         RoundToNearestUnit();
         NotificationHandler.Current.SendNotification(new Notification
         {
             Id = "ApplicationState.SpeedLimitChanged",
             Title = "Speed limit changed",
-            Content = $"New limit {UnitConversions.FromScientificUnits(UnitType.Speed, newSpeedLimit, DisplayUnits):0} {DisplayUnits.ToString().Substring(0, 1)}"
+            Content = $"New limit {UnitConversions.FromScientificUnits(UnitType.Speed, newSpeedLimit, DisplayUnits):0} {UnitConversions.GetUnitAbbreviation(UnitType.Speed, DisplayUnits)}"
         });
     }
 

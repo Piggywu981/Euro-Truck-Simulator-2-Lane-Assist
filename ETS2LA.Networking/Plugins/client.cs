@@ -1,6 +1,7 @@
 using ETS2LA.Networking.Users;
 using ETS2LA.Networking.Settings;
 using ETS2LA.Backend;
+using ETS2LA.Backend.Events;
 using ETS2LA.Backend.Plugins;
 using ETS2LA.Notifications;
 using ETS2LA.Logging;
@@ -191,6 +192,8 @@ public class PluginApiClient
         });
         InstalledPluginManifest.Current.Save();
 
+        Events.Current.Publish<string>("ETS2LA.Plugins.Installed", pluginId);
+        Events.Current.Publish<EventArgs>($"ETS2LA.Plugins.Installed.{pluginId}", EventArgs.Empty);
         Log($"Successfully installed plugin {plugin.Name} ({plugin.Id}, {latestVersion.Version})", NotificationLevel.Success);
         return true;
     }
@@ -217,6 +220,8 @@ public class PluginApiClient
             return false;
         }
 
+        Events.Current.Publish<string>("ETS2LA.Plugins.Updated", pluginId);
+        Events.Current.Publish<EventArgs>($"ETS2LA.Plugins.Updated.{pluginId}", EventArgs.Empty);
         Log($"Successfully updated plugin with ID {pluginId}.", NotificationLevel.Success);
         return true;
     }
@@ -259,6 +264,8 @@ public class PluginApiClient
         InstalledPluginManifest.Current.InstalledPlugins.Remove(installedPlugin.Value);
         InstalledPluginManifest.Current.Save();
 
+        Events.Current.Publish<string>("ETS2LA.Plugins.Uninstalled", pluginId);
+        Events.Current.Publish<EventArgs>($"ETS2LA.Plugins.Uninstalled.{pluginId}", EventArgs.Empty);
         Log($"Successfully uninstalled plugin with ID {pluginId}", NotificationLevel.Success);
         return true;
     }

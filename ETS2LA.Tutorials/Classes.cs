@@ -161,6 +161,10 @@ public class TutorialExecutor
                 PlaySoundAction playSound = (PlaySoundAction)action;
                 AudioHandler.Current.Queue(playSound.SoundFilePath);
                 break;
+            case TutorialActionType.ExecuteFunction:
+                ExecuteFunctionAction executeFunction = (ExecuteFunctionAction)action;
+                executeFunction.Function?.Invoke();
+                break;
             case TutorialActionType.WaitForInput:
                 WaitForInputAction waitForInput = (WaitForInputAction)action;
                 clearAfter = true;

@@ -372,8 +372,8 @@ public class PluginHandler
                 Level = NotificationLevel.Success,
                 CloseAfter = 3
             });
-            Events.Events.Current.Publish<string>($"ETS2LA.Backend.Enabled", plugin.Info.Name);
-            Events.Events.Current.Publish($"ETS2LA.Backend.Enabled.{plugin.Info.Name}", EventArgs.Empty);
+            Events.Events.Current.Publish<string>($"ETS2LA.Backend.Enabled", plugin.Info.Id);
+            Events.Events.Current.Publish($"ETS2LA.Backend.Enabled.{plugin.Info.Id}", EventArgs.Empty);
             return true;
         }
         catch (Exception ex)
@@ -415,8 +415,8 @@ public class PluginHandler
             plugin.OnDisable();
             Logger.Info($"Disabled plugin: [bold]{plugin.Info.Name}[/]");
             PluginDisabled?.Invoke(plugin);
-            Events.Events.Current.Publish<string>($"ETS2LA.Backend.Disabled", plugin.Info.Name);
-            Events.Events.Current.Publish($"ETS2LA.Backend.Disabled.{plugin.Info.Name}", EventArgs.Empty);
+            Events.Events.Current.Publish<string>($"ETS2LA.Backend.Disabled", plugin.Info.Id);
+            Events.Events.Current.Publish($"ETS2LA.Backend.Disabled.{plugin.Info.Id}", EventArgs.Empty);
             return true;
         }
         catch (Exception ex)

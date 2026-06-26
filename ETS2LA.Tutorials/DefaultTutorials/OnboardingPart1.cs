@@ -8,13 +8,13 @@ using ETS2LA.Backend.Events;
 
 namespace ETS2LA.Tutorials.DefaultTutorials;
 
-public class Onboarding
+public class OnboardingPart1
 {
     bool hasMoved = false;
 
     public Tutorial Create()
     {
-        return new Tutorial("Onboarding", "This tutorial will guide you through ETS2LA's usage.", "ETS2LA", new List<TutorialSection>
+        return new Tutorial("OnboardingPart1", "Onboarding until the catalogue plugins were installed.", "ETS2LA", new List<TutorialSection>
         {
             new TutorialSection
             {
@@ -63,31 +63,21 @@ public class Onboarding
                 {
                     new ShowMessageAction
                     {
-                        Message = "This on the other hand is the actual ETS2LA window.\nClosing this window will cause ETS2LA to shutdown.",
+                        Message = "This sidebar has everything you need.\nLet's go to the catalogue page to start with.",
                         ScreenPositionCallback = () =>
                         {
                             var position = ETS2LAWindowLocation();
                             var size = ETS2LAWindowSize();
-                            return ((int)(position.Item1 + size.Item1 / 2 - 355 / 2), (int)(position.Item2 + size.Item2 / 2 - 25));
-                        }
-                    },
-                    new ShowMessageAction
-                    {
-                        Message = "This sidebar has everything you need.\nLet's go to the plugin manager page.",
-                        ScreenPositionCallback = () =>
-                        {
-                            var position = ETS2LAWindowLocation();
-                            var size = ETS2LAWindowSize();
-                            return (position.Item1 + 15, position.Item2 + 202);
+                            return (position.Item1 + 15, position.Item2 + 230);
                         }
                     },
                     new WaitForEventAction
                     {
-                        EventId = "ETS2LA.UI.SwitchedPage.Manager"
+                        EventId = "ETS2LA.UI.SwitchedPage.Catalogue"
                     },
                     new ShowMessageAction
                     {
-                        Message = "Here you see all of your installed plugins. To start off with, enable the 'Lane Assist' Plugin.",
+                        Message = "You'll want to install the 'Lane Assist' and 'Adaptive Cruise Control' plugins.",
                         ScreenPositionCallback = () =>
                         {
                             var position = ETS2LAWindowLocation();
@@ -97,53 +87,18 @@ public class Onboarding
                     },
                     new WaitForEventAction
                     {
-                        EventId = "ETS2LA.Backend.Enabled.LaneAssist"
+                        EventId = "ETS2LA.Plugins.Installed.tumppi066.adaptivecruisecontrol"
                     },
                     new ShowMessageAction
                     {
-                        Message = "Great!\nLet's go to the settings next.",
+                        Message = "You might've noticed we automatically installed dependencies.\nEvery time you install/uninstall plugins or libraries, you need\nto restart ETS2LA. On some systems you may need to restart ETS2LA yourself.",
                         ScreenPositionCallback = () =>
                         {
                             var position = ETS2LAWindowLocation();
                             var size = ETS2LAWindowSize();
-                            return (position.Item1 + 220, position.Item2 + 585);
+                            return (position.Item1 + 140, position.Item2 + 224);
                         }
                     },
-                    new WaitForEventAction
-                    {
-                        EventId = "ETS2LA.UI.SwitchedPage.Settings"
-                    },
-                    new ShowMessageAction
-                    {
-                        Message = "Let's check the controls.",
-                        ScreenPositionCallback = () =>
-                        {
-                            var position = ETS2LAWindowLocation();
-                            var size = ETS2LAWindowSize();
-                            return (position.Item1 + 220, position.Item2 + 320);
-                        }
-                    },
-                    new WaitForEventAction
-                    {
-                        EventId = "ETS2LA.UI.SwitchedPage.Settings.Controls"
-                    },
-                    new ShowMessageWaitNextAction
-                    {
-                        Message = "You can edit your controls here. The initial tutorial stops now, if you need additional\nhelp, then please join our discord server at https://ets2la.com/discord.",
-                        ScreenPositionCallback = () =>
-                        {
-                            var position = ETS2LAWindowLocation();
-                            var size = ETS2LAWindowSize();
-                            return (position.Item1 + 442, position.Item2 + 3);
-                        }
-                    },
-                    new SendNotificationAction
-                    {
-                        Title = "Tutorial Finished",
-                        Message = "Welcome to ETS2LA!",
-                        Level = Notifications.NotificationLevel.Success,
-                        CloseAfter = 5f
-                    }
                 }
             }
         });
@@ -170,8 +125,8 @@ public class Onboarding
 
         AlignForWidth(ImGui.CalcTextSize("Let's start off by familiarizing you to our User Interface.").X);
         ImGui.Text("Let's start off by familiarizing you to our User Interface.");
-        AlignForWidth(ImGui.CalcTextSize("What you're seeing right now is actually just an overlay!").X);
-        ImGui.Text("What you're seeing right now is actually just an overlay!");
+        AlignForWidth(ImGui.CalcTextSize("The window you're seeing right now is an overlay.").X);
+        ImGui.Text("The window you're seeing right now is an overlay.");
         ImGui.Spacing();
         ImGui.Spacing();
 

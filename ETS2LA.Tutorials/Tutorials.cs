@@ -29,12 +29,19 @@ public class TutorialHandler
         settingsHandler = new();
         settings = settingsHandler.Load<TutorialSettings>("TutorialSettings.json");
         
-        if (!settings.CompletedTutorials.Contains("Onboarding"))
+        if (!settings.CompletedTutorials.Contains("OnboardingPart1"))
         {
             Events.Current.Subscribe<EventArgs>("ETS2LA.UI.WindowOpened", (e) =>
             {
-                RegisterTutorial(new Onboarding().Create()); 
-                StartTutorial("Onboarding"); 
+                RegisterTutorial(new OnboardingPart1().Create());
+                StartTutorial("OnboardingPart1");
+            });
+        } else if (!settings.CompletedTutorials.Contains("OnboardingPart2"))
+        {
+            Events.Current.Subscribe<EventArgs>("ETS2LA.UI.WindowOpened", (e) =>
+            {
+                RegisterTutorial(new OnboardingPart2().Create());
+                StartTutorial("OnboardingPart2");
             });
         }
     }

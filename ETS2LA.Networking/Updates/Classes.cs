@@ -1,7 +1,7 @@
 using Velopack;
 using Velopack.Sources;
 
-namespace ETS2LA.Backend.Updates;
+namespace ETS2LA.Networking.Updates;
 
 public class UpdaterSource
 {
@@ -18,5 +18,6 @@ public class UpdaterSource
 [Serializable]
 public class UpdaterSettings
 {
-    public string SelectedSource { get; set; } = "GitHub";
+    public string? SelectedSource { get; set; }
+    public bool IsSourceSelectedByUser { get; set; }
 }

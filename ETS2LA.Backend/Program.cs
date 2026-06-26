@@ -3,7 +3,6 @@ using ETS2LA.Controls;
 using ETS2LA.Audio;
 
 using Spectre.Console;
-using ETS2LA.Backend.Updates;
 
 namespace ETS2LA.Backend
 {

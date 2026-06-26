@@ -555,6 +555,24 @@ public class OverlayHandler
         windows.RemoveAll(w => w.Definition.Title == def.Title);
     }
 
+    public void OpenWindow(string windowName)
+    {
+        var window = windows.FirstOrDefault(w => w.Definition.Title == windowName);
+        if (window != null)
+        {
+            window.IsWindowOpen = true;
+        }
+    }
+
+    public void CloseWindow(string windowName)
+    {
+        var window = windows.FirstOrDefault(w => w.Definition.Title == windowName);
+        if (window != null)
+        {
+            window.IsWindowOpen = false;
+        }
+    }
+
     public void Shutdown()
     {
         shutdown = true;

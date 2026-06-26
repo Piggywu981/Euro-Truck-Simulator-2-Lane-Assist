@@ -34,6 +34,7 @@ public partial class MainWindow : AppWindow
     private readonly PluginManagerService pluginService;
     private readonly DashboardView dashboardView = new();
     private readonly ManagerView managerView;
+    private readonly CatalogueView catalogueView;
     private readonly SettingsView settingsView;
     public static event EventHandler? WindowOpened;
 
@@ -58,6 +59,7 @@ public partial class MainWindow : AppWindow
 
         pluginService = new PluginManagerService();
         managerView = new ManagerView(pluginService);
+        catalogueView = new CatalogueView();
         settingsView = new SettingsView();
         navButtons.AddRange(new[]
         {
@@ -207,7 +209,7 @@ public partial class MainWindow : AppWindow
             PageKind.Dashboard => dashboardView,
             PageKind.Manager => managerView,
             PageKind.Visualization => CreatePlaceholder("Sorry", "This page is being remade and isn't available in this version. It will return in a future update post open beta release."),
-            PageKind.Catalogue => CreatePlaceholder("Catalogue", "This page will contain 3rd party plugins. Those aren't supported yet, you can copy them manually to the plugins folder and restart."),
+            PageKind.Catalogue => catalogueView,
             PageKind.Performance => CreatePlaceholder("Performance", "This page hasn't been implemented yet, you can monitor performance using external tools."),
             PageKind.Wiki => CreatePlaceholder("Wiki", "Please take a look at https://docs.ets2la.com for documentation. This page will link there once we have more content."),
             PageKind.Roadmap => CreatePlaceholder("Roadmap", "Please take a look at our public roadmap on GitHub. Navigate to the repository and click on the Projects tab at the top."),

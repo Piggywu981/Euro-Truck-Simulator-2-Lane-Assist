@@ -95,7 +95,7 @@ public class ApplicationState
     ///  provide Lane Keeping, should be disabled when the user selects a higher
     ///  level.
     /// </summary>
-    public SteeringAssists DesiredSteeringLevel { get; set; } = SteeringAssists.None;
+    public SteeringAssists DesiredSteeringLevel { get; set; } = SteeringAssists.Full;
     /// <summary>
     ///  This value will be set to true if the user has temporarily paused the steering assist,
     ///  e.g. by braking. Once the user resumes assists this value will be set to false again.
@@ -212,12 +212,19 @@ public class ApplicationState
             else if (assistanceSettings.SetSpeedBehaviourOption == SetSpeedBehaviour.SpeedLimit)
                 DesiredSpeed = latestTelemetryData.truckFloat.speedLimit;
 
+            Events.Current.Publish<EventArgs>("ETS2LA.State.AssistsUnpaused", new EventArgs());
+            Events.Current.Publish<bool>("ETS2LA.State.SteeringPaused", PauseSteeringAssist);
+            Events.Current.Publish<bool>("ETS2LA.State.LongitudinalPaused", PauseLongitudinalAssist);
             RoundToNearestUnit();
         }
         else
         {
             PauseLongitudinalAssist = true;
             PauseSteeringAssist = true;
+
+            Events.Current.Publish<EventArgs>("ETS2LA.State.AssistsPaused", new EventArgs());
+            Events.Current.Publish<bool>("ETS2LA.State.SteeringPaused", PauseSteeringAssist);
+            Events.Current.Publish<bool>("ETS2LA.State.LongitudinalPaused", PauseLongitudinalAssist);
         }
     }
 
@@ -316,6 +323,7 @@ public class ApplicationState
         if (PauseSteeringAssist)
         {
             PauseSteeringAssist = false;
+            Events.Current.Publish<bool>("ETS2LA.State.SteeringPaused", PauseSteeringAssist);
         }
         else
         {
@@ -324,6 +332,9 @@ public class ApplicationState
             {
                 DesiredSteeringLevel = SteeringAssists.None;
             }
+
+            Events.Current.Publish<SteeringAssists>("ETS2LA.State.SteeringLevel", DesiredSteeringLevel);
+            Events.Current.Publish<EventArgs>($"ETS2LA.State.SteeringLevel.{DesiredSteeringLevel}", new EventArgs());
         }
     }
 

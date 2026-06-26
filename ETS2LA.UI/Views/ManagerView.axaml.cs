@@ -136,7 +136,12 @@ public partial class ManagerView : UserControl, INotifyPropertyChanged
 
     private void OnOpenFolderButtonClick(object? sender, RoutedEventArgs e)
     {
-        string location = Directory.GetCurrentDirectory() + "/Plugins";
+        string location = _pluginService.backend.PluginHandler?.PluginRootPath ?? string.Empty;
+        if (string.IsNullOrEmpty(location))
+        {
+            location = Directory.GetCurrentDirectory() + "/Plugins";
+        }
+
         # if WINDOWS
         location = location.Replace("/", "\\");
         Process.Start("explorer.exe", location);

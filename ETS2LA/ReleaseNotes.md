@@ -1,13 +1,14 @@
-### ETS2LA C# 3.4.4
-- Fix issue where `ETS2LA.Game.Output` could get stuck in an infinite `Thread.Sleep` causing no controls to be sent to the game.
-- **Airskye** - Add sound effect when audio volume slider is dragged.
-- **nulijiazaizhong** - Mirror to CNB on commit push for CN users.
+### ETS2LA C# 3.4.7
+- Update catalogue to support restarting ETS2LA.
+- Catalogue now handles plugin updates.
+- Catalogue now handles installing plugin dependencies, and preventing uninstall of dependencies.
+- Backend synced between `ets2la.com` and `ets2la.cn`.
 
 ---
 <!-- Content inside ETS2LA will be cutoff at the line above, do not place lines inside the changelog. -->
 
-> [!IMPORTANT]
-> If you're not in the ETS2LA beta program, please take a look at https://ets2la.com/download. This version is not what you're looking for!
+> [!CAUTION]
+> 如果您来自中国，可访问 [https://cnb.cool/ETS2LA-CN/Euro-Truck-Simulator-2-Lane-Assist/-/releases/latest](https://cnb.cool/ETS2LA-CN/Euro-Truck-Simulator-2-Lane-Assist/-/releases/latest) 这是我们官方的中国镜像仓库，从该仓库下载和安装的文件会优先使用中国仓库进行更新；另外这是开源免费项目，如发现有倒卖/安装收费行为，中国镜像站运营负责人有权利封禁你的ip，如遭遇ip封禁请不要提请任何申诉，我们不会受理
 
 
 <sub>ETS2LA is version specific, make sure you use a supported version!  

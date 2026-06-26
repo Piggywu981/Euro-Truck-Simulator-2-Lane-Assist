@@ -16,6 +16,7 @@ public enum TutorialActionType
     PointAtScreen,
     PointAtCoordinate,
     PlaySound,
+    ExecuteFunction,
 
     // These are so called "wait" actions.
     // They will clear previous instant actions
@@ -79,6 +80,12 @@ public struct PlaySoundAction : TutorialAction
 {
     public TutorialActionType ActionType => TutorialActionType.PlaySound;
     public string SoundFilePath { get; set; }
+}
+
+public struct ExecuteFunctionAction : TutorialAction
+{
+    public TutorialActionType ActionType => TutorialActionType.ExecuteFunction;
+    public Action? Function { get; set; }
 }
 
 public struct PointAtScreenAction : TutorialAction

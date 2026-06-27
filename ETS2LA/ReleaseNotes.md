@@ -1,6 +1,7 @@
-### ETS2LA C# 3.4.13
-- Fix axis immediately binding to keybinds.
-- They will now wait for slight movement from the last known value.
+### ETS2LA C# 3.4.14
+- Tweak release text to include information about overlay problems.
+- **Drk** - Improved joystick axis drift rejection when binding keybinds.
+- **Drk** - Detect Steam games via their appmanifest instead of libraryfolders.vdf.
 
 ---
 <!-- Content inside ETS2LA will be cutoff at the line above, do not place lines inside the changelog. -->

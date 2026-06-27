@@ -18,6 +18,7 @@ public class SharpDXControlsBackend : IControlsBackend
     public event EventHandler<ControlRemovedEventArgs>? ControlRemoved;
 
     private bool pauseListener = false;
+    private const int AxisMoveThreshold = 16384;
 
     /// <summary>
     ///  You can access connected joysticks through this list. It is preferred <br/>
@@ -385,33 +386,31 @@ public class SharpDXControlsBackend : IControlsBackend
 
                 foreach(var update in data)
                 {
-                    if (_previousStates.ContainsKey(joystick))
-                    {
-                        JoystickUpdate? hasLastValue = _previousStates[joystick].FirstOrDefault(u => u.Offset == update.Offset);
-                        if (hasLastValue != null)
-                        {
-                            var lastValue = hasLastValue.Value.Value;
-                            var currentValue = update.Value;
-                            // TODO: Dynamically increase value for axis 
-                            if (Math.Abs((int)lastValue - (int)currentValue) < 120)
-                            {
-                                continue;
-                            }
-                        }
-                    }
-
                     string controlId = GetIdFromOffset(update.Offset);
+
                     if (update.Offset >= JoystickOffset.Buttons0 && update.Offset <= JoystickOffset.Buttons127)
                     {
                         pauseListener = false;
                         return (joystick.Information.InstanceGuid.ToString(), controlId);
                     }
-                    else
+
+                    if (!_previousStates.ContainsKey(joystick))
+                        _previousStates[joystick] = new List<JoystickUpdate>();
+
+                    int restIndex = _previousStates[joystick].FindIndex(u => u.Offset == update.Offset);
+                    if (restIndex < 0)
                     {
-                        float normalizedValue = NormalizeAxisValue(update.Value / 65535.0f, AxisType.Normal);
-                        pauseListener = false;
-                        return (joystick.Information.InstanceGuid.ToString(), controlId);
+                        _previousStates[joystick].Add(update);
+                        continue;
                     }
+
+                    if (Math.Abs(_previousStates[joystick][restIndex].Value - update.Value) < AxisMoveThreshold)
+                    {
+                        continue;
+                    }
+
+                    pauseListener = false;
+                    return (joystick.Information.InstanceGuid.ToString(), controlId);
                 }
             }
             Thread.Sleep(20);

@@ -3,7 +3,6 @@ using ETS2LA.Backend.Events;
 
 using System.Diagnostics;
 using System.IO.MemoryMappedFiles;
-using Avalonia.Controls.Embedding.Offscreen;
 
 namespace ETS2LA.Game.Output;
 
@@ -305,10 +304,12 @@ public class GameOutput
                     if (weightedValue > 0)
                     {
                         WriteFloat(legacyAccessor, legacyShmOffsets["aforward"], weightedValue);
+                        WriteFloat(legacyAccessor, legacyShmOffsets["abackward"], 0);
                     }
                     else
                     {
                         WriteFloat(legacyAccessor, legacyShmOffsets["abackward"], -weightedValue);
+                        WriteFloat(legacyAccessor, legacyShmOffsets["aforward"], 0);
                     }
                 }
                 else

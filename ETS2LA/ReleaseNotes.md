@@ -1,5 +1,5 @@
-### ETS2LA C# 3.4.11
-- Official release of ETS2LA C#.
+### ETS2LA C# 3.4.12
+- Fix ETS2LA not resuming from stops.
 
 ---
 <!-- Content inside ETS2LA will be cutoff at the line above, do not place lines inside the changelog. -->

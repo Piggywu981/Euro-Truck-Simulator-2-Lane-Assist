@@ -263,7 +263,6 @@ public class GameOutput
             }
 
             IsReset = false;
-            Logger.Debug("Channels");
             try
             {
                 foreach (var channel in Channels.Values)
@@ -282,7 +281,6 @@ public class GameOutput
             } catch {}
 
             double time = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
-            Logger.Debug("Floats");
             foreach (var kvp in curFrameFloats)
             {
                 string propName = kvp.Key;

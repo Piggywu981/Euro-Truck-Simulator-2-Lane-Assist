@@ -1,6 +1,5 @@
-### ETS2LA C# 3.4.10
-- Added support for TruckersMP. Trucks now have their speed parsed properly.
-- Manually removed plugins are now pruned from `InstalledPluginManifest` at startup. This also affects Windows, where the plugin folder is replaced during an update.
+### ETS2LA C# 3.4.11
+- Official release of ETS2LA C#.
 
 ---
 <!-- Content inside ETS2LA will be cutoff at the line above, do not place lines inside the changelog. -->

@@ -13,9 +13,6 @@ public class SteamLibrary
 {
     /// <summary>Root path of the library (the folder that contains steamapps).</summary>
     public required string Path { get; set; }
-
-    /// <summary>App IDs of the games installed in this library.</summary>
-    public List<string> AppIds { get; set; } = new();
 }
 
 /// <summary>
@@ -47,9 +44,8 @@ class SteamHandler
     }
 
     /// <summary>
-    ///  Parses libraryfolders.vdf into a list of Steam libraries. Each library
-    ///  holds its root path and the app IDs of the games installed in it.
-    ///  This includes both default and user added libraries.
+    ///  Parses libraryfolders.vdf into a list of Steam libraries, each holding
+    ///  its root path. This includes both default and user added libraries.
     /// </summary>
     /// <returns>All configured Steam libraries.</returns>
     public static List<SteamLibrary> GetLibraries()
@@ -59,33 +55,13 @@ class SteamHandler
         if (!File.Exists(vdfPath))
             return libraries;
 
-        SteamLibrary? current = null;
-        bool inAppsBlock = false;
         foreach (string rawLine in File.ReadAllLines(vdfPath))
         {
             string line = rawLine.Trim();
 
             // The "path" key marks the start of a new library entry.
             if (line.StartsWith("\"path\""))
-            {
-                current = new SteamLibrary { Path = line.Split('"')[3] };
-                libraries.Add(current);
-                inAppsBlock = false;
-            }
-            // The "apps" key opens a block listing the installed app IDs.
-            else if (line.StartsWith("\"apps\""))
-            {
-                inAppsBlock = true;
-            }
-            else if (inAppsBlock)
-            {
-                // Entries look like:  "227300"   "12345678"  where the key is the
-                // app ID and the value is its size on disk. The block ends with "}".
-                if (line.StartsWith("}"))
-                    inAppsBlock = false;
-                else if (line.StartsWith("\"") && current != null)
-                    current.AppIds.Add(line.Split('"')[1]);
-            }
+                libraries.Add(new SteamLibrary { Path = line.Split('"')[3] });
         }
 
         return libraries;
@@ -93,7 +69,7 @@ class SteamHandler
 
     /// <summary>
     ///  Finds the specified games across all Steam libraries by their app IDs.
-    ///  An app ID is only resolved if libraryfolders.vdf reports it as installed
+    ///  An app ID is only resolved if its appmanifest is present in a library
     ///  and its install folder actually exists on disk.
     /// </summary>
     /// <param name="appIds">Steam app IDs to search for.</param>
@@ -107,7 +83,7 @@ class SteamHandler
             string steamApps = Path.Combine(library.Path, "steamapps");
             foreach (string appId in appIds)
             {
-                if (foundGames.ContainsKey(appId) || !library.AppIds.Contains(appId))
+                if (foundGames.ContainsKey(appId))
                     continue;
 
                 string? installDir = GetInstallDir(steamApps, appId);

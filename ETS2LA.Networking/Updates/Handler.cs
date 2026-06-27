@@ -28,7 +28,7 @@ public class Updater
     public List<UpdaterSource> AvailableSources => new()
     {
         new UpdaterSource(
-            new GithubSource("https://github.com/ETS2LA/Euro-Truck-Simulator-2-Lane-Assist", null, true),
+            new GithubSource("https://github.com/ETS2LA/Euro-Truck-Simulator-2-Lane-Assist", null, false),
             "GitHub"
         ),
         new UpdaterSource(
@@ -129,9 +129,7 @@ public class Updater
     {
         return new UpdateManager(source, new UpdateOptions
         {
-#if DEBUG
-            ExplicitChannel = "win-beta"
-#endif
+            
         });
     }
 

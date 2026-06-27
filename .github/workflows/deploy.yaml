@@ -4,7 +4,7 @@ permissions:
 on:
   push:
     branches:
-      - rewrite
+      - main
 
 jobs:
   check_version:
@@ -65,7 +65,7 @@ jobs:
           New-Item -ItemType Directory -Force -Path .\publish\Assets | Out-Null
           Set-Content -Path .\publish\Assets\DistributionSource.txt -Value "GitHub" -NoNewline
           & $vpk pack `
-            --channel "win-beta" `
+            --channel "win-release" `
             --packId ETS2LA `
             --packVersion ${{ needs.check_version.outputs.version }} `
             --packDir .\publish `
@@ -80,8 +80,7 @@ jobs:
             --packTitle "ETS2LA" `
             --releaseNotes .\ETS2LA\ReleaseNotes.md
           & $vpk upload github `
-            --channel "win-beta" `
-            --pre `
+            --channel "win-release" `
             --merge `
             --repoUrl "https://github.com/${{ github.repository }}" `
             --publish `
@@ -93,7 +92,7 @@ jobs:
           Remove-Item -Path .\Releases -Recurse -Force
           Set-Content -Path .\publish\Assets\DistributionSource.txt -Value "CNB" -NoNewline
           & $vpk pack `
-            --channel "win-beta" `
+            --channel "win-release" `
             --packId ETS2LA `
             --packVersion ${{ needs.check_version.outputs.version }} `
             --packDir .\publish `
@@ -144,7 +143,7 @@ jobs:
           mkdir -p ./publish/Assets
           printf "GitHub" > ./publish/Assets/DistributionSource.txt
           $VPK pack \
-            --channel "linux-beta" \
+            --channel "linux-release" \
             --packId ETS2LA \
             --packVersion ${{ needs.check_version.outputs.version }} \
             --packDir ./publish \
@@ -153,8 +152,7 @@ jobs:
             --packTitle "ETS2LA" \
             --releaseNotes ./ETS2LA/ReleaseNotes.md
           $VPK upload github \
-            --channel "linux-beta" \
-            --pre \
+            --channel "linux-release" \
             --merge \
             --repoUrl "https://github.com/${{ github.repository }}" \
             --publish \
@@ -166,7 +164,7 @@ jobs:
           rm -rf ./Releases
           printf "CNB" > ./publish/Assets/DistributionSource.txt
           $VPK pack \
-            --channel "linux-beta" \
+            --channel "linux-release" \
             --packId ETS2LA \
             --packVersion ${{ needs.check_version.outputs.version }} \
             --packDir ./publish \

@@ -208,7 +208,7 @@ public partial class MainWindow : AppWindow
         {
             PageKind.Dashboard => dashboardView,
             PageKind.Manager => managerView,
-            PageKind.Visualization => CreatePlaceholder("Sorry", "This page is being remade and isn't available in this version. It will return in a future update post open beta release."),
+            PageKind.Visualization => CreatePlaceholder("Sorry", "This page is being remade and isn't available in this version. It will return in a future update."),
             PageKind.Catalogue => catalogueView,
             PageKind.Performance => CreatePlaceholder("Performance", "This page hasn't been implemented yet, you can monitor performance using external tools."),
             PageKind.Wiki => CreatePlaceholder("Wiki", "Please take a look at https://docs.ets2la.com for documentation. This page will link there once we have more content."),

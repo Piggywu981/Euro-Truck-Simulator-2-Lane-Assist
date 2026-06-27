@@ -17,11 +17,14 @@ public class SharpDXControlsBackend : IControlsBackend
     public event EventHandler<ControlAddedEventArgs>? ControlAdded;
     public event EventHandler<ControlRemovedEventArgs>? ControlRemoved;
 
+    private bool pauseListener = false;
+
     /// <summary>
     ///  You can access connected joysticks through this list. It is preferred <br/>
     ///  that you use this list instead of discovering new DI devices again.
     /// </summary>
     public List<Joystick> _connectedJoysticks = new();
+    public Dictionary<Joystick, List<JoystickUpdate>> _previousStates = new();
     private DirectInput _directInput = new DirectInput();
     private Keyboard _keyboard;
 
@@ -267,6 +270,12 @@ public class SharpDXControlsBackend : IControlsBackend
         var lastDeviceRefresh = DateTime.MinValue;
         while (true)
         {
+            if (pauseListener)
+            {
+                Thread.Sleep(100);
+                continue;
+            }
+
             if ((DateTime.Now - lastDeviceRefresh).TotalSeconds >= 2)
             {
                 try { RefreshConnectedJoysticks(); }
@@ -307,6 +316,15 @@ public class SharpDXControlsBackend : IControlsBackend
                     string controlId = GetIdFromOffset(update.Offset);
                     if (string.IsNullOrEmpty(controlId)) continue;
 
+                    if (!_previousStates.ContainsKey(joystick))
+                    {
+                        _previousStates[joystick] = new List<JoystickUpdate>();
+                    }
+
+                    bool needsReplace = _previousStates[joystick].Any(u => u.Offset == update.Offset);
+                    if (needsReplace) _previousStates[joystick].RemoveAll(u => u.Offset == update.Offset);
+                    _previousStates[joystick].Add(update);
+
                     var matchingControls = RegisteredControls.Where(c => 
                         c.DeviceId == joystick.Information.InstanceGuid.ToString() && 
                         c.ControlId.ToString() == controlId);
@@ -340,6 +358,7 @@ public class SharpDXControlsBackend : IControlsBackend
     public (string, string) WaitForInput(float timeoutSeconds)
     {
         var startTime = DateTime.Now;
+        pauseListener = true;
         while ((DateTime.Now - startTime).TotalSeconds < timeoutSeconds)
         {
             var kbBuffer = _keyboard.GetBufferedData();
@@ -347,6 +366,7 @@ public class SharpDXControlsBackend : IControlsBackend
             {
                 var keyEvent = kbBuffer[0];
                 string controlId = ((Key)keyEvent.Key).ToString();
+                pauseListener = false;
                 return ("Keyboard", controlId);
             }
 
@@ -363,28 +383,41 @@ public class SharpDXControlsBackend : IControlsBackend
                     continue;
                 }
 
-                if (data.Length > 0)
+                foreach(var update in data)
                 {
-                    var update = data[0];
+                    if (_previousStates.ContainsKey(joystick))
+                    {
+                        JoystickUpdate? hasLastValue = _previousStates[joystick].FirstOrDefault(u => u.Offset == update.Offset);
+                        if (hasLastValue != null)
+                        {
+                            var lastValue = hasLastValue.Value.Value;
+                            var currentValue = update.Value;
+                            // TODO: Dynamically increase value for axis 
+                            if (Math.Abs((int)lastValue - (int)currentValue) < 120)
+                            {
+                                continue;
+                            }
+                        }
+                    }
+
                     string controlId = GetIdFromOffset(update.Offset);
-                    
                     if (update.Offset >= JoystickOffset.Buttons0 && update.Offset <= JoystickOffset.Buttons127)
                     {
+                        pauseListener = false;
                         return (joystick.Information.InstanceGuid.ToString(), controlId);
                     }
                     else
                     {
                         float normalizedValue = NormalizeAxisValue(update.Value / 65535.0f, AxisType.Normal);
-                        if(Math.Abs(normalizedValue) > 0.1f)
-                        {
-                            return (joystick.Information.InstanceGuid.ToString(), controlId);
-                        }
+                        pauseListener = false;
+                        return (joystick.Information.InstanceGuid.ToString(), controlId);
                     }
                 }
             }
             Thread.Sleep(20);
         }
 
+        pauseListener = false;
         return ("", "");
     }
 }

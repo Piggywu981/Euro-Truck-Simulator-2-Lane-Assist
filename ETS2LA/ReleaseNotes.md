@@ -1,5 +1,6 @@
-### ETS2LA C# 3.4.12
-- Fix ETS2LA not resuming from stops.
+### ETS2LA C# 3.4.13
+- Fix axis immediately binding to keybinds.
+- They will now wait for slight movement from the last known value.
 
 ---
 <!-- Content inside ETS2LA will be cutoff at the line above, do not place lines inside the changelog. -->

@@ -108,7 +108,10 @@ public class PluginHandler
         {
             try
             {
-                var assembly = Assembly.LoadFrom(filename);
+                var absolutePath = Path.GetFullPath(filename);
+                var shadowPath = CreateShadowCopy(absolutePath);
+
+                var assembly = Assembly.LoadFrom(shadowPath);
                 var libraryTypes = assembly.GetTypes()
                     .Where(t => typeof(ILibraryPlugin).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
 
@@ -154,8 +157,6 @@ public class PluginHandler
                 var pluginTypes = assembly.GetTypes()
                     .Where(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
 
-                var pluginLoaded = false;
-
                 // There can be multiple plugins in one assembly.
                 foreach (var type in pluginTypes)
                 {
@@ -164,15 +165,8 @@ public class PluginHandler
 
                     LoadedPlugins.Add(plugin);
                     _pluginLoadContexts[plugin] = loadContext;
-                    pluginLoaded = true;
                     
                     Logger.Info($"Loaded plugin: [gray]{type.FullName}[/] from [gray]{filename}[/].");
-                }
-
-                if (!pluginLoaded)
-                {
-                    loadContext.Unload();
-                    CleanupShadowDirectory(loadContext);
                 }
             }
             catch (Exception ex)

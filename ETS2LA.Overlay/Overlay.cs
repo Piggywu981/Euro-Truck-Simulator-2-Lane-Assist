@@ -528,7 +528,10 @@ public class OverlayHandler
             GLFW.Terminate();
             return false;
         }
+
+        # if WINDOWS
         GLFW.SetWindowPos(glfwWindow, 1, 1);
+        # endif
 
         return true;
     }

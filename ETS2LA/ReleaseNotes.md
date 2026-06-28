@@ -1,7 +1,8 @@
-### ETS2LA C# 3.4.14
-- Tweak release text to include information about overlay problems.
-- **Drk** - Improved joystick axis drift rejection when binding keybinds.
-- **Drk** - Detect Steam games via their appmanifest instead of libraryfolders.vdf.
+### ETS2LA C# 3.4.15
+- Updated TruckLib to the latest release. This fixes issues with ETS2LA thinking the road is to the side of where it actually is.
+- Libraries are now also using `ShadowCopy` to ensure they can be updated without causing a crash.
+- When the speedlimit changes ETS2LA will now save your current offset. For example: `64 -> 84` instead of `64 -> 80`.
+- Fixed the overlay moving to the far left monitor on Linux. There will be an update to automatically move the over to the monitor ETS2 is on eventually
 
 ---
 <!-- Content inside ETS2LA will be cutoff at the line above, do not place lines inside the changelog. -->
@@ -11,7 +12,9 @@
 <sub>The above notice is to make sure Chinese people can find their specific download as they can't download from GitHub without a VPN.</sub>
 
 > [!WARNING]
-> If you have issues with your **overlay being fully opaque** then make sure to reinstall your graphics card drivers. For NVIDIA's 10 series please use the latest drivers from *last year*, not the hotfix from this year.
+> If you have issues with your **overlay being fully opaque**, make sure to reinstall your graphics card drivers.  
+> **NVIDIA** - Set `OpenGL GDI Compatibility` to `Prefer Compatible` in the *NVIDIA App*.  
+> **AMD** - We've yet to find a solution, if you have information please tell us. Some GPUs work some don't...
 
 <sub>ETS2LA is version specific, make sure you use a supported version!  
 Older versions are not kept compatible with server side changes.</sub>

@@ -134,6 +134,7 @@ public class ApplicationState
     private GameTelemetryData latestTelemetryData = new();
     private AssistanceSettings assistanceSettings;
     private StateSettings stateSettings;
+    private float lastSpeedLimit = 0f;
 
     // The functions below are for handling control events.
     // If determining what they do is hard via code, then take a look at the 
@@ -185,10 +186,15 @@ public class ApplicationState
         if (DesiredSpeed == 0)
             return;
 
+        float offset = 0;
+        if (lastSpeedLimit != 0)
+            offset = DesiredSpeed - lastSpeedLimit; 
+
         if (newSpeedLimit == 0)
             newSpeedLimit = UnitConversions.ToScientificUnits(UnitType.Speed, 30, Units.Metric);
 
-        DesiredSpeed = newSpeedLimit;
+        lastSpeedLimit = newSpeedLimit;
+        DesiredSpeed = newSpeedLimit + offset;
         RoundToNearestUnit();
         NotificationHandler.Current.SendNotification(new Notification
         {
@@ -210,7 +216,9 @@ public class ApplicationState
             if (assistanceSettings.SetSpeedBehaviourOption == SetSpeedBehaviour.CurrentSpeed)
                 DesiredSpeed = latestTelemetryData.truckFloat.speed;
             else if (assistanceSettings.SetSpeedBehaviourOption == SetSpeedBehaviour.SpeedLimit)
-                DesiredSpeed = latestTelemetryData.truckFloat.speedLimit;
+                DesiredSpeed = latestTelemetryData.truckFloat.speedLimit != 0 ?
+                               latestTelemetryData.truckFloat.speedLimit :
+                               UnitConversions.ToScientificUnits(UnitType.Speed, 30, Units.Metric);
 
             Events.Current.Publish<EventArgs>("ETS2LA.State.AssistsUnpaused", new EventArgs());
             Events.Current.Publish<bool>("ETS2LA.State.SteeringPaused", PauseSteeringAssist);

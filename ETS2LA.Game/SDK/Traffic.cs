@@ -56,6 +56,7 @@ public class TrafficVehicle : BaseVehicle
     public TrafficTrailer[] trailers = Array.Empty<TrafficTrailer>();
 
     // These are only internal
+    public KalmanFilter speedFilter = new KalmanFilter(q: 0.008f, r: 0.4f);
     public Vector3 lastPosition = Vector3.Zero;
     public float lastUpdateTime = 0f;
 }
@@ -71,7 +72,7 @@ public class TrafficProvider
     public static TrafficProvider Current => _instance.Value;
 
     private float UpdateRate { get; set; } = 1f / 60f;
-    private float SpeedUpdateRateInTMP = 1f / 2f;
+    private float SpeedUpdateRateInTMP = 1f / 10f;
     public string EventString = "ETS2LA.Game.SDK.Traffic.Data";
 
     private MemoryReader _reader;
@@ -277,12 +278,13 @@ public class TrafficProvider
                 if (lastVehicle != null)
                 {
                     vehicle.speed = lastVehicle.speed;
+                    vehicle.speedFilter = lastVehicle.speedFilter;
                     vehicle.lastPosition = lastVehicle.lastPosition;
                     vehicle.lastUpdateTime = lastVehicle.lastUpdateTime;
                     if (curTime - vehicle.lastUpdateTime > SpeedUpdateRateInTMP)
                     {
                         var distance = Vector3.Distance(vehicle.lastPosition, vehicle.Position);
-                        vehicle.speed = distance / (curTime - vehicle.lastUpdateTime);
+                        vehicle.speed = vehicle.speedFilter.Update(distance / (curTime - vehicle.lastUpdateTime));
                         vehicle.lastPosition = vehicle.Position;
                         vehicle.lastUpdateTime = curTime;
                     }

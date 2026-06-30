@@ -1,7 +1,7 @@
-### ETS2LA C# 3.4.16
-- Implemented `KalmanFilter` in `ETS2LA.Shared`.
-- The `KalmanFilter` is now used to determine vehicle speed in TruckersMP. The resulting speed should be **drastically** more stable.
-- As a result of this update, `tumppi066.laneassist` will also be updated to utilize the new `KalmanFilter`.
+### ETS2LA C# 3.4.17
+- Add option to `Pause When Unstable` in Assistance Settings.
+  - This will pause the lane assist for whatever reason disconnects without your input.
+- Add `GetNextCurve`, `GetPreviousCurve` to `PrefabPath` class.
 
 ---
 <!-- Content inside ETS2LA will be cutoff at the line above, do not place lines inside the changelog. -->

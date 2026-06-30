@@ -1014,6 +1014,76 @@ public class PrefabPath
     }
 
     /// <summary>
+    ///  Returns the closest nav curve for whatever point is passed in.
+    ///  There are no distance checks, this function will return a curve, regardless
+    ///  of how far the point is.
+    /// </summary>
+    /// <param name="point">Input position to check against.</param>
+    /// <returns>Output nav curve.</returns>
+    public NavCurve? GetCurrentCurve(Vector3 point)
+    {
+        if (Length <= 0) return null;
+
+        float minDistanceSq = float.MaxValue;
+        float cumulativeDist = 0;
+
+        NavCurve? closestCurve = null;
+        IEnumerable<NavCurve> curvesToConsider = Curves;
+        if (CurveDirection == Direction.Backward) curvesToConsider = curvesToConsider.Reverse();
+
+        foreach (var curve in curvesToConsider)
+        {
+            Vector3 startPos = Vector3.Transform(curve.StartPosition + prefabStart, rotationMatrix);
+            Vector3 endPos = Vector3.Transform(curve.EndPosition + prefabStart, rotationMatrix);
+
+            Vector3 line = endPos - startPos;
+            float lineLenSq = line.LengthSquared();
+            
+            float t = 0;
+            if (lineLenSq > 0)
+            {
+                t = Vector3.Dot(point - startPos, line) / lineLenSq;
+                t = Math.Clamp(t, 0, 1);
+            }
+
+            Vector3 closestPointOnSegment = startPos + (line * t);
+            float distSq = Vector3.DistanceSquared(point, closestPointOnSegment);
+
+            if (distSq < minDistanceSq)
+            {
+                minDistanceSq = distSq;
+                closestCurve = curve;
+            }
+
+            cumulativeDist += curve.Length;
+        }
+
+        return closestCurve;
+    }
+
+    public NavCurve? GetNextCurve(NavCurve curve)
+    {
+        IEnumerable<NavCurve> curvesToConsider = Curves;
+        if (CurveDirection == Direction.Backward) curvesToConsider = curvesToConsider.Reverse();
+
+        int index = curvesToConsider.ToList().IndexOf(curve);
+        if (index == -1 || index == curvesToConsider.Count() - 1) return null;
+
+        return curvesToConsider.ElementAt(index + 1);
+    }
+
+    public NavCurve? GetPreviousCurve(NavCurve curve)
+    {
+        IEnumerable<NavCurve> curvesToConsider = Curves;
+        if (CurveDirection == Direction.Backward) curvesToConsider = curvesToConsider.Reverse();
+
+        int index = curvesToConsider.ToList().IndexOf(curve);
+        if (index == -1 || index == 0) return null;
+
+        return curvesToConsider.ElementAt(index - 1);
+    }
+
+    /// <summary>
     ///  Get the point at the specified distance along the path. Distance must be between 0 and path length.
     /// </summary>
     /// <param name="distance">Distance along the path to interpolate.</param>

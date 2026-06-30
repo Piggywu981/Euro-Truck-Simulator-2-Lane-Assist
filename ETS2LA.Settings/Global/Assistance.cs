@@ -50,6 +50,7 @@ public class AssistanceSettings
     public static AssistanceSettings Current => _instance.Value;
 
     public bool SeparateCruiseAndSteering { get; set; } = false;
+    public bool PauseWhenUnstable { get; set; } = true;
     public AccelerationResponseOption AccelerationResponse { get; set; } = AccelerationResponseOption.Normal;
     public SteeringSensitivityOption SteeringSensitivity { get; set; } = SteeringSensitivityOption.Normal;
     public FollowingDistanceOption FollowingDistance { get; set; } = FollowingDistanceOption.Normal;
@@ -69,6 +70,7 @@ public class AssistanceSettings
             if (loadedSettings != null)
             {
                 SeparateCruiseAndSteering = loadedSettings.SeparateCruiseAndSteering;
+                PauseWhenUnstable = loadedSettings.PauseWhenUnstable;
                 AccelerationResponse = loadedSettings.AccelerationResponse;
                 SteeringSensitivity = loadedSettings.SteeringSensitivity;
                 FollowingDistance = loadedSettings.FollowingDistance;
@@ -90,6 +92,7 @@ public class AssistanceSettings
     public void OnSettingsChanged(AssistanceSettings newSettings)
     {
         SeparateCruiseAndSteering = newSettings.SeparateCruiseAndSteering;
+        PauseWhenUnstable = newSettings.PauseWhenUnstable;
         AccelerationResponse = newSettings.AccelerationResponse;
         SteeringSensitivity = newSettings.SteeringSensitivity;
         FollowingDistance = newSettings.FollowingDistance;

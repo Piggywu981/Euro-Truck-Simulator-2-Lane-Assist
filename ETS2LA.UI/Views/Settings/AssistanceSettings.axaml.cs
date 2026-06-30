@@ -33,6 +33,19 @@ public partial class AssistanceSettingsPage : UserControl, INotifyPropertyChange
         }
     }
 
+    public bool PauseWhenUnstable
+    {
+        get => AssistanceSettings.Current.PauseWhenUnstable;
+        set
+        {
+            if (AssistanceSettings.Current.PauseWhenUnstable != value)
+            {
+                AssistanceSettings.Current.PauseWhenUnstable = value;
+                AssistanceSettings.Current.Save();
+            }
+        }
+    }
+
     public string SpeedControlDisplay => $"{StateSettingsHandler.Current.GetSettings().SpeedControlStepSize:F0} {UnitConversions.GetUnitAbbreviation(
                                             UnitType.Speed, 
                                             StateSettingsHandler.Current.GetSettings().DisplayUnits

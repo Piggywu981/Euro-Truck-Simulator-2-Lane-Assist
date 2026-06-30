@@ -150,6 +150,14 @@
             <Separator />
 
             <StackPanel Spacing="10">
+                <Grid ColumnDefinitions="*, Auto">
+                    <TextBlock Text="Pause When Unstable" VerticalAlignment="Center" />
+                    <ToggleSwitch Grid.Column="1" IsChecked="{Binding PauseWhenUnstable}" Classes="primary-toggle" AutomationProperties.Name="Pause When Unstable" />
+                </Grid>
+                <TextBlock Text="We will pause the game when we detect instability or the steering is unresponsive / disables itself." FontSize="12" Classes="Description" />
+            </StackPanel>
+
+            <StackPanel Spacing="10">
                 <StackPanel Spacing="3">
                     <TextBlock Text="Speed Limit Warning" />
                     <TextBlock Text="How should ETS2LA warn you about speed limits?" FontSize="12" Classes="Description" />
